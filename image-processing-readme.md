@@ -26,12 +26,12 @@ Historical archives worldwide contain millions of handwritten documents that are
 - **Inaccessible to researchers** who need digital, searchable text
 - **Time-consuming to transcribe** manually by historians and archivists
 
-**Our solution:** Automated enhancement and transcription that preserves cultural heritage while making it universally accessible.
+**Our solution:** Automated enhancement and transcription to make handwritten archival documents more available for computational analysis.
 
 ---
 
 ## Image Processing Methods
-Our workflow starts with image preprocessing to enhance the quality of historical document images before starting the transcription process. We provide various computer vision techniques to enhance text visibility, reduce noise, and improve readability of historical documents.
+Our workflow starts with image preprocessing. We employ computer vision techniques to enhance text visibility, reduce noise, and improve readability of historical documents.
 
 ### Processing Methods Overview
 
