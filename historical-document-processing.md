@@ -1,8 +1,8 @@
-# Historical Document Processing: From Scanned Images to Digital Text
+# Historical Document Processing: From non-professional photographs taken in the archive to Digital Text
 
 ## Complete Workflow Overview
 
-Our research combines specialized image processing with LLMs to transform historical handwritten documents into searchable digital text. The complete pipeline consists of four main stages:
+Our research combines multiple image processing techniques with LLMs to transform historical handwritten documents into searchable digital text. The complete pipeline consists of four main stages:
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -12,26 +12,29 @@ Our research combines specialized image processing with LLMs to transform histor
 └─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 ↓                        ↓                        ↓
                        Multiple Methods:           Ready for AI:            📝 Digital Text:
-                       • Adaptive                 • Clean, enhanced        • Accurate transcription
+                       • Adaptive                 • Clean, enhanced        • Automatic transcription
                        • Graph Analysis           • High contrast          • Structured output
-                       • Color Filtering          • Noise-free             • Historical analysis
-                       • Edge Detection           • Optimized format       • Searchable content
+                       • Color Filtering          • Noise-free             • Searchable content
+                       • Edge Detection           • Optimized format       
 ```
 
-## The Challenge We're Solving
+## The Challenges
 
-Historical archives worldwide contain millions of handwritten documents that are:
-- **Physically deteriorating** due to age and environmental factors
-- **Difficult to read** because of faded ink, discolored paper, and damaged surfaces
-- **Inaccessible to researchers** who need digital, searchable text
+Archives of handwritten documents are vast, measuring in the millions of shelving kilometers worldwide. And yet, many have not been professionally scanned and digitized. Instead, scholars will often take photographs of the documents while visiting the archive. The quality of the resulting images can be poor:
+- **Physically deteriorating** images can be difficult to capture because of faded ink, discolored paper
+- **Inconsistent lighting per image** can result in shadows, making parts of the page difficult to read
+- **Unstable lighting conditions** make it difficult to find a single comprehensive technique that works for all images in a groupf 
+
+As a result, computational research with these materials is limited because:
 - **Time-consuming to transcribe** manually by historians and archivists
+- **Existing computer vision techniques** are limited for pre-processing to produce machine-readable images
 
-**Our solution:** Automated enhancement and transcription to make handwritten archival documents more available for computational analysis.
+**Our goal:** Automated enhancement and transcription of non-professionally photographed handwritten archival documents. 
 
 ---
 
 ## Image Processing Methods
-Our workflow starts with image preprocessing. We employ computer vision techniques to enhance text visibility, reduce noise, and improve readability of historical documents.
+We experimented with and evaluated multiple computer vision image preprocessing techniques to reduce noise, and improve machine readability.
 
 ### Processing Methods Overview
 
@@ -47,17 +50,21 @@ Input Document ──┬── Edge Detection ────────── Enh
 
 #### Edge Detection Approach
 **Technique**: Canny Edge Detection + Morphological Closing
-- **Best for**: Documents with clear text boundaries and strong edge definition
 - **Process**: Detects text edges → Connects broken character segments → Removes noise
 - **Parameters**: Threshold1=50, Threshold2=150 for edge detection
 - **Use case**: Modern handwriting with good contrast
 
 #### Color-Based Ink Isolation  
 **Technique**: HSV Color Space Filtering
-- **Best for**: Historical documents with brown or sepia ink on aged paper
 - **Process**: Converts to HSV → Isolates brown ink range → Filters background
 - **Parameters**: HSV range [20,20,100] to [30,100,255] targets brown ink
-- **Use case**: Vintage documents with distinctive ink coloration
+- **Use case**: Historical documents with brown or sepia ink on aged paper
+
+#### CLAHE Enhancement
+**Technique**: Contrast Limited Adaptive Histogram Equalization
+- **Process**: Local contrast enhancement → Adaptive thresholding → Noise removal
+- **Features**: Prevents over-amplification while enhancing faint text
+- **Use case**: Severely deteriorated documents with minimal visible text
 
 #### Adaptive Thresholding (Primary Method)
 **Our most reliable and versatile approach** with three variants:
@@ -66,21 +73,21 @@ Input Document ──┬── Edge Detection ────────── Enh
 - Adaptive Gaussian thresholding with moderate parameters
 - Morphological closing (4x4 kernel) to connect text segments  
 - Morphological opening (2x2 kernel) to remove noise
-- **Best for**: General historical documents
+- **Use case**: The wide range of images we processed
 
 **Stronger**  
 - More aggressive thresholding for severely faded documents
 - Enhanced parameters: block size 21, C parameter 12
-- **Best for**: Documents with very light or faded text
+- **Use case**: The documents with very light or faded text
 
 **Mean**
 - Uses mean-based adaptive thresholding instead of Gaussian
 - Better performance on documents with uneven illumination
-- **Best for**: Documents with varying lighting conditions
+- **Use case**: The documents with varying lighting conditions
 
 #### Graph Analysis (Advanced Structural Method)
+**Our most effective though costly approach**
 **Technique**: Connected Component Analysis + Graph Theory
-- **Best for**: Complex document layouts and detailed structural understanding
 - **Process**: 
   1. Converts document pixels to graph nodes based on connectivity
   2. Identifies connected components representing text elements
@@ -88,14 +95,7 @@ Input Document ──┬── Edge Detection ────────── Enh
   4. Groups similar components using network analysis
   5. Tests multiple thresholds (130-210) for robustness
 - **Output**: Detailed structural analysis with text component relationships
-- **Use case**: Research applications requiring document structure understanding
-
-#### CLAHE Enhancement
-**Technique**: Contrast Limited Adaptive Histogram Equalization
-- **Best for**: Documents with poor contrast and uneven lighting
-- **Process**: Local contrast enhancement → Adaptive thresholding → Noise removal
-- **Features**: Prevents over-amplification while enhancing faint text
-- **Use case**: Severely deteriorated documents with minimal visible text
+- **Use case**: Word detection even as conditions of image quality vary across the page
 
 
 ### Processing Methods Comparison
@@ -120,7 +120,7 @@ After image enhancement, we employ an AI-powered transcription pipeline. The LLM
 ### Complete LLM Pipeline Architecture
 
 ```
-   Enhanced Images (from above) ──┬── Preprocessing Pipeline ────┬── Multi-Model Processing
+   Enhanced Images (from above) ──┬── Preprocessing Pipeline ────┬── Model Processing
                                   │                              │
 ┌─────────────────────────────────┴──────────────────────────────┴────────────────────┐
 │                              MODULAR OCR PIPELINE                                   │
@@ -201,19 +201,16 @@ Data/
 │   ├── original.jpg                      # Source document
 │   ├── adaptive_threshold.jpg            # Standard processing
 │   ├── graph_analysis.jpg                # Advanced processing
-│   ├── {model}_{method}_{temp}.txt       # LLM transcriptions
+│   ├── {model}_{method}_{temp}.txt       # LLM transcriptions (multiple per document)
 │   └── ground_truth.txt                  # Reference transcription
 └── [more document folders]
 ```
 
-**Transcription Naming:** `{model}_{method}_{temperature}`
-
 ### Implementation and Impact
 
-**Scalable Solution**: The pipeline can process thousands of documents automatically while maintaining high accuracy standards.
+**Scalability**: The biggest challenge for this domain is scaling transcription.
 
-**Cultural Preservation**: Making historical archives digitally searchable preserves knowledge while protecting original documents from handling damage.
+**Access**: Making historical archives digitally searchable preserves knowledge while protecting original documents from handling damage.
 
 **Research Acceleration**: Historians and researchers can now process years of archival work in days, enabling new discoveries and insights.
 
-**Educational Access**: Historical documents become accessible to students and the public worldwide, democratizing access to cultural heritage.
