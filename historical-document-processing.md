@@ -1,4 +1,4 @@
-# Historical Document Processing: From non-professional photographs taken in the archive to Digital Text
+# Historical Document Processing: From non-professional photographs taken in the archive to digital text
 
 ## Complete Workflow Overview
 
@@ -208,9 +208,5 @@ Data/
 
 ### Implementation and Impact
 
-**Scalability**: The biggest challenge for this domain is scaling transcription.
-
-**Access**: Making historical archives digitally searchable preserves knowledge while protecting original documents from handling damage.
-
-**Research Acceleration**: Historians and researchers can now process years of archival work in days, enabling new discoveries and insights.
+These efforts address the specific needs of non-professional handwritten document photographs taken in archives by visiting scholars. These unprofessional photographs present a number of challenges that are not widely addressed in the computer vision community. They are at the intersection of two problem types: 1. handwriting recognition; 2. non-uniform illumnination. Methods that address one or the other of these issues do not provide a a comprehensive solution. Our research will contribute to ongoing work on this compound CV problem. 
 
