@@ -34,7 +34,7 @@ As a result, computational research with these materials is limited because:
 ---
 
 ## Image Processing Methods
-We experimented with and evaluated multiple computer vision image preprocessing techniques to reduce noise, and improve machine readability.
+We experimented with and evaluated multiple computer vision image preprocessing techniques to reduce noise, and improve machine readability. This approach follows preprocessing methods from prior work [^1].
 
 ### Processing Methods Overview
 
@@ -215,3 +215,4 @@ Data/
 
 These efforts address the specific needs of non-professional handwritten document photographs taken in archives by visiting scholars. These unprofessional photographs present a number of challenges that are not widely addressed in the computer vision community. They are at the intersection of two problem types: 1. handwriting recognition; 2. non-uniform illumnination. Methods that address one or the other of these issues do not provide a a comprehensive solution. Our research will contribute to ongoing work on this compound CV problem. 
 
+[^1]: A. A. Shihotov and T. M. Tatarnikova, "Methods for Preprocessing Images of Handwritten Documents in Computer Vision Tasks," *WECONF 2025*, doi: [10.1109/WECONF65186.2025.11017244](https://doi.org/10.1109/WECONF65186.2025.11017244).
