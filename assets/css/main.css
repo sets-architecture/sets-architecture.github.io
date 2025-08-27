@@ -34,15 +34,19 @@ header {
 
 .wrap { max-width: 960px; margin: 0 auto; padding: 1.25rem; }
 
-.brand { display: flex; align-items: center; gap: .6rem; font-weight: 700; letter-spacing: .2px; }
-.brand .dot {
-  width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent);
-}
-
 nav a { color: var(--muted); text-decoration: none; margin-left: 1rem; }
 nav a.active { color: var(--accent); font-weight: 600; }
 nav a:hover { color: var(--accent); }
+
+.header-bar { display:flex; align-items:center; justify-content:space-between; }
+.brand { display:flex; align-items:center; gap:.6rem; font-weight:700; letter-spacing:.2px; text-decoration:none; color:inherit; }
+.brand .dot { width:10px; height:10px; border-radius:50%; background:var(--accent);
+  box-shadow:0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent); }
+
+.primary-nav { display:flex; gap:1rem; }
+.primary-nav .nav-link { color:var(--muted); text-decoration:none; }
+.primary-nav .nav-link:hover { color:var(--accent); }
+.primary-nav .nav-link.active { color:var(--accent); font-weight:600; }
 
 main .hero { padding: 3rem 0 1.5rem; }
 h1 { font-size: clamp(1.8rem, 2vw + 1rem, 2.4rem); margin: 0 0 .5rem; }

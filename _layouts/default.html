@@ -21,15 +21,14 @@
   <body>
     <!-- Header -->
     <header>
-      <div class="wrap" style="display:flex; align-items:center; justify-content:space-between;">
-        <div class="brand">
-          <span class="dot" aria-hidden="true"></span><span>{{ site.title }}</span>
-        </div>
-        
-        {% include nav.html %}
 
-      </div>
-    </header>
+  <div class="wrap header-bar">
+    <a class="brand" href="{{ '/' | relative_url }}">
+      <span class="dot" aria-hidden="true"></span><span>{{ site.title }}</span>
+    </a>
+    {% include nav.html %}
+  </div>
+</header>
 
     <!-- Main content -->
     <main class="wrap">
