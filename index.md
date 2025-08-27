@@ -21,32 +21,45 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
 3. While the potential to scale-up research in the humanities motivates our interest in AI, deep sources will always be a minority data domain because their unique qualities are intertwined with historical moments, geographical setting, political circumstances, etc..
 
 ## Experiments and Outcomes
-''''
+```mermaid
 flowchart TD
-    A[Deep Source Analysis by Scholar] --> B[Image Pre-processing & Text Transcription]
-    B --> C[LLM-aided Document Analysis]
-    C --> D[Historian-guided LLM Document Analysis]
-    D --> E[Query Document Data as Sets]
+    subgraph " "
+        A[Deep Source Analysis by Scholar<br/><i>Establishing sophisticated benchmark<br/>for archival document understanding</i>]
+    end
     
-    A1[Establishing sophisticated benchmark<br/>for archival document understanding]
-    B1[Comparison of methods and models<br/>for document digitization]
-    C1[Measure confidence, entropy, and accuracy<br/>on 14 information retrieval tasks<br/>across three frontier models]
-    D1[Evaluate scholar-language model<br/>interaction on analysis tasks]
-    E1[NEXT STEP:<br/>Structured querying of<br/>document datasets]
+    subgraph "  "
+        B[Image Pre-processing & Text Transcription<br/><i>Comparison of methods and models<br/>for document digitization</i>]
+    end
     
-    A -.-> A1
-    B -.-> B1
-    C -.-> C1
-    D -.-> D1
-    E -.-> E1
+    subgraph "   "
+        C[LLM-aided Document Analysis<br/><i>Measure confidence, entropy, and accuracy<br/>on 14 information retrieval tasks<br/>across three frontier models</i>]
+    end
     
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#e8f5e8
-    style D fill:#fff3e0
-    style E fill:#ffebee
-
-''''
+    subgraph "    "
+        D[Historian-guided LLM Document Analysis<br/><i>Evaluate scholar-language model<br/>interaction on analysis tasks</i>]
+    end
+    
+    subgraph "     "
+        E[Query Document Data as Sets<br/><i>NEXT STEP:<br/>Structured querying of<br/>document datasets</i>]
+    end
+    
+    A --> B
+    B --> C  
+    C --> D
+    D --> E
+    
+    classDef step1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef step2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef step3 fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef step4 fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef step5 fill:#ffebee,stroke:#b71c1c,stroke-width:2px
+    
+    class A step1
+    class B step2  
+    class C step3
+    class D step4
+    class E step5
+```
 
 ## References
 
@@ -58,14 +71,14 @@ Yue, Xiang, Yuansheng Ni, Kai Zhang, et al. 2024\. “MMMU: A Massive Multi-Disc
 
 ## Team
 
-Leads  
-Giovanna Ceserani  
-Sebastian Ahnert  
-Contributors  
-Nicole Coleman  
-Allen Romano  
-Huijun Mao  
-Teresa Ceserani  
-Consultants  
-Diyi Yang  
-Michele Mauri
+### Leads  
+- Giovanna Ceserani  
+- Sebastian Ahnert  
+### Contributors  
+- Nicole Coleman  
+- Allen Romano  
+- Huijun Mao  
+- Teresa Ceserani  
+### Consultants  
+- Diyi Yang  
+- Michele Mauri
