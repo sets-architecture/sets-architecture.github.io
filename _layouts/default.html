@@ -18,13 +18,19 @@
   </div>
 
   <!-- Mermaid at bottom of page -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: 'default'
-      });
+<!-- Mermaid - More robust loading -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'default'
+    });
+    
+    // Force re-render after page load
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        mermaid.init();
+      }, 100);
     });
   </script>
 </body>
