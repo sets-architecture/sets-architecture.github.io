@@ -1,0 +1,7 @@
+# _data/navigation.yml
+- title: Home
+  url: /
+- title: Propel Task 1.1
+  url: /propel-1.1/
+- title: Propel Task 1.2
+  url: /propel-1.2/

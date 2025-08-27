@@ -1,0 +1,22 @@
+{%- assign current = page.url | replace:'index.html','' -%}
+<nav aria-label="Primary">
+  {%- for item in site.data.navigation -%}
+    {%- if item.external -%}
+      <a href="{{ item.url }}" target="_blank" rel="noopener"
+         class="nav-link"
+      >{{ item.title }}</a>
+    {%- else -%}
+      {%- assign href = item.url | relative_url -%}
+      {%- comment -%}
+        Normalize trailing slashes for active check
+      {%- endcomment -%}
+      {%- assign norm_current = current | replace:'//','/' -%}
+      {%- assign norm_href    = href    | replace:'//','/' -%}
+      {%- assign is_active = (norm_current == norm_href) -%}
+      <a href="{{ href }}"
+         class="nav-link{% if is_active %} active{% endif %}"
+         {% if is_active %}aria-current="page"{% endif %}
+      >{{ item.title }}</a>
+    {%- endif -%}
+  {%- endfor -%}
+</nav>

@@ -2,6 +2,7 @@
 layout: default
 title: Propel Task 1.2
 description: Historical document pre-processing and LLM transcription.
+permalink: /propel-1.2/
 ---
 
 # Historical Document Processing: From non-professional photographs taken in the archive to digital text

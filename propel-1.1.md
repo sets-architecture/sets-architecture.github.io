@@ -2,6 +2,7 @@
 layout: default
 title: Propel Task 1.1
 description: Expert Analysis of Archival Document Images.
+permalink: /propel-1.1/
 ---
 
 
