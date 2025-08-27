@@ -26,35 +26,22 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
 3. While the potential to scale-up research in the humanities motivates our interest in AI, deep sources will always be a minority data domain because their unique qualities are intertwined with historical moments, geographical setting, political circumstances, etc..
 
 ## Experiments and Outcomes
-```mermaid
-flowchart LR
-    A[Deep Source Analysis by Scholar<br/><i>Establishing sophisticated benchmark<br/>for archival document understanding</i>]
+
+<div class="graphviz">
+digraph workflow {
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fillcolor="#f8f9fa", fontname="Source Sans Pro"];
     
-    B[Image Pre-processing & Text Transcription<br/><i>Comparison of methods and models<br/>for document digitization</i>]
+    A [label="Deep Source Analysis\nby Scholar\n\nEstablishing sophisticated benchmark\nfor archival document understanding", fillcolor="#e1f5fe"];
+    B [label="Image Pre-processing &\nText Transcription\n\nComparison of methods and models\nfor document digitization", fillcolor="#f3e5f5"];
+    C [label="LLM-aided Document\nAnalysis\n\nMeasure confidence, entropy, and accuracy\non 14 information retrieval tasks\nacross three frontier models", fillcolor="#e8f5e8"];
+    D [label="Historian-guided LLM\nDocument Analysis\n\nEvaluate scholar-language model\ninteraction on analysis tasks", fillcolor="#fff3e0"];
+    E [label="Query Document\nData as Sets\n\nNEXT STEP:\nStructured querying of\ndocument datasets", fillcolor="#ffebee"];
     
-    C[LLM-aided Document Analysis<br/><i>Measure confidence, entropy, and accuracy<br/>on 14 information retrieval tasks<br/>across three frontier models</i>]
-    
-    D[Historian-guided LLM Document Analysis<br/><i>Evaluate scholar-language model<br/>interaction on analysis tasks</i>]
-    
-    E[Query Document Data as Sets<br/><i>NEXT STEP:<br/>Structured querying of<br/>document datasets</i>]
-    
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    
-    classDef step1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef step2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef step3 fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef step4 fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef step5 fill:#ffebee,stroke:#b71c1c,stroke-width:2px
-    
-    class A step1
-    class B step2
-    class C step3
-    class D step4
-    class E step5
-```
+    A -> B -> C -> D -> E;
+}
+</div>
+
 ## References
 
 Lee, Mina, Megha Srivastava, Amelia Hardy, et al. 2024\. “Evaluating Human-Language Model Interaction.” [https://arxiv.org/abs/2212.09746](https://arxiv.org/abs/2212.09746).
