@@ -61,8 +61,6 @@ Lee, Mina, Megha Srivastava, Amelia Hardy, et al. 2024\. “Evaluating Human-Lan
 
 Yue, Xiang, Yuansheng Ni, Kai Zhang, et al. 2024\. “MMMU: A Massive Multi-Discipline Multimodal Understanding and Reasoning Benchmark for Expert AGI.” *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, June, 9556–67.
 
-## 
-
 ## Team
 
 ### Leads  
