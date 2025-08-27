@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SETS</title>
+  <meta name="description" content="SETS project page." />
+
+  <!-- Libre Franklin (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #4f46e5;
+      --card: #f9fafb;
+      --border: #e5e7eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0f14;
+        --text: #e5e7eb;
+        --muted: #9aa3af;
+        --accent: #8b93ff;
+        --card: #121821;
+        --border: #1f2937;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Libre Franklin", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(79,70,229,0.06), transparent);
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 1.25rem; }
+    .brand { display: flex; align-items: center; gap: .6rem; font-weight: 700; letter-spacing: .2px; }
+    .brand .dot {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent);
+    }
+    nav a { color: var(--muted); text-decoration: none; margin-left: 1rem; }
+    nav a:hover { color: var(--accent); }
+    main .hero { padding: 3rem 0 1.5rem; }
+    h1 { font-size: clamp(1.8rem, 2vw + 1rem, 2.4rem); margin: 0 0 .5rem; }
+    p.lead { color: var(--muted); max-width: 60ch; margin: 0; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 2rem 0;
+      overflow: auto;
+    }
+    .small { font-size: .9rem; color: var(--muted); }
+    .mermaid { min-height: 220px; }
+    footer {
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .footer-grid {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem;
+      padding: 1rem 0;
+      font-size: .95rem;
+    }
+  </style>
+
+  <!-- Mermaid -->
+  <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.mermaid) {
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'default',
+          securityLevel: 'antiscript'
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="wrap" style="display:flex; align-items:center; justify-content:space-between;">
+      <div class="brand"><span class="dot" aria-hidden="true"></span><span>Minimal Project</span></div>
+      <nav aria-label="primary">
+        <a href="#workflow">Workflow</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>SETS a Set-Based Architecture for Knowledge Integration and Discovery</h1>
+      <p class="lead">The goal of SETS is to improve the performance of AI in the domain of humanities research on archival sources.</p>
+    </section>
+   <section id="about">
+      <h2>Evaluating Human-AI Interaction with Deep Sources</h2>
+      <p>Our first step was creating a benchmark for human-model interaction in the analysis of deep sources (Lee et al, 2024). This evaluation framework aims to improve upon existing benchmarks for multi-modal models by taking a deep and focused approach rather than a broader but flatter approach (Yue et al, 2024). Our framework attends to the complexity of deep sources as textual, visual, and physical objects, while also taking into account the theoretical and methodological approaches of the scholar.</p>
+    </section>
+   
+    <section id="workflow" class="card" aria-labelledby="workflow-title">
+      <h2 id="workflow-title" style="margin-top:0;">Experiments and Outcomes</h2>
+      <div class="mermaid">
+      flowchart LR
+        A[Deep source analysis by a scholar:<br/>Establishing a sophisticated benchmark for archival document understanding]
+          --> B[Image pre-processing and text transcription:<br/>A comparison of methods and models]
+        B --> C[LLM-aided document analysis — a measure of confidence, entropy, and accuracy<br/>on 14 information retrieval tasks across three frontier models]
+        C --> D[Historian-guided LLM document analysis:<br/>Evaluating scholar–language model interaction on tasks]
+
+        classDef phase fill:#4f46e5,stroke:#362fef,color:#fff;
+        class A,B,C,D phase
+      </div>
+      <p class="small"></p>
+    </section>
+
+ 
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <span>© <span id="year"></span>SETS</span>
+      <span></span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+  <noscript>
+    Mermaid diagrams require JavaScript. Text fallback:
+    Deep source analysis → Image pre-processing & transcription → LLM-aided analysis → Historian-guided LLM analysis
+  </noscript>
+</body>
+</html>
