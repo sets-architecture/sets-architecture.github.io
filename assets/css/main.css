@@ -189,3 +189,6 @@ img:-webkit-full-screen {
   height: 100vh;
   object-fit: contain; /* letterbox without cropping */
 }
+
+figcaption { color: var(--muted); margin-top: .5rem; }
+figcaption.small { font-size: 0.95rem; }
