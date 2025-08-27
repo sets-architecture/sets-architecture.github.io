@@ -1,0 +1,17 @@
+<footer class="distill-footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p>&copy; {{ 'now' | date: '%Y' }} {{ site.author.name | default: site.title }}</p>
+        {% if site.author.affiliation %}
+        <p class="affiliation">{{ site.author.affiliation }}</p>
+        {% endif %}
+      </div>
+      {% if site.author.email %}
+      <div class="footer-section">
+        <a href="mailto:{{ site.author.email }}">Contact</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</footer>

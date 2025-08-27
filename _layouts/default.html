@@ -11,62 +11,16 @@
   
   <!-- CSS -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-  
-  <!-- Distill-style header -->
-  <div class="distill-header">
-    <div class="header-container">
-      <div class="header-left">
-        <a href="{{ site.baseurl }}/" class="site-title">{{ site.title | default: "Research" }}</a>
-      </div>
-      <nav class="header-nav">
-        <a href="{{ site.baseurl }}/">Overview</a>
-        <a href="{{ site.baseurl }}/scholar-analysis/">Scholar Analysis</a>
-        <a href="{{ site.baseurl }}/preprocessing/">Pre-processing</a>
-        <a href="{{ site.baseurl }}/llm-analysis/">LLM Analysis</a>
-        <a href="{{ site.baseurl }}/guided-analysis/">Guided Analysis</a>
-      </nav>
-    </div>
-  </div>
 </head>
 <body>
-  <div class="container">
-    {{ content }}
-  </div>
-
-  <!-- Distill-style footer -->
-  <footer class="distill-footer">
-    <div class="footer-container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <p>&copy; {{ 'now' | date: '%Y' }} {{ site.author.name | default: site.title }}</p>
-          {% if site.author.affiliation %}
-          <p class="affiliation">{{ site.author.affiliation }}</p>
-          {% endif %}
-        </div>
-        {% if site.author.email %}
-        <div class="footer-section">
-          <a href="mailto:{{ site.author.email }}">Contact</a>
-        </div>
-        {% endif %}
-      </div>
+  {% include header.html %}
+  
+  <main class="distill-main">
+    <div class="container">
+      {{ content }}
     </div>
-  </footer>
+  </main>
 
-  <!-- GraphViz support -->
-  <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/graphviz.umd.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const graphvizElements = document.querySelectorAll('.graphviz');
-      graphvizElements.forEach(async function(element) {
-        const dotSource = element.textContent;
-        try {
-          const svg = await hpccWasm.graphviz.layout(dotSource, "svg", "dot");
-          element.innerHTML = svg;
-        } catch (error) {
-          console.error('GraphViz rendering error:', error);
-        }
-      });
-    });
-  </script>
+  {% include footer.html %}
 </body>
 </html>
