@@ -37,9 +37,9 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
          ▼                       ▼                       ▼                       ▼                       ▼
    Establishing            Comparison of           Measure confidence,      Evaluate scholar-        NEXT STEP:
    sophisticated           methods and models      entropy, and accuracy    language model           Structured
-   benchmark for           for document           on 14 information        interaction on           querying of
-   archival document       digitization           retrieval tasks across   analysis tasks           document
-   understanding                                  three frontier models                             datasets
+   benchmark for           for document           on 14+ information        interaction on           querying of
+   archival document       digitization           retrieval tasks.   analysis tasks           document
+   understanding                                                           datasets
 ```
 
 ## References
