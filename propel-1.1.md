@@ -1,4 +1,11 @@
-# Expert Analysis of Archival Documents Images
+---
+layout: default
+title: Propel Task 1.1
+description: Expert Analysis of Archival Document Images.
+---
+
+
+# Expert Analysis of Archival Document Images
 
 ## A scholar’s approach to historical records
 

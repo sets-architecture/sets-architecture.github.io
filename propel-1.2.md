@@ -1,3 +1,9 @@
+---
+layout: default
+title: Propel Task 1.2
+description: Historical document pre-processing and LLM transcription.
+---
+
 # Historical Document Processing: From non-professional photographs taken in the archive to digital text
 
 ## Complete Workflow Overview
