@@ -25,17 +25,17 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
 ## Experiments and Outcomes
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Deep Source   │───▶│   Image Pre-    │───▶│   LLM-aided     │───▶│  Historian-     │───▶│   Query         │
-│   Analysis by   │    │   processing &  │    │   Document      │    │  guided LLM     │    │   Document      │
-│   Scholar       │    │   Text Trans.   │    │   Analysis      │    │   Analysis      │    │   Data as Sets  │
-└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │                       │                       │
-         ▼                       ▼                       ▼                       ▼                       ▼
-   Establishing            Comparison of           Measure confidence,      Evaluate scholar-        NEXT STEP:
-   sophisticated           methods and models      entropy, and accuracy    language model           Structured
-   benchmark for           for document           on 14+ information        interaction on           querying of
-   archival document       digitization           retrieval tasks.   analysis tasks           document
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Deep Source   │───▶│   Image Pre-    │───▶│   LLM-aided     │───▶│  Historian-     │
+│   Analysis by   │    │   processing &  │    │   Document      │    │  guided LLM     │
+│   Scholar       │    │   Text Trans.   │    │   Analysis      │    │   Analysis      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │                       │      
+         ▼                       ▼                       ▼                       ▼            
+   Establishing            Comparison of           Measure confidence,      Evaluate scholar-  
+   sophisticated           methods and models      entropy, and accuracy    language model      
+   benchmark for           for document           on 14+ information        interaction on    
+   archival document       digitization           retrieval tasks.   analysis tasks           
    understanding                                                           datasets
 ```
 
