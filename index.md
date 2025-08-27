@@ -1,7 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script>
-  mermaid.initialize({startOnLoad:true});
-</script>
+
 
 # SETS a Set-Based Architecture for Knowledge Integration and Discovery
 

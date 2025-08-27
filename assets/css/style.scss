@@ -192,3 +192,139 @@ code {
     padding: 2rem 1rem;
   }
 }
+
+/* People Section - Distill.pub style */
+.people {
+  margin: 4rem 0;
+}
+
+.people h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #222;
+}
+
+.people h3 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.leads, .contributors, .consultants {
+  margin-bottom: 3rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.leads {
+  display: flex;
+  flex-direction: column;
+}
+
+.leads .person {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 3rem;
+  margin-bottom: 2rem;
+}
+
+.consultants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+}
+
+.consultants .person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.person .mug {
+  display: block;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 80px;
+  height: 80px;
+  transition: transform 0.2s ease;
+}
+
+.person .mug:hover {
+  transform: scale(1.05);
+}
+
+.person .mug img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.person .name {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.person .name:hover {
+  color: #004c9b;
+  text-decoration: none;
+}
+
+.person .affiliation {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 0.85rem;
+  color: #666;
+  text-decoration: none;
+  font-style: italic;
+}
+
+.person .affiliation:hover {
+  color: #004c9b;
+  text-decoration: none;
+}
+
+/* Responsive adjustments for people section */
+@media (max-width: 768px) {
+  .columns {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .leads .person {
+    margin-right: 2rem;
+  }
+  
+  .consultants {
+    gap: 2rem;
+  }
+  
+  .person .mug {
+    width: 60px;
+    height: 60px;
+  }
+}
