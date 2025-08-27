@@ -29,7 +29,7 @@ description: SETS project page.
     agendas. We looked at approaches to scaling the analysis of a set of disconnected images from an archive which
     required defining the components of scholarly analysis of deep sources and the dimensions to consider when designing
     evaluation metrics.</p>
-      <h2>Evaluating Human-AI Interaction with Deep Sources</h2>
+      <h2>Phase 1: Evaluating Human-AI Interaction with Deep Sources</h2>
       <p>Our first step was creating a benchmark for human-model interaction in the analysis of deep sources (Lee et al, 2024). This evaluation framework aims to improve upon existing benchmarks for multi-modal models by taking a deep and focused approach rather than a broader but flatter approach (Yue et al, 2024). Our framework attends to the complexity of deep sources as textual, visual, and physical objects, while also taking into account the theoretical and methodological approaches of the scholar.</p>
       <p>Whereas existing benchmarks address general reasoning capabilities, we offer a benchmark for deep sources that evaluates models on an actual workflow, measuring real task completion rather than using proxy metrics. Our benchmark design is grounded in the following assumptions:</p>
       <ul>
@@ -40,37 +40,41 @@ description: SETS project page.
 </section>
 
 <section id="outcomes">
-  <h2 id="outcomes-title" style="margin-top:0;">Experiments and Outcomes</h2>
+  <h3 id="outcomes-title" style="margin-top:0;">Experiments and Outcomes</h3>
 
   <div class="card" aria-labelledby="outcomes-title">
     <!-- Mermaid diagram -->
     <div class="mermaid">
-    flowchart TD
+    flowchart LR
       A[Deep Source Analysis by Scholar] --> B[Image Pre-processing & Text Transcription]
       B --> C[LLM-aided Document Analysis]
       C --> D[Historian-guided LLM Document Analysis]
-      D --> E[Query Document Data as Sets]
+   
 
       A1[Establishing sophisticated benchmark<br/>for archival document understanding]
       B1[Comparison of methods and models<br/>for document digitization]
       C1[Measure confidence, entropy, and accuracy<br/>on 14 information retrieval tasks<br/>across three frontier models]
       D1[Evaluate scholar-language model<br/>interaction on analysis tasks]
-      E1[NEXT STEP:<br/>Structured querying of<br/>document datasets]
+     
 
       A -.-> A1
       B -.-> B1
       C -.-> C1
       D -.-> D1
-      E -.-> E1
 
       style A fill:#e1f5fe
       style B fill:#f3e5f5
       style C fill:#e8f5e8
       style D fill:#fff3e0
-      style E fill:#ffebee
+  
     </div>
     <p class="small"></p>
-  </div>
+  </div> 
+  
+<h4 id="outcomes-title" style="margin-top:0;">Propel Task 1.1: Deep Source Analysis</h4>
+<p>This task provides the basis of a real-world benchmark for expert analysis of deep sources. We address the critique that most benchmarks test breadth over depth by assuming that AI and scholar will work in collaboration. We address concerns that current benchmarks do not adequately present real-world relevant tasks by elaborating on an actual use case using actual source materials, not artificial tasks or generated images. <a href="/propel-1.1.html">Read the task report.</a></p>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Task 1.2: Image pre-processing</h4>
+<p>In many cases, scholars who work in archives do not have access to professionally produced source images. Rather, scholars often enter archives with a digital camera and photograph documents themselves under less than ideal lighting conditions. The images for this case study were also acquired this way. In Task 1.2, we experiment with existing methods to improve machine-readability of archival manuscripts. We arrive at a merely adequate expediant method and a prefered method that is computationally costly. Further work will need to be done to improve upon the preferred method.<a href="/propel-1.2.html">Read the task report.</a></p>
 </section>
 
 <section id="team" class="card" aria-labelledby="team-title">
