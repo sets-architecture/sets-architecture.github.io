@@ -27,20 +27,23 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
 
 ## Experiments and Outcomes
 
-<div class="graphviz">
-digraph workflow {
-    rankdir=LR;
-    node [shape=box, style="rounded,filled", fillcolor="#f8f9fa", fontname="Source Sans Pro"];
-    
-    A [label="Deep Source Analysis\nby Scholar\n\nEstablishing sophisticated benchmark\nfor archival document understanding", fillcolor="#e1f5fe"];
-    B [label="Image Pre-processing &\nText Transcription\n\nComparison of methods and models\nfor document digitization", fillcolor="#f3e5f5"];
-    C [label="LLM-aided Document\nAnalysis\n\nMeasure confidence, entropy, and accuracy\non 14 information retrieval tasks\nacross three frontier models", fillcolor="#e8f5e8"];
-    D [label="Historian-guided LLM\nDocument Analysis\n\nEvaluate scholar-language model\ninteraction on analysis tasks", fillcolor="#fff3e0"];
-    E [label="Query Document\nData as Sets\n\nNEXT STEP:\nStructured querying of\ndocument datasets", fillcolor="#ffebee"];
-    
-    A -> B -> C -> D -> E;
-}
-</div>
+# Experiments and Outcomes
+## Research Methodology Workflow
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Deep Source   │───▶│   Image Pre-    │───▶│   LLM-aided     │───▶│  Historian-     │───▶│   Query         │
+│   Analysis by   │    │   processing &  │    │   Document      │    │  guided LLM     │    │   Document      │
+│   Scholar       │    │   Text Trans.   │    │   Analysis      │    │   Analysis      │    │   Data as Sets  │
+└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │                       │                       │
+         ▼                       ▼                       ▼                       ▼                       ▼
+   Establishing            Comparison of           Measure confidence,      Evaluate scholar-        NEXT STEP:
+   sophisticated           methods and models      entropy, and accuracy    language model           Structured
+   benchmark for           for document           on 14 information        interaction on           querying of
+   archival document       digitization           retrieval tasks across   analysis tasks           document
+   understanding                                  three frontier models                             datasets
+```
 
 ## References
 
