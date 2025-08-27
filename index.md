@@ -27,9 +27,6 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
 
 ## Experiments and Outcomes
 
-# Experiments and Outcomes
-## Research Methodology Workflow
-
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Deep Source   │───▶│   Image Pre-    │───▶│   LLM-aided     │───▶│  Historian-     │───▶│   Query         │
