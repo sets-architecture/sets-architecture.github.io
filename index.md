@@ -1,3 +1,8 @@
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({startOnLoad:true});
+</script>
+
 # SETS a Set-Based Architecture for Knowledge Integration and Discovery
 
 The goal of SETS is to improve the performance of AI in the domain of humanities research on archival sources. 
@@ -23,28 +28,18 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
 ## Experiments and Outcomes
 ```mermaid
 flowchart LR
-    subgraph " "
-        A[Deep Source Analysis by Scholar<br/><i>Establishing sophisticated benchmark<br/>for archival document understanding</i>]
-    end
+    A[Deep Source Analysis by Scholar<br/><i>Establishing sophisticated benchmark<br/>for archival document understanding</i>]
     
-    subgraph "  "
-        B[Image Pre-processing & Text Transcription<br/><i>Comparison of methods and models<br/>for document digitization</i>]
-    end
+    B[Image Pre-processing & Text Transcription<br/><i>Comparison of methods and models<br/>for document digitization</i>]
     
-    subgraph "   "
-        C[LLM-aided Document Analysis<br/><i>Measure confidence, entropy, and accuracy<br/>on 14 information retrieval tasks<br/>across three frontier models</i>]
-    end
+    C[LLM-aided Document Analysis<br/><i>Measure confidence, entropy, and accuracy<br/>on 14 information retrieval tasks<br/>across three frontier models</i>]
     
-    subgraph "    "
-        D[Historian-guided LLM Document Analysis<br/><i>Evaluate scholar-language model<br/>interaction on analysis tasks</i>]
-    end
+    D[Historian-guided LLM Document Analysis<br/><i>Evaluate scholar-language model<br/>interaction on analysis tasks</i>]
     
-    subgraph "     "
-        E[Query Document Data as Sets<br/><i>NEXT STEP:<br/>Structured querying of<br/>document datasets</i>]
-    end
+    E[Query Document Data as Sets<br/><i>NEXT STEP:<br/>Structured querying of<br/>document datasets</i>]
     
     A --> B
-    B --> C  
+    B --> C
     C --> D
     D --> E
     
@@ -54,13 +49,12 @@ flowchart LR
     classDef step4 fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef step5 fill:#ffebee,stroke:#b71c1c,stroke-width:2px
     
-    class A step1;
-    class B step2;
-    class C step3;
-    class D step4;
-    class E step5;
+    class A step1
+    class B step2
+    class C step3
+    class D step4
+    class E step5
 ```
-
 ## References
 
 Lee, Mina, Megha Srivastava, Amelia Hardy, et al. 2024\. “Evaluating Human-Language Model Interaction.” [https://arxiv.org/abs/2212.09746](https://arxiv.org/abs/2212.09746).
