@@ -46,9 +46,9 @@ description: SETS project page.
     <!-- Mermaid diagram -->
     <div class="mermaid">
     flowchart LR
-      A[Deep Source Analysis by Scholar] --> B[Image Pre-processing & Text Transcription]
-      B --> C[LLM-aided Document Analysis]
-      C --> D[Historian-guided LLM Document Analysis]
+      A[1.1 Deep Source Analysis by Scholar] --> B[1.2 Image Pre-processing & Text Transcription]
+      B --> C[1.3 LLM-aided Document Analysis]
+      C --> D[1.4 Historian-guided LLM Document Analysis]
    
 
       A1[Establishing sophisticated benchmark<br/>for archival document understanding]
