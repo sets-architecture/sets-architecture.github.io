@@ -196,3 +196,14 @@ img:-webkit-full-screen {
 
 figcaption { color: var(--muted); margin-top: .5rem; }
 figcaption.small { font-size: 0.95rem; }
+
+/* images in tables */
+.img-table { table-layout: fixed; width: 100%; }
+.img-table th, .img-table td { text-align: center; vertical-align: top; }
+.img-table img.tbl-img {
+width: 100% !important;
+max-width: clamp(80px, 18vw, 140px) !important;
+height: auto;
+display: inline-block;
+}
+.table-wrapper { overflow-x: auto; }

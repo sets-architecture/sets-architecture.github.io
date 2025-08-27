@@ -105,10 +105,13 @@ Input Document ──┬── Edge Detection ────────── Enh
 - **Use case**: Word detection even as conditions of image quality vary across the page
 
 ### Sample Images
-| Original | Graph Analysis | Adaptive Thresholding Standard | Adaptive Thresholding Strong | Adaptive Thresholding Mean |
-|-------|-------|----------|--------|------|
-| ![Original](samples/original.png) | ![Graph](samples/Graph.png) | ![Standard](samples/standard.png) | ![Strong](samples/strong.png) | ![Mean](samples/mean.png) |
 
+<div class="table-wrapper"> 
+{: .img-table} 
+| Original | Graph Analysis | Adaptive Thresholding Standard | Adaptive Thresholding Strong | Adaptive Thresholding Mean | 
+|---|---|---|---|---| 
+| ![Original](samples/original.png){: .tbl-img } | ![Graph](samples/Graph.png){: .tbl-img } | ![Standard](samples/standard.png){: .tbl-img } | ![Strong](samples/strong.png){: .tbl-img } | ![Mean](samples/mean.png){: .tbl-img } | 
+</div>
 
 ### Processing Methods Comparison
 
