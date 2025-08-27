@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      {% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}
+    </title>
+    <meta name="description" content="{% if page.description %}{{ page.description | escape }}{% else %}{{ site.description | escape }}{% endif %}" />
+
+    {% seo %}
+
+    <!-- Libre Franklin (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="wrap" style="display:flex; align-items:center; justify-content:space-between;">
+        <div class="brand">
+          <span class="dot" aria-hidden="true"></span><span>{{ site.title }}</span>
+        </div>
+        {# Primary nav (currently not used)
+        <nav aria-label="primary">
+          <a href="#outcomes">Outcomes</a>
+          <a href="#about">About</a>
+        </nav>
+        #}
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="wrap">
+      {{ content }}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="wrap footer-grid">
+        <!-- <span>© <span id="year"></span> {{ site.title }}</span> -->
+        <span>Updated August 27, 2025</span>
+      </div>
+    </footer>
+
+    <!-- Mermaid (client-side) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    {% include js/mermaid-init.js %}
+
+    <!-- Main site JS -->
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+
+    <!-- Noscript fallback (diagram text) -->
+    <noscript>
+      Mermaid diagrams require JavaScript. Text fallback:
+      Deep source analysis → Image pre-processing & transcription → LLM-aided analysis → Historian-guided LLM analysis
+    </noscript>
+  </body>
+</html>

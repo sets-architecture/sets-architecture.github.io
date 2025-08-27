@@ -1,0 +1,14 @@
+title: SETS
+description: SETS project page.
+theme: null
+
+# GitHub Pages-supported plugins
+plugins:
+  - jekyll-seo-tag
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+# Optional: keep URLs clean
+permalink: pretty
