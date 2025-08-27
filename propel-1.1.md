@@ -57,7 +57,7 @@ Jewish foreign visitors are recorded separately, in sheets that include Jewish (
 
 ### 2.2 Information organization and structure within the documents
 
-<figure class="full-bleed" markdown="1">
+<figure markdown="1">
 ![diagram of a page spread highlighting elements of the document described in bullet points below](/assets/images/Task1.1-figure1.png){: .img-full .can-fullscreen }
 <figcaption markdown="1">
 Figure 1\. Page spread for February 20, 1766 mv (ASV IS 758-81) diagram of information organization/structure. Click/tap the image to view it full screen.
@@ -76,7 +76,7 @@ Figure 1\. Page spread for February 20, 1766 mv (ASV IS 758-81) diagram of infor
 * The records for Jewish travelers follow the same structure but are recorded separately and are reported by a dedicated deputy, ‘deputato,’ not by the hoteliers, and with no additional location information beyond the name of the host ((‘in casa di \[x\] : ‘in the house of \[x\]’).  
 
 ### 2.3 Visual elements in the documents
-<figure class="full-bleed" markdown="1">
+<figure markdown="1">
 ![diagram pointing out 3 different archivists marks across a page and what they signify](/assets/images/Task1.1-figure2.png){: .img-full .can-fullscreen } 
 <figcaption markdown="1">
 Figure 2\. Archivist’s marks in the first page of the May 28, 1770 record (ASV IS 758-81). Click/tap the image to view it full screen.
