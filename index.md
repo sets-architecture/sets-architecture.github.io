@@ -22,7 +22,7 @@ Whereas existing benchmarks address general reasoning capabilities, we offer a b
 
 ## Experiments and Outcomes
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph " "
         A[Deep Source Analysis by Scholar<br/><i>Establishing sophisticated benchmark<br/>for archival document understanding</i>]
     end
@@ -54,11 +54,11 @@ flowchart TD
     classDef step4 fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef step5 fill:#ffebee,stroke:#b71c1c,stroke-width:2px
     
-    class A step1
-    class B step2  
-    class C step3
-    class D step4
-    class E step5
+    class A step1;
+    class B step2;
+    class C step3;
+    class D step4;
+    class E step5;
 ```
 
 ## References
