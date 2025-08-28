@@ -10,9 +10,9 @@ description: SETS project page.
 </section>
 
 <section id="about">
-    <p>Our primary focus is on what we call “deep sources”. These are handwritten archival documents that contain multiple layers of meaning: their meaning is encoded as text, but also in distinctive graphical marks, physical attributes and visual layout patterns. Meaning further accumulates over time as the documents are modified, change ownership, and are reused and reinterpreted beyond the intention of their initial creation.</p>
+    <p>Our primary focus is on what we call “deep sources.” These are handwritten archival documents that contain multiple layers of meaning: their meaning is encoded as text, but also in distinctive graphical marks, physical attributes and visual layout patterns. Meaning further accumulates over time as the documents are modified, change ownership, and are reused and reinterpreted beyond the intention of their initial creation.</p>
     <p>Deep sources are as important as they are difficult to
-    access and read. Archival collections measurr in the millions of shelving kilometers worldwide and
+    access and read. Archival collections measure in the millions of shelving kilometers worldwide and
     hold unique documents of high information density per square centimeter. These materials are crucial to the
     understanding of our shared past, which in turn informs choices about the future. Analyzing these materials is not
     simply a matter of information retrieval. It requires careful attention, mediation and interpretation.</p>
@@ -25,9 +25,7 @@ description: SETS project page.
     <p>Preliminary work on the development of SETS began in the Spring of 2025 when the team was awarded a Propel grant from
     the Dean of Research at Stanford University. The Propel grant funded experiments to improve efficiency in learning
     from archival handwritten sources, a complex and time-consuming task that severely constrains the scope of research
-    agendas. We looked at approaches to scaling the analysis of a set of disconnected images from an archive which
-    required defining the components of scholarly analysis of deep sources and the dimensions to consider when designing
-    evaluation metrics.</p>
+    agendas. We examined approaches to scaling the analysis of several archival images. This operationrequired defining: 1. the components of scholarly analysis;  and 2. the dimensions to be considered when designing evaluation metrics.</p>
       <h2>Phase 1: Evaluating Human-AI Interaction with Deep Sources</h2>
       <p>Our first step was creating a benchmark for human-model interaction in the analysis of deep sources (Lee et al, 2024). This evaluation framework aims to improve upon existing benchmarks for multi-modal models by taking a deep and focused approach rather than a broader but flatter approach (Yue et al, 2024). Our framework attends to the complexity of deep sources as textual, visual, and physical objects, while also taking into account the theoretical and methodological approaches of the scholar.</p>
       <p>Whereas existing benchmarks address general reasoning capabilities, we offer a benchmark for deep sources that evaluates models on an actual workflow, measuring real task completion rather than using proxy metrics. Our benchmark design is grounded in the following assumptions:</p>
