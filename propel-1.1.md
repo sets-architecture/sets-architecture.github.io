@@ -26,11 +26,11 @@ permalink: /propel-1.1/
 14. How much time is required for the analysis of the document? Is analysis conducted all-at-once or by returning to the document more time/s after further research?
 
 # Case study: 
-A Selection of Records from the Inquisitori di Stato of the Venetian Republic currently held at the Archivio di Stato di Venezia
+A Selection of eighteenth-century records from the Inquisitori di Stato of the Venetian Republic currently held at the Archivio di Stato di Venezia
 
 ## 1. Summary Description
 
-The basic organizing principle for the information contained in these documents is temporal and by week. A date–most frequently in the order day-month-year–is placed as a title in the top center of the first page of the record. Subsequent pages of the same record do not have this title date in the top center. The arrivals and departures of the foreign visitors are recorded for the preceding week (‘scaduta settimana’). 
+The information contained in these documents is organized temporally. A date–most frequently in the order day-month-year–is placed as a title in the top center of the first page of the record. Subsequent pages of the same record do not have this title date in the top center. The arrivals and departures of the foreign visitors are recorded for the preceding week (‘scaduta settimana’). 
 
 Each sheet is divided into two columns: the left column lists the record of presences/arrivals (‘Forestieri annotati riferiti da cameranti nella scaduta settimana come siegue’: ‘Foreigners noted reported by hoteliers in the past week as follows’) in order by day of arrival and grouped by place of stay; the right column lists the record of departures (‘Forestieri partiti riferiti da cameranti nella scaduta settimana come siegue’: ‘Foreigners departed reported by hoteliers in the past week as follows’) in order by day of departure and grouped by place of stay. 
 
@@ -125,7 +125,7 @@ The presence of these marks was observed by the PI when working with the documen
 
 ## 4. Measure of Time Spent on Analysis
 
-Direct evaluation of even one document from this selection can take several hours. It would be misleading, though, to characterize this by a single measure because scholar’s familiarity with the archive’s holdings, with the specific set of documents, with previous scholarship and with knowledge transmitted by curators and archivists, all play significant roles in determining the time required for careful analysis of the documents.
+Direct evaluation of even one document from this selection can take several hours.  Several factors affect this measure of time: the scholar’s familiarity with the archive’s holdings, with the specific set of documents, with previous scholarship and with knowledge transmitted by curators and archivists, all play significant roles in determining the time required for analysis.
 
 The analysis is recursive, but also accretive. As one returns to sources, other details come into focus. Determining the questions that one might ask of a source (section 3\) is a process that evolves over time spent with many documents, learning which questions can be answered and which cannot. Naming categories is a process of identifying emerging patterns, constructing arguments, and arriving at interpretations. 
 
