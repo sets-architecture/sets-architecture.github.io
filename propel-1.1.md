@@ -127,7 +127,7 @@ The presence of these marks was observed by the PI when working with the documen
 
 Direct evaluation of even one document from this selection can take several hours.  Several factors affect this measure of time: the scholar’s familiarity with the archive’s holdings, with the specific set of documents, with previous scholarship and with knowledge transmitted by curators and archivists, all play significant roles in determining the time required for analysis.
 
-The analysis is recursive, but also accretive. As one returns to sources, other details come into focus. Determining the questions that one might ask of a source (section 3\) is a process that evolves over time spent with many documents, learning which questions can be answered and which cannot. Naming categories is a process of identifying emerging patterns, constructing arguments, and arriving at interpretations. 
+The analysis is recursive, but also accretive. As one returns to sources, additional details come into focus. Determining the questions that one might ask of a source (section 3\) is a process that evolves over time spent with many documents, learning which questions can be answered and which cannot. Naming categories is a process of identifying emerging patterns, constructing arguments, and arriving at interpretations. 
 
 Information retrieval tasks that require reading through the documents and counting, page after page are significantly time consuming. It is essential that these counts and the gathering of specific values be accurate. Scholars doing this work will triple-check the results to be certain of the results. These results become the basis of hypotheses or even of research claims. Any error can upend a research project. 
 
