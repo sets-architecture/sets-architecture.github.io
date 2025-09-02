@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archival Documents</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        /* Gallery Styles */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .thumbnail {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .thumbnail:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .thumbnail-title {
+            padding: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Viewer Styles */
+        .viewer {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .viewer-header {
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .viewer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 70vh;
+        }
+
+        .image-panel {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #eee;
+        }
+
+        .viewer-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .transcription-panel {
+            padding: 20px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .transcription-content {
+            max-width: none;
+        }
+
+        .transcription-content h1,
+        .transcription-content h2,
+        .transcription-content h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .transcription-content p {
+            margin-bottom: 15px;
+        }
+
+        .transcription-content em {
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .viewer-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .image-panel {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                min-height: 300px;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .thumbnail img {
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Archival Documents</h1>
+        
+        <div class="gallery" id="gallery">
+            <!-- Thumbnails will be generated here -->
+        </div>
+
+        <div class="viewer" id="viewer">
+            <div class="viewer-header">
+                <h2 id="viewer-title"></h2>
+                <button class="close-btn" onclick="closeViewer()">&times;</button>
+            </div>
+            <div class="viewer-content">
+                <div class="image-panel">
+                    <img id="viewer-image" class="viewer-image" alt="">
+                </div>
+                <div class="transcription-panel">
+                    <div id="transcription-content" class="transcription-content loading">
+                        Loading transcription...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Document configuration
+        const documents = [
+            { id: '1766_2_20_p1', title: 'February 20, 1766 page 1', image: 'images/AVS IS 758-781 1766 02 p1.jpg' },
+            { id: '1766_2_20_p2', title: 'February 20, 1766 page 2', image: 'images/AVS IS 758-781 1766 02 p2.jpg' },
+            { id: '1769_5_8_p1', title: 'May 8, 1769 page 1', image: 'images/AVS IS 758-781 1769 05 p1.jpg' },
+            { id: '1769_5_8_p2', title: 'May 8, 1769 page 2', image: 'images/AVS IS 758-781 1769 05 p2.jpg' },
+            { id: '1770_5_28', title: 'May 28, 1770 page 1', image: 'images/AVS IS 758-781 1770 05 28 p1.jpg' },
+            { id: '1770_8_20', title: 'August 20, 1770', image: 'images/AVS IS 758-781 1770 08.jpg' }
+        ];
+
+        // Generate gallery thumbnails
+        function generateGallery() {
+            const gallery = document.getElementById('gallery');
+            
+            documents.forEach(doc => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'thumbnail';
+                thumbnail.onclick = () => openViewer(doc);
+                
+                thumbnail.innerHTML = `
+                    <img src="${doc.image}" alt="${doc.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"150\" viewBox=\"0 0 200 150\"><rect width=\"200\" height=\"150\" fill=\"%23f0f0f0\"/><text x=\"100\" y=\"75\" text-anchor=\"middle\" fill=\"%23999\">Image not found</text></svg>'">
+                    <div class="thumbnail-title">${doc.title}</div>
+                `;
+                
+                gallery.appendChild(thumbnail);
+            });
+        }
+
+        // Open document viewer
+        async function openViewer(doc) {
+            const viewer = document.getElementById('viewer');
+            const title = document.getElementById('viewer-title');
+            const image = document.getElementById('viewer-image');
+            const transcriptionDiv = document.getElementById('transcription-content');
+            
+            // Set up viewer
+            title.textContent = doc.title;
+            image.src = doc.image;
+            image.alt = doc.title;
+            
+            // Show viewer
+            viewer.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Load transcription
+            transcriptionDiv.innerHTML = '<div class="loading">Loading transcription...</div>';
+            
+            try {
+                const response = await fetch(`transcriptions/${doc.id}.md`);
+                if (response.ok) {
+                    const markdown = await response.text();
+                    const html = marked.parse(markdown);
+                    transcriptionDiv.innerHTML = html;
+                } else {
+                    transcriptionDiv.innerHTML = '<p><em>Transcription not available</em></p>';
+                }
+            } catch (error) {
+                transcriptionDiv.innerHTML = '<p><em>Error loading transcription</em></p>';
+            }
+        }
+
+        // Close document viewer
+        function closeViewer() {
+            document.getElementById('viewer').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        // Handle escape key to close viewer
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeViewer();
+            }
+        });
+
+        // Initialize gallery when page loads
+        document.addEventListener('DOMContentLoaded', generateGallery);
+    </script>
+</body>
+</html>
