@@ -68,26 +68,9 @@
         /* Viewer Styles */
         .viewer {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-        }
-
-        .viewer-container {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
@@ -98,7 +81,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-shrink: 0;
         }
 
         .close-btn {
@@ -118,8 +100,7 @@
         .viewer-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            flex: 1;
-            overflow: hidden;
+            min-height: 70vh;
         }
 
         .image-panel {
@@ -128,7 +109,6 @@
             align-items: center;
             justify-content: center;
             border-right: 1px solid #eee;
-            overflow: auto;
         }
 
         .viewer-image {
@@ -140,41 +120,24 @@
         }
 
         .transcription-panel {
-            padding: 0;
+            padding: 20px;
+            overflow-y: auto;
             background: #fafafa;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
 
         .transcription-content {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-            text-align: left;
+            max-width: none;
         }
 
         .transcription-content h1,
         .transcription-content h2,
-        .transcription-content h3,
-        .transcription-content h4,
-        .transcription-content h5,
-        .transcription-content h6 {
+        .transcription-content h3 {
             color: #2c3e50;
             margin-bottom: 10px;
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .transcription-content h1:first-child,
-        .transcription-content h2:first-child,
-        .transcription-content h3:first-child {
-            margin-top: 0;
         }
 
         .transcription-content p {
             margin-bottom: 15px;
-            text-align: left;
         }
 
         .transcription-content em {
@@ -182,28 +145,6 @@
             background: #f0f0f0;
             padding: 2px 4px;
             border-radius: 3px;
-        }
-
-        .transcription-content strong {
-            color: #2c3e50;
-        }
-
-        .transcription-content ul,
-        .transcription-content ol {
-            margin-bottom: 15px;
-            margin-left: 20px;
-        }
-
-        .transcription-content li {
-            margin-bottom: 5px;
-        }
-
-        .transcription-content blockquote {
-            border-left: 4px solid #ddd;
-            margin: 15px 0;
-            padding-left: 20px;
-            font-style: italic;
-            color: #666;
         }
 
         .loading {
@@ -214,13 +155,6 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .viewer-container {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                bottom: 10px;
-            }
-
             .viewer-content {
                 grid-template-columns: 1fr;
                 grid-template-rows: auto 1fr;
@@ -229,8 +163,7 @@
             .image-panel {
                 border-right: none;
                 border-bottom: 1px solid #eee;
-                min-height: 250px;
-                max-height: 40vh;
+                min-height: 300px;
             }
 
             .gallery {
@@ -253,19 +186,17 @@
         </div>
 
         <div class="viewer" id="viewer">
-            <div class="viewer-container">
-                <div class="viewer-header">
-                    <h2 id="viewer-title"></h2>
-                    <button class="close-btn" onclick="closeViewer()">&times;</button>
+            <div class="viewer-header">
+                <h2 id="viewer-title"></h2>
+                <button class="close-btn" onclick="closeViewer()">&times;</button>
+            </div>
+            <div class="viewer-content">
+                <div class="image-panel">
+                    <img id="viewer-image" class="viewer-image" alt="">
                 </div>
-                <div class="viewer-content">
-                    <div class="image-panel">
-                        <img id="viewer-image" class="viewer-image" alt="">
-                    </div>
-                    <div class="transcription-panel">
-                        <div id="transcription-content" class="transcription-content loading">
-                            Loading transcription...
-                        </div>
+                <div class="transcription-panel">
+                    <div id="transcription-content" class="transcription-content loading">
+                        Loading transcription...
                     </div>
                 </div>
             </div>
@@ -292,23 +223,11 @@
                 thumbnail.className = 'thumbnail';
                 thumbnail.onclick = () => openViewer(doc);
                 
-                const img = document.createElement('img');
-                img.src = doc.image;
-                img.alt = doc.title;
-                img.onerror = function() {
-                    this.style.display = 'none';
-                    const placeholder = document.createElement('div');
-                    placeholder.style.cssText = 'height:150px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;';
-                    placeholder.textContent = 'Image not found';
-                    this.parentNode.insertBefore(placeholder, this);
-                };
+                thumbnail.innerHTML = `
+                    <img src="${doc.image}" alt="${doc.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"150\" viewBox=\"0 0 200 150\"><rect width=\"200\" height=\"150\" fill=\"%23f0f0f0\"/><text x=\"100\" y=\"75\" text-anchor=\"middle\" fill=\"%23999\">Image not found</text></svg>'">
+                    <div class="thumbnail-title">${doc.title}</div>
+                `;
                 
-                const titleDiv = document.createElement('div');
-                titleDiv.className = 'thumbnail-title';
-                titleDiv.textContent = doc.title;
-                
-                thumbnail.appendChild(img);
-                thumbnail.appendChild(titleDiv);
                 gallery.appendChild(thumbnail);
             });
         }
@@ -327,6 +246,7 @@
             
             // Show viewer
             viewer.style.display = 'block';
+            document.body.style.overflow = 'hidden';
             
             // Load transcription
             transcriptionDiv.innerHTML = '<div class="loading">Loading transcription...</div>';
@@ -348,18 +268,12 @@
         // Close document viewer
         function closeViewer() {
             document.getElementById('viewer').style.display = 'none';
+            document.body.style.overflow = '';
         }
 
         // Handle escape key to close viewer
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                closeViewer();
-            }
-        });
-
-        // Close viewer when clicking outside the content
-        document.getElementById('viewer').addEventListener('click', function(e) {
-            if (e.target === this) {
                 closeViewer();
             }
         });
