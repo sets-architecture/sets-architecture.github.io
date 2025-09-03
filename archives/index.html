@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archival Documents</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +14,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Libre Franklin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: #333;
             background-color: #f8f9fa;
@@ -25,132 +26,176 @@
             padding: 20px;
         }
 
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Libre Franklin', sans-serif;
+        }
+
         h1 {
             text-align: center;
             margin-bottom: 30px;
             color: #2c3e50;
+            font-weight: 600;
         }
 
         /* Gallery Styles */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .thumbnail {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            aspect-ratio: 4/3;
         }
 
         .thumbnail:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
-        .thumbnail img {
+        .thumbnail-image {
             width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .thumbnail-title {
+            height: 75%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+            background: #fafafa;
             padding: 15px;
-            font-weight: 600;
-            color: #2c3e50;
         }
 
-        /* Viewer Styles */
-        .viewer {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        .thumbnail-placeholder {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-        }
-
-        .viewer-container {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .viewer-header {
-            padding: 20px;
-            background: #2c3e50;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 4px;
-        }
-
-        .close-btn:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .viewer-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .image-panel {
-            padding: 20px;
+            height: 75%;
+            background: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-right: 1px solid #eee;
-            overflow: auto;
+            color: #999;
+            font-size: 16px;
+            display: none;
         }
 
-        .viewer-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .transcription-panel {
-            padding: 0;
-            background: #fafafa;
-            overflow: hidden;
+        .thumbnail-title {
+            padding: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1rem;
+            height: 25%;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #fff;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: none;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-family: 'Libre Franklin', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: background-color 0.2s;
+        }
+
+        .back-button:hover {
+            background: #34495e;
+        }
+
+        .back-button.show {
+            display: inline-block;
+        }
+
+        /* Document Viewer */
+        .document-viewer {
+            display: none;
+        }
+
+        .document-viewer.show {
+            display: block;
+        }
+
+        .document-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .document-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .document-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Image Section */
+        .image-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .image-section h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        .document-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Transcription Section */
+        .transcription-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .transcription-section h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
         }
 
         .transcription-content {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
             text-align: left;
         }
 
@@ -160,87 +205,159 @@
         .transcription-content h4,
         .transcription-content h5,
         .transcription-content h6 {
+            font-family: 'Libre Franklin', sans-serif;
             color: #2c3e50;
-            margin-bottom: 10px;
-            margin-top: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
             text-align: left;
         }
 
-        .transcription-content h1:first-child,
-        .transcription-content h2:first-child,
-        .transcription-content h3:first-child {
+        .transcription-content h1 {
+            font-size: 1.8rem;
             margin-top: 0;
         }
 
+        .transcription-content h2 {
+            font-size: 1.5rem;
+        }
+
+        .transcription-content h3 {
+            font-size: 1.3rem;
+        }
+
         .transcription-content p {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            color: #444;
+            font-size: 1.05rem;
             text-align: left;
+        }
+
+        .transcription-content strong {
+            font-weight: 600;
+            color: #2c3e50;
         }
 
         .transcription-content em {
             color: #666;
-            background: #f0f0f0;
-            padding: 2px 4px;
-            border-radius: 3px;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-style: italic;
         }
 
-        .transcription-content strong {
-            color: #2c3e50;
+        .transcription-content blockquote {
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            font-style: italic;
+            text-align: left;
         }
 
         .transcription-content ul,
         .transcription-content ol {
-            margin-bottom: 15px;
-            margin-left: 20px;
+            margin-bottom: 20px;
+            padding-left: 30px;
         }
 
         .transcription-content li {
-            margin-bottom: 5px;
-        }
-
-        .transcription-content blockquote {
-            border-left: 4px solid #ddd;
-            margin: 15px 0;
-            padding-left: 20px;
-            font-style: italic;
-            color: #666;
+            margin-bottom: 8px;
+            text-align: left;
         }
 
         .loading {
             text-align: center;
             padding: 40px;
             color: #666;
+            font-style: italic;
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .viewer-container {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                bottom: 10px;
+        @media (max-width: 1024px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 25px;
             }
+        }
 
-            .viewer-content {
+        @media (max-width: 968px) {
+            .document-content {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr;
+                gap: 30px;
             }
 
-            .image-panel {
-                border-right: none;
-                border-bottom: 1px solid #eee;
-                min-height: 250px;
-                max-height: 40vh;
+            .image-section {
+                position: static;
+                order: 1;
+            }
+
+            .transcription-section {
+                order: 2;
+            }
+
+            .document-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
             }
 
             .gallery {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 15px;
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(6, 1fr);
+                gap: 20px;
             }
 
-            .thumbnail img {
-                height: 120px;
+            .thumbnail-image {
+                height: 70%;
+                padding: 10px;
             }
+
+            .thumbnail-placeholder {
+                height: 70%;
+            }
+
+            .thumbnail-title {
+                height: 30%;
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+
+            .document-content {
+                gap: 20px;
+            }
+
+            .image-section,
+            .transcription-section {
+                padding: 20px;
+            }
+
+            .document-title {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Smooth transitions */
+        .gallery, .document-viewer {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .gallery.hiding {
+            opacity: 0;
+        }
+
+        .document-viewer.showing {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -248,24 +365,29 @@
     <div class="container">
         <h1>Archival Documents</h1>
         
+        <button class="back-button" id="back-button" onclick="showGallery()">
+            ← Back to Gallery
+        </button>
+        
         <div class="gallery" id="gallery">
             <!-- Thumbnails will be generated here -->
         </div>
 
-        <div class="viewer" id="viewer">
-            <div class="viewer-container">
-                <div class="viewer-header">
-                    <h2 id="viewer-title"></h2>
-                    <button class="close-btn" onclick="closeViewer()">&times;</button>
+        <div class="document-viewer" id="document-viewer">
+            <div class="document-header">
+                <h2 class="document-title" id="document-title"></h2>
+            </div>
+            
+            <div class="document-content">
+                <div class="image-section">
+                    <h3>Document Image</h3>
+                    <img id="document-image" class="document-image" alt="">
                 </div>
-                <div class="viewer-content">
-                    <div class="image-panel">
-                        <img id="viewer-image" class="viewer-image" alt="">
-                    </div>
-                    <div class="transcription-panel">
-                        <div id="transcription-content" class="transcription-content loading">
-                            Loading transcription...
-                        </div>
+                
+                <div class="transcription-section">
+                    <h3>Transcription</h3>
+                    <div id="transcription-content" class="transcription-content loading">
+                        Loading transcription...
                     </div>
                 </div>
             </div>
@@ -290,43 +412,56 @@
             documents.forEach(doc => {
                 const thumbnail = document.createElement('div');
                 thumbnail.className = 'thumbnail';
-                thumbnail.onclick = () => openViewer(doc);
+                thumbnail.onclick = () => openDocument(doc);
                 
                 const img = document.createElement('img');
+                img.className = 'thumbnail-image';
                 img.src = doc.image;
                 img.alt = doc.title;
-                img.onerror = function() {
-                    this.style.display = 'none';
-                    const placeholder = document.createElement('div');
-                    placeholder.style.cssText = 'height:150px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;';
-                    placeholder.textContent = 'Image not found';
-                    this.parentNode.insertBefore(placeholder, this);
-                };
                 
-                const titleDiv = document.createElement('div');
-                titleDiv.className = 'thumbnail-title';
-                titleDiv.textContent = doc.title;
+                const placeholder = document.createElement('div');
+                placeholder.className = 'thumbnail-placeholder';
+                placeholder.textContent = 'Image not found';
+                
+                const title = document.createElement('div');
+                title.className = 'thumbnail-title';
+                title.textContent = doc.title;
+                
+                // Handle image load error
+                img.addEventListener('error', function() {
+                    img.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                });
                 
                 thumbnail.appendChild(img);
-                thumbnail.appendChild(titleDiv);
+                thumbnail.appendChild(placeholder);
+                thumbnail.appendChild(title);
+                
                 gallery.appendChild(thumbnail);
             });
         }
 
         // Open document viewer
-        async function openViewer(doc) {
-            const viewer = document.getElementById('viewer');
-            const title = document.getElementById('viewer-title');
-            const image = document.getElementById('viewer-image');
+        async function openDocument(doc) {
+            const gallery = document.getElementById('gallery');
+            const viewer = document.getElementById('document-viewer');
+            const backButton = document.getElementById('back-button');
+            const title = document.getElementById('document-title');
+            const image = document.getElementById('document-image');
             const transcriptionDiv = document.getElementById('transcription-content');
             
-            // Set up viewer
+            // Hide gallery and show viewer
+            gallery.style.display = 'none';
+            viewer.classList.add('show', 'showing');
+            backButton.classList.add('show');
+            
+            // Set up document
             title.textContent = doc.title;
             image.src = doc.image;
             image.alt = doc.title;
             
-            // Show viewer
-            viewer.style.display = 'block';
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             
             // Load transcription
             transcriptionDiv.innerHTML = '<div class="loading">Loading transcription...</div>';
@@ -345,24 +480,20 @@
             }
         }
 
-        // Close document viewer
-        function closeViewer() {
-            document.getElementById('viewer').style.display = 'none';
+        // Show gallery
+        function showGallery() {
+            const gallery = document.getElementById('gallery');
+            const viewer = document.getElementById('document-viewer');
+            const backButton = document.getElementById('back-button');
+            
+            // Show gallery and hide viewer
+            gallery.style.display = 'grid';
+            viewer.classList.remove('show', 'showing');
+            backButton.classList.remove('show');
+            
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // Handle escape key to close viewer
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeViewer();
-            }
-        });
-
-        // Close viewer when clicking outside the content
-        document.getElementById('viewer').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeViewer();
-            }
-        });
 
         // Initialize gallery when page loads
         document.addEventListener('DOMContentLoaded', generateGallery);
