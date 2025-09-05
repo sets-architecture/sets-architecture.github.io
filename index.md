@@ -90,6 +90,7 @@ description: SETS project page.
             <li><span class="name">Nicole Coleman</span><br><span class="affil">Independent</span></li>
             <li><span class="name">Allen Romano</span><br><span class="affil">Independent</span></li>
             <li><span class="name">Huijun Mao</span><br><span class="affil">Stanford University</span></li>
+            <li><span class="name">Teresa Ceserani</span><br><span class="affil">Independent</span></li>
       </ul>
     </div>
     <div class="team-col" aria-labelledby="consultants-title">
