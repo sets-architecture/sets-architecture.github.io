@@ -40,7 +40,7 @@ To evaluate Task 1.1 performance, we compared the model responses to the ground 
 
 #### Completeness vs Accuracy Trade-off
 - **Gemini 2.5 Pro**: High completion rate but lower accuracy
-- **GPT-5**: Lower completion rate but more honest uncertainty handling
+- **GPT-5**: Lower completion rate and introduces confusing qualifications of certainty
 - **Claude Opus 4**: Moderate completion with variable accuracy
 
 
