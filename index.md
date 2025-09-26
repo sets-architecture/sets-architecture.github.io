@@ -68,11 +68,11 @@ description: SETS project page.
     <p class="small"></p>
   </div> 
   
-<h4 id="outcomes-title" style="margin-top:0;">Propel Task 1.1: Deep Source Analysis</h4>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.1: Deep Source Analysis</h4>
 <p>We propose a real-world benchmark based on an expert analysis of deep sources. We address the critique that most benchmarks test breadth over depth by assuming that AI and scholars will work in collaboration. We address concerns that current benchmarks do not adequately present real-world relevant tasks by testing with an actual use case employing actual source materials, rather than artificial tasks or generated images.</a></p>
-<h4 id="outcomes-title" style="margin-top:0;">Propel Task 1.2: Image pre-processing</h4>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.2: Image pre-processing</h4>
 <p>For many archives professionally produced digital images do not exist. Rather, scholars often enter archives with their own digital camera and are permitted to photograph documents themselves under sufficient but not ideal lighting conditions. The images for this case study were acquired this way. We experiment with existing methods to improve machine-readability of photographed archival manuscripts. We arrive at: 1. a merely adequate expedient method and 2. a preferred method that is computationally costly. Further work will need to be done to improve upon this preferred method.</a></p>
-<h4 id="outcomes-title" style="margin-top:0;">Propel Task 1.4: Expert-directed Analysis</h4>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.4: Expert-directed Analysis</h4>
 <p>This task builds on tasks 1.1 and 1.3 to complete a manual close evaluation of how LLMs fare when provided with expert scholarly guidance. We run this evaluation over 3 deep source documents for which we have established accurate transcriptions. In 1.1 we determine how a scholar analyzes a deep source document. In task 1.3, we evaluate how a range of LLMs responded to a set of questions about a set of deep source documents. In task 1.4, we evaluate the same range of LLMs’ responses to those same questions, but first (1.4.1) we provide the LLMs with guidance in the form of context (background information about the deep sources documents ), and then (1.4.2) we added to the guidance provided also the deep sources’ transcriptions. Finally (1.4.3) we introduce a request that requires atomizing and synthesizing information retrieved from deep sources.<a href="/propel-1.4/">Read the task report.</a></p>
 </section>
 
