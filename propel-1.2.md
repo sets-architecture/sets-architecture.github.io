@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Propel Task 1.2
+title: Propel 1.2
 description: Historical document pre-processing and LLM transcription.
 permalink: /propel-1.2/
 ---

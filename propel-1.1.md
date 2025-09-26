@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Propel Task 1.1
+title: Propel 1.1
 description: Expert Analysis of Archival Document Images.
 permalink: /propel-1.1/
 ---
 
 
-# Propel Task 1.1: Expert Analysis of Archival Document Images
+# Propel Experiment 1.1: Expert Analysis of Archival Document Images
 
 ## A scholar’s approach to historical records
 
