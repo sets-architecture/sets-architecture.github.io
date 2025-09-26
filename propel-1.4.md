@@ -1,4 +1,4 @@
-# 1.4 Expert-directed Analysis (Manual)
+# 1.4 Expert-Directed Analysis of Deep Sources
 This experiment is to measure how the models improve (or not) with expert guidance. This experiment was run manaually on three document images across three frontier models as of September 2025, Claude Opus, GPT5, and Gemini 2.5 Pro. The scale of this analysis made it possible to provide accurate transcriptions as ground truth and carefully evaluate the model outputs including the "thinking" "reasoning" steps. 
 
 ## Question Answering - Tasks 1 and 2
