@@ -16,10 +16,10 @@ TASK 1: The guidance comes in the form of 1. Contextual information about the so
 
 TASK 2: In addition to the contextual information, the models are given full transcriptions of the documents. 
 
-## Task 1.1 Instructions
+## Task 1 Instructions
 For the attached document images, provide answers to the following questions in a tabular format. Create a separate table for each image. Include the confidence value \(as percentage measure\) of the answer for each question.
 
-### Task 1 Performance
+### Task 1 Performance Evaluation
 
 To evaluate Task 1.1 performance, we compared the model responses to the ground truth answers for each of the three documents using an evaluation methodology that we arrived at by first allowing the three models to define their own methodology, reviewing and revising. See the methodology described here: [task-1-task2-comparison-methodology.md](task-1-task2-comparison-methodology.md) 
 
@@ -54,7 +54,7 @@ To evaluate Task 1.1 performance, we compared the model responses to the ground 
 ## Task 2 Instructions
 For the attached document images and transcriptions, provide answers to the following questions in a tabular format. Create a separate table for each image. Include the confidence value (as percentage measure)of the answer for each question.
 
-### Task 2 Performance
+### Task 2 Performance Evaluation
 
 See the full results at [task2-comparison.md](task2-comparison.md). The same evaluation methodology was used as for Task 1.1.
 
@@ -69,7 +69,7 @@ See the full results at [task2-comparison.md](task2-comparison.md). The same eva
 1. **Tie: Gemini 2.5 Pro & GPT-5**: 53/63 (84.1%)
 2. **Claude Opus**: 34/63 (54.0%)
 
-## Category Performance Analysis
+## Category Performance Analysis by Question Type
 
 ### Binary Questions (Y/N)
 - **Claude Opus**: 13/15 (86.7%)
@@ -164,7 +164,6 @@ traveler detection rate (98.5% recall)
 - All models achieved >99% name transcription accuracy as expected since the transcriptions were provided.
 - Field accuracy (80-82%) was similar across models, suggesting systematic challenges with certain field types
 - The main differentiator was traveler detection completeness.
-
 
 
 ## Token usage by task and model
