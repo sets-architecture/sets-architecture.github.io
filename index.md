@@ -50,7 +50,7 @@ description: SETS project page.
 
       A1[Establishing sophisticated benchmark<br/>for archival document understanding]
       B1[Comparison of methods and models<br/>for document digitization]
-      C1[Measure confidence, entropy, and accuracy<br/>on 14 information retrieval tasks<br/>across three frontier models]
+      C1[Measure confidence, entropy, and accuracy<br/>on 21 information retrieval tasks<br/>across three frontier models]
       D1[Evaluate scholar-language model<br/>interaction on analysis tasks]
      
 
