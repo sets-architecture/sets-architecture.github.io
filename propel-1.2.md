@@ -13,7 +13,7 @@ Our research combines multiple image processing techniques with LLMs to transfor
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Scanned       │───▶│     Image       │───▶│  Enhanced       │───▶│    LLM OCR      │
+│   Photographed  │───▶│     Image       │───▶│  Enhanced       │───▶│    LLM OCR      │
 │   Historical    │    │  Processing     │    │   Output        │    │   Pipeline      │
 │   Document      │    │                 │    │   Images        │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
