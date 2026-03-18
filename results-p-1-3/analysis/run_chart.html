@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html><head><meta charset='utf-8'>
+<title>Per-Run Accuracy</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: -apple-system, sans-serif; margin: 2rem; color: #222; }
+  h1   { font-size: 1.4rem; }
+  p.note { font-size: 0.85rem; color: #555; line-height: 1.6; }
+  .chart-wrap { max-width: 920px; }
+</style>
+</head><body>
+<h1>Per-Run Accuracy — t0 vs t_varied</h1>
+<p class='note'>
+  Mean accuracy across all 39 pages × 22 questions for each individual run.<br>
+  <b>Solid lines</b> = t0 (temperature = 0). <b>Dashed lighter lines</b> = t_varied (GPT=1.0, Claude=0.5, Gemini=1.0).<br>
+  Variation within each temperature reflects non-determinism in the model APIs.
+</p>
+<div class="chart-wrap">
+  <canvas id="chart" height="460"></canvas>
+</div>
+<script>
+const ctx = document.getElementById('chart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    datasets: [{"label": "Claude t0 (mean 56.5%)", "data": [57.06, 57.25, 56.44, 55.61, 56.48, 56.87, 56.15, 55.8, 56.7, 56.68], "borderColor": "#4e79a7", "backgroundColor": "#4e79a722", "pointBackgroundColor": "#4e79a7", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Claude t_varied (mean 56.61%)", "data": [56.86, 56.17, 57.23, 56.68, 55.78, 57.58, 55.21, 57.93, 55.89, 56.79], "borderColor": "#a8c4e0", "backgroundColor": "#a8c4e022", "pointBackgroundColor": "#a8c4e0", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "GPT t0 (mean 48.45%)", "data": [48.71, 48.3, 48.0, 49.12, 48.52, 49.21, 48.16, 47.53, 48.43, 48.51], "borderColor": "#f28e2b", "backgroundColor": "#f28e2b22", "pointBackgroundColor": "#f28e2b", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "GPT t_varied (mean 47.12%)", "data": [47.99, 47.91, 46.36, 47.64, 46.21, 47.77, 46.44, 46.7, 47.87, 46.36], "borderColor": "#f8c98a", "backgroundColor": "#f8c98a22", "pointBackgroundColor": "#f8c98a", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 2.5 t0 (mean 64.41%)", "data": [64.06, 65.68, 64.16, 63.47, 63.97, 65.36, 64.96, 63.56, 63.4, 65.45], "borderColor": "#59a14f", "backgroundColor": "#59a14f22", "pointBackgroundColor": "#59a14f", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 2.5 t_varied (mean 63.13%)", "data": [63.96, 61.68, 63.09, 63.02, 63.29, 63.16, 61.71, 64.24, 63.55, 63.62], "borderColor": "#a8d4a4", "backgroundColor": "#a8d4a422", "pointBackgroundColor": "#a8d4a4", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 3.1 t0 (mean 70.29%)", "data": [70.48, 70.04, 70.82, 70.65, 70.01, 70.71, 69.71, 69.31, 70.57, 70.62], "borderColor": "#b07aa1", "backgroundColor": "#b07aa122", "pointBackgroundColor": "#b07aa1", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 3.1 t_varied (mean 69.95%)", "data": [68.83, 68.37, 68.37, 69.63, 71.71, 67.92, 71.29, 70.48, 70.28, 72.61], "borderColor": "#d9bcd6", "backgroundColor": "#d9bcd622", "pointBackgroundColor": "#d9bcd6", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label.split(' (')[0] + ': ' + ctx.parsed.y.toFixed(1) + '%'
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Run number' },
+        ticks: { stepSize: 1 }
+      },
+      y: {
+        title: { display: true, text: 'Mean accuracy (%)' },
+        min: 0,
+        max: 100,
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+</script>
+</body></html>
