@@ -166,6 +166,26 @@ traveler detection rate (98.5% recall)
 - The main differentiator was traveler detection completeness.
 
 
+---
+# Propel 1.4 — Scale Experiment Results (39 images, 5 models, 10 runs)
+
+Full automated evaluation across 39 archival document images using 5 frontier models with expert guidance.
+
+## Analysis Reports
+
+- [Naive vs Guided Comparison](analysis/naive_vs_guided.html) — All 5 models: guided vs naive accuracy, Δ per question
+- [Gemini 3.1 vs Claude Thinking](analysis/gemini31_vs_claude_thinking.html) — Head-to-head thinking models, naive & guided
+- [Evaluation Report (t0)](analysis/eval_report_t0.html) — Full per-question accuracy table
+- [Agreement Analysis](analysis/agreement.html) — Cross-model agreement patterns
+- [Difficulty Analysis](analysis/difficulty.html) — Which questions are hardest
+- [Question Breakdown](analysis/questions.html) — Per-question detail
+- [Run Chart](analysis/run_chart.html) — Accuracy across 10 runs
+- [Temperature Analysis](analysis/temperature.html) — t0 vs t_varied comparison
+- [Text Questions](analysis/text_questions.html) — OCR / character accuracy deep dive
+- [Bracket Analysis](analysis/brackets.html) — Curly bracket question analysis
+- [Bracket Errors](analysis/bracket_errors.html) — Bracket error patterns
+
+---
 ## Token usage by task and model
 
 | Task | Model | Input tokens | Output tokens | Total |

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html><head><meta charset='utf-8'>
+<title>Per-Run Accuracy</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: -apple-system, sans-serif; margin: 2rem; color: #222; }
+  h1   { font-size: 1.4rem; }
+  p.note { font-size: 0.85rem; color: #555; line-height: 1.6; }
+  .chart-wrap { max-width: 920px; }
+</style>
+</head><body>
+<h1>Per-Run Accuracy — t0 vs t_varied</h1>
+<p class='note'>
+  Mean accuracy across all 39 pages × 22 questions for each individual run.<br>
+  <b>Solid lines</b> = t0 (temperature = 0). <b>Dashed lighter lines</b> = t_varied (GPT=1.0, Claude=0.5, Gemini=1.0).<br>
+  Variation within each temperature reflects non-determinism in the model APIs.
+</p>
+<div class="chart-wrap">
+  <canvas id="chart" height="460"></canvas>
+</div>
+<script>
+const ctx = document.getElementById('chart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    datasets: [{"label": "Claude t0 (mean 56.88%)", "data": [57.39, 56.71, 56.73, 57.18, 56.82, 57.07, 56.57, 56.64, 56.08, 57.63], "borderColor": "#4e79a7", "backgroundColor": "#4e79a722", "pointBackgroundColor": "#4e79a7", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Claude t_varied (mean 57.08%)", "data": [57.0, 57.4, 57.39, 56.4, 57.69, 56.78, 56.69, 58.56, 56.16, 56.69], "borderColor": "#a8c4e0", "backgroundColor": "#a8c4e022", "pointBackgroundColor": "#a8c4e0", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "GPT t0 (mean 50.69%)", "data": [51.1, 52.13, 51.46, 49.52, 50.6, 50.24, 50.35, 49.95, 51.03, 50.55], "borderColor": "#f28e2b", "backgroundColor": "#f28e2b22", "pointBackgroundColor": "#f28e2b", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "GPT t_varied (mean 49.55%)", "data": [49.7, 50.52, 50.08, 50.43, 49.01, 50.16, 50.44, 48.88, 47.87, 48.36], "borderColor": "#f8c98a", "backgroundColor": "#f8c98a22", "pointBackgroundColor": "#f8c98a", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 2.5 t0 (mean 68.42%)", "data": [66.95, 68.36, 69.23, 69.34, 67.32, 69.35, 68.8, 68.35, 67.39, 69.07], "borderColor": "#59a14f", "backgroundColor": "#59a14f22", "pointBackgroundColor": "#59a14f", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 2.5 t_varied (mean 67.31%)", "data": [65.22, 68.79, 67.77, 65.88, 66.53, 66.93, 67.83, 68.51, 66.75, 68.88], "borderColor": "#a8d4a4", "backgroundColor": "#a8d4a422", "pointBackgroundColor": "#a8d4a4", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 3.1 t0 (mean 68.31%)", "data": [68.52, 68.17, 67.95, 67.72, 68.95, 68.12, 68.72, 68.33, 68.65, 68.02], "borderColor": "#b07aa1", "backgroundColor": "#b07aa122", "pointBackgroundColor": "#b07aa1", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Gemini 3.1 t_varied (mean 69.85%)", "data": [67.65, 68.44, 71.28, 72.06, 69.22, 69.32, 70.1, 71.1, 69.8, 69.54], "borderColor": "#d9bcd6", "backgroundColor": "#d9bcd622", "pointBackgroundColor": "#d9bcd6", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Claude (thinking) t0 (mean 0%)", "data": [null, null, null, null, null, null, null, null, null, null], "borderColor": "#999", "backgroundColor": "#99922", "pointBackgroundColor": "#999", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [], "tension": 0.3, "fill": false, "spanGaps": false}, {"label": "Claude (thinking) t_varied (mean 0%)", "data": [null, null, null, null, null, null, null, null, null, null], "borderColor": "#ccc", "backgroundColor": "#ccc22", "pointBackgroundColor": "#ccc", "pointRadius": 4, "pointHoverRadius": 6, "borderDash": [6, 3], "tension": 0.3, "fill": false, "spanGaps": false}]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label.split(' (')[0] + ': ' + ctx.parsed.y.toFixed(1) + '%'
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Run number' },
+        ticks: { stepSize: 1 }
+      },
+      y: {
+        title: { display: true, text: 'Mean accuracy (%)' },
+        min: 0,
+        max: 100,
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+</script>
+</body></html>
