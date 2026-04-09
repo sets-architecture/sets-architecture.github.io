@@ -11,7 +11,7 @@ Generating the accurate ground truth data for all 39 images was essential to the
 
 Since we had already run the expert-guided experiment on three of the images, we anticipated that the models would fare better on this naive experiment. Instead, the errors reveal basic limitations to relying on LLMs for question-answering on deep sources. We concluded that: 1. Due to model variability (non-determinism) there were significant variations in results even on the same images; 2. Repeated queries yielded different results; 3. Accuracy measurements vary but do not necessarily improve with later runs. See the [consistency report](consistency_report.md) for a full analysis.
 
-For example, on model results Generated 2026-01-06 at 14:49:32 compared to model results generated 2026-01-06 at 15:34:48 (45 minutes later), we see the following differences in answers to the same questions on the same images: 
+For example, on model results generated 2026-01-06 at 14:49:32 compared to model results generated 2026-01-06 at 15:34:48 (45 minutes later), we see the following differences in answers to the same questions on the same images: 
 
  - Claude Opus: 255 differences across all questions 
  - Gemini: 395 differences across all questions
