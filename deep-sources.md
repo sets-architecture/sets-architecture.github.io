@@ -2,6 +2,7 @@
 layout: default
 title: Deep source analysis with LLMs
 description: SETS project page.
+updated: 2026-04-17
 ---
 
 <section class="hero">
@@ -65,31 +66,57 @@ description: SETS project page.
 <p>This experiment builds on 1.1 and 1.3 to complete a manual, close evaluation of how LLMs fare when provided with expert scholarly guidance. We ran this experiment over the same 39 deep source documents used in 1.3 and we evaluate the same range of LLMs’ responses to the 22 questions. The difference is that we provide the LLMs with guidance established in 1.1. <a href="/propel-1.4/">Read the report.</a></p>
 </section>
 
-<section id="team" class="card" aria-labelledby="team-title">
-  <h2 id="team-title">Team</h2>
-  <div class="team-grid">
-    <div class="team-col" aria-labelledby="leads-title">
-      <h3 id="leads-title">Leads</h3>
-      <ul class="people">
-        <li><span class="name">Giovanna Ceserani</span><br><span class="affil">Stanford University</span></li>
-        <li><span class="name">Sebastian Ahnert</span><br><span class="affil">Cambridge University</span></li>
-      </ul>
+<section id="team" class="people" aria-labelledby="team-title">
+  <h2 id="team-title">The Deep Source Analysis research team</h2>
+  <div class="investigators">
+    <h3>Investigators</h3>
+    <div class="person">
+      <span class="mug"><img src="{{ '/assets/images/people/ceserani-giovanna.webp' | relative_url }}" alt=""></span>
+      <span class="name">Giovanna Ceserani</span>
+      <span class="affiliation">Stanford University</span>
     </div>
-    <div class="team-col" aria-labelledby="contributors-title">
-      <h3 id="contributors-title">Contributors</h3>
-      <ul class="people">
-            <li><span class="name">Nicole Coleman</span><br><span class="affil">Independent</span></li>
-            <li><span class="name">Allen Romano</span><br><span class="affil">Independent</span></li>
-            <li><span class="name">Huijun Mao</span><br><span class="affil">Stanford University</span></li>
-            <li><span class="name">Teresa Ceserani</span><br><span class="affil">Independent</span></li>
-      </ul>
+    <div class="person">
+      <span class="mug"><img src="{{ '/assets/images/people/ahnert-sebastian.jpg' | relative_url }}" alt=""></span>
+      <span class="name">Sebastian Ahnert</span>
+      <span class="affiliation">Cambridge University</span>
     </div>
-    <div class="team-col" aria-labelledby="consultants-title">
-      <h3 id="consultants-title">Consultants</h3>
-      <ul class="people">
-            <li><span class="name">Diyi Yang</span><br><span class="affil">Stanford University</span></li>
-            <li><span class="name">Michele Mauri</span><br><span class="affil">Politecnico di Milano, DensityDesign</span></li>
-      </ul>
+  </div>
+  <div class="team">
+    <h3>Team</h3>
+    <div class="columns">
+      <div class="person">
+        <span class="mug"><img src="{{ '/assets/images/people/coleman-nicole.jpg' | relative_url }}" alt=""></span>
+        <span class="name">Nicole Coleman</span>
+        <span class="affiliation">Independent</span>
+      </div>
+      <div class="person">
+        <span class="mug"><img src="{{ '/assets/images/people/romano-allen.jpg' | relative_url }}" alt=""></span>
+        <span class="name">Allen Romano</span>
+        <span class="affiliation">Independent</span>
+      </div>
+      <div class="person">
+        <span class="mug"><img src="{{ '/assets/images/people/mao-huijun.jpeg' | relative_url }}" alt=""></span>
+        <span class="name">Huijun Mao</span>
+        <span class="affiliation">Stanford University</span>
+      </div>
+      <div class="person">
+        <span class="mug"><img src="{{ '/assets/images/people/ceserani-teresa.webp' | relative_url }}" alt=""></span>
+        <span class="name">Teresa Ceserani</span>
+        <span class="affiliation">Independent</span>
+      </div>
+    </div>
+  </div>
+  <div class="consultants">
+    <h3>Consultants</h3>
+    <div class="person">
+      <span class="mug"><img src="{{ '/assets/images/people/Yang-Diyi.jpg' | relative_url }}" alt=""></span>
+      <span class="name">Diyi Yang</span>
+      <span class="affiliation">Stanford University</span>
+    </div>
+    <div class="person">
+      <span class="mug"><img src="{{ '/assets/images/people/mauri-michele.jpg' | relative_url }}" alt=""></span>
+      <span class="name">Michele Mauri</span>
+      <span class="affiliation">Politecnico di Milano, DensityDesign</span>
     </div>
   </div>
 </section>
