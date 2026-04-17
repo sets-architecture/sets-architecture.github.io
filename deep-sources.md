@@ -72,7 +72,7 @@ updated: 2026-04-17
     <h3>Investigators</h3>
     <div class="person">
       <span class="mug"><img src="{{ '/assets/images/people/ceserani-giovanna.webp' | relative_url }}" alt=""></span>
-      <span class="name">Giovanna Ceserani</span>
+      <span class="name">Giovanna Ceserani, PI</span>
       <span class="affiliation">Stanford University</span>
     </div>
     <div class="person">
