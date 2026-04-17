@@ -4,6 +4,9 @@ title: Propel 1.3
 description: Naive LLM Analysis of Archival Document Images.
 permalink: /propel-1.3/
 ---
+
+<p class="parent-link"><a href="{{ '/deep-sources/' | relative_url }}">← Deep Source Analysis with LLMs</a></p>
+
 # 1.3 Naive LLM Analysis of Deep Sources
 This experiment is to measure how the models' answers to a set of questions posed about 39 document images compare to the ground truth. This experiment was run across three frontier models as of January 2026: , Claude Opus, GPT5.2, and Gemini 3 Pro. Our intention was to run this experiment before 1.4. We were not able to that because of initial obstacles to gathering ground truth data for all 39 images. Instead, we ran the expert-guided experiment in September 2025 and then returned to run this naive experiment in December 2025 - January 2026.
 

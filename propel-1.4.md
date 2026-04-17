@@ -5,6 +5,8 @@ description: Expert-Directed Analysis of Deep Sources
 permalink: /propel-1.4/
 ---
 
+<p class="parent-link"><a href="{{ '/deep-sources/' | relative_url }}">← Deep Source Analysis with LLMs</a></p>
+
 # 1.4 Expert-Directed Analysis of Deep Sources
 This experiment is to measure how the models improve (or not) with expert guidance. This experiment was run manaually on three document images across three frontier models as of September 2025, Claude Opus, GPT5, and Gemini 2.5 Pro. The scale of this analysis made it possible to provide accurate transcriptions as ground truth and carefully evaluate the model outputs including the "thinking" "reasoning" steps. 
 
