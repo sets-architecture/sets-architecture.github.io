@@ -224,7 +224,8 @@ footer {
 }
 .people .investigators h3,
 .people .consultants h3,
-.people .team h3 {
+.people .team h3,
+.funding h3 {
   font-family: var(--font-sans);
   font-style: normal;
   font-size: 14px;
@@ -236,6 +237,7 @@ footer {
   margin-top: 12px;
   color: var(--muted);
 }
+.funding p { max-width: 60ch; }
 @media (min-width: 1080px) {
   .people .investigators h3,
   .people .consultants h3,

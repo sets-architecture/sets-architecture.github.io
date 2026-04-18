@@ -16,6 +16,10 @@ updated: 2026-04-17
     <p>The name SETS is rooted in our belief that leveraging the mathematical flexibility of set theory will be fundamental to achieving our goal. Set theory will allow us to represent knowledge as a dynamic graph structure where entities, relationships, and even concepts are defined within the graph itself as nested sets. In a SETS graph, meaning resides in the topological structure, which is inherently mutable and extensible, allowing the framework to evolve alongside scholarly inquiry and discovery. This architecture complements the complex and layered history of deep sources and the scholarship that makes them accessible, thus enabling the creation of new knowledge.</p>
 </section>
 
+<section id="funding" class="funding">
+  <p>SETS is made possible by a 2025 Humanities and AI Virtual Institute (HAVI) award from <a href="https://www.schmidtsciences.org/">Schmidt Sciences</a>. HAVI supports groundbreaking work at the intersection of AI and the humanities. Learn more at <a href="https://www.schmidtsciences.org/havi-2025-announcement/">schmidtsciences.org/havi-2025-announcement</a>.</p>
+</section>
+
 <section id="subprojects" aria-labelledby="subprojects-title">
   <h2 id="subprojects-title">Sub-projects</h2>
   <p><a href="{{ '/deep-sources/' | relative_url }}"><strong>Deep Source Analysis with LLMs</strong></a> — preliminary work funded by a Propel grant from the Dean of Research at Stanford University, evaluating how LLMs perform on the analysis of archival handwritten documents.</p>
