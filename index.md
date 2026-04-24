@@ -28,39 +28,44 @@ updated: 2026-04-17
 <section id="team" class="people" aria-labelledby="team-title">
   <h2 id="team-title">The SETS research team</h2>
   <div class="investigators">
-    <h3>Investigators</h3>
     <div class="person">
       <span class="mug"><img src="{{ '/assets/images/people/ceserani-giovanna.webp' | relative_url }}" alt=""></span>
-      <span class="name">Giovanna Ceserani, PI</span>
+      <span class="name">Giovanna Ceserani</span>
+      <span class="role">Principal Investigator</span>
+      <span class="role">& Project Lead</span>
       <span class="affiliation">Stanford University</span>
     </div>
     <div class="person">
       <span class="mug"><img src="{{ '/assets/images/people/ahnert-sebastian.jpg' | relative_url }}" alt=""></span>
       <span class="name">Sebastian Ahnert</span>
+      <span class="role">Co-investigator</span>
       <span class="affiliation">Cambridge University</span>
     </div>
   </div>
   <div class="team">
-    <h3>Team</h3>
     <div class="columns">
       <div class="person">
         <span class="mug"><img src="{{ '/assets/images/people/coleman-nicole.jpg' | relative_url }}" alt=""></span>
         <span class="name">Nicole Coleman</span>
+        <span class="role">Director of Interdisciplinary Research and Product Development</span>
         <span class="affiliation">Independent</span>
       </div>
       <div class="person">
         <span class="mug"><img src="{{ '/assets/images/people/mauri-michele.jpg' | relative_url }}" alt=""></span>
         <span class="name">Michele Mauri</span>
+        <span class="role">Co-investigator</span>
         <span class="affiliation">Politecnico di Milano, DensityDesign</span>
       </div>
       <div class="person">
         <span class="mug"><img src="{{ '/assets/images/people/roberts-richard.jpg' | relative_url }}" alt=""></span>
         <span class="name">Richard Roberts</span>
+        <span class="role">Project Lead</span>
         <span class="affiliation">Stanford University</span>
       </div>
       <div class="person">
         <span class="mug"><img src="{{ '/assets/images/people/yayciglu-ali.webp' | relative_url }}" alt=""></span>
         <span class="name">Ali Yaycıoğlu</span>
+        <span class="role">Project Lead</span>
         <span class="affiliation">Stanford University</span>
       </div>
     </div>
