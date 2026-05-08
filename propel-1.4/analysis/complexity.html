@@ -1,0 +1,126 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'>
+<title>Image Complexity vs Accuracy</title>
+<style>
+    body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+    h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1.1rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+    p.note { font-size: 0.85rem; color: #555; margin: 0.3rem 0 1rem; }
+    table { border-collapse: collapse; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: right; }
+    th { background: #f0f0f0; cursor: pointer; user-select: none; }
+    th:hover { background: #e0e0e0; }
+    th.sorted { background: #d8e8d8; }
+    th .arrow { font-size: 0.65rem; margin-left: 4px; color: #999; }
+    th.sorted .arrow { color: #222; }
+    td.label { text-align: left; }
+    tr:hover { background: #fafafa; }
+    .chart { width: 100%; height: 500px; margin: 1rem 0; }
+    .small { font-size: 0.78rem; color: #888; }
+    </style>
+<script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script>
+</head><body>
+<h1>Image Complexity vs Model Accuracy</h1>
+<p class='note'>Two ways to measure page complexity: <b>structural</b> (counts derived from ground truth) and <b>empirical</b> (mean model accuracy). Pages with denser content are systematically harder.</p>
+<h2>Correlation: structural complexity vs mean accuracy</h2>
+<p class='note'>Pearson r across all 39 pages. Negative = denser pages have lower accuracy.</p>
+<table><tr><th>Complexity measure</th><th>Range</th><th>Pearson r</th><th>r&sup2;</th></tr>
+<tr><td class='label'>Text density (sum of travelers + con + e)</td><td>7–118</td><td>&minus;0.752</td><td>0.566</td></tr>
+<tr><td class='label'>Named travelers (Q13)</td><td>4–62</td><td>&minus;0.773</td><td>0.597</td></tr>
+<tr><td class='label'>Unnamed travelers (Q14)</td><td>1–39</td><td>&minus;0.613</td><td>0.376</td></tr>
+<tr><td class='label'>Brackets (Q19)</td><td>0–13</td><td>&minus;0.557</td><td>0.311</td></tr>
+<tr><td class='label'>con instances (Q9)</td><td>1–16</td><td>&minus;0.666</td><td>0.444</td></tr>
+<tr><td class='label'>e conjunction instances (Q11)</td><td>0–8</td><td>&minus;0.602</td><td>0.363</td></tr>
+<tr><td class='label'>Places of origin (Q15)</td><td>2–25</td><td>&minus;0.772</td><td>0.596</td></tr>
+<tr><td class='label'>Places of stay (Q16)</td><td>2–13</td><td>&minus;0.476</td><td>0.226</td></tr>
+</table>
+<h2>Scatter: text density vs accuracy, by model</h2>
+<p class='note'>Each point = one page for one model. Click legend entries to toggle models.</p>
+<div id='scatter' class='chart'></div>
+<script>
+Plotly.newPlot('scatter', [{"type": "scatter", "mode": "markers", "name": "Claude", "x": [56, 65, 10, 46, 20, 46, 10, 99, 51, 97, 118, 72, 10, 38, 7, 35, 43, 20, 53, 39, 48, 51, 49, 32, 27, 36, 67, 36, 25, 24, 19, 31, 28, 56, 19, 72, 108, 38, 15], "y": [0.43197007404360344, 0.46947772046646824, 0.8523809523809524, 0.4328573021874457, 0.5996491228070175, 0.49901060948855064, 0.7523228609625668, 0.31390269087637507, 0.41924857821916645, 0.39104815686958544, 0.37445789926776674, 0.4411943596307751, 0.6748251748251748, 0.5813420239890829, 0.7475, 0.44552584670231726, 0.6451048951048951, 0.7670454545454546, 0.47748834498834497, 0.604272043745728, 0.6520347707847708, 0.4368965259339591, 0.45419733044733046, 0.47833859359594655, 0.5444444444444444, 0.4782085561497326, 0.4519928827526867, 0.4611426767676768, 0.7364814814814815, 0.6547619047619048, 0.6596256684491979, 0.573663101604278, 0.583459595959596, 0.5418510737628385, 0.5, 0.6138641633080971, 0.45227522205463383, 0.5368778310222161, 0.8863636363636364], "text": ["Page 1<br>Density: 56<br>Accuracy: 0.432", "Page 2<br>Density: 65<br>Accuracy: 0.469", "Page 3<br>Density: 10<br>Accuracy: 0.852", "Page 4<br>Density: 46<br>Accuracy: 0.433", "Page 5<br>Density: 20<br>Accuracy: 0.600", "Page 6<br>Density: 46<br>Accuracy: 0.499", "Page 7<br>Density: 10<br>Accuracy: 0.752", "Page 8<br>Density: 99<br>Accuracy: 0.314", "Page 9<br>Density: 51<br>Accuracy: 0.419", "Page 10<br>Density: 97<br>Accuracy: 0.391", "Page 11<br>Density: 118<br>Accuracy: 0.374", "Page 12<br>Density: 72<br>Accuracy: 0.441", "Page 13<br>Density: 10<br>Accuracy: 0.675", "Page 14<br>Density: 38<br>Accuracy: 0.581", "Page 15<br>Density: 7<br>Accuracy: 0.748", "Page 16<br>Density: 35<br>Accuracy: 0.446", "Page 17<br>Density: 43<br>Accuracy: 0.645", "Page 18<br>Density: 20<br>Accuracy: 0.767", "Page 19<br>Density: 53<br>Accuracy: 0.477", "Page 20<br>Density: 39<br>Accuracy: 0.604", "Page 21<br>Density: 48<br>Accuracy: 0.652", "Page 22<br>Density: 51<br>Accuracy: 0.437", "Page 23<br>Density: 49<br>Accuracy: 0.454", "Page 24<br>Density: 32<br>Accuracy: 0.478", "Page 25<br>Density: 27<br>Accuracy: 0.544", "Page 26<br>Density: 36<br>Accuracy: 0.478", "Page 27<br>Density: 67<br>Accuracy: 0.452", "Page 28<br>Density: 36<br>Accuracy: 0.461", "Page 29<br>Density: 25<br>Accuracy: 0.736", "Page 30<br>Density: 24<br>Accuracy: 0.655", "Page 31<br>Density: 19<br>Accuracy: 0.660", "Page 32<br>Density: 31<br>Accuracy: 0.574", "Page 33<br>Density: 28<br>Accuracy: 0.583", "Page 34<br>Density: 56<br>Accuracy: 0.542", "Page 35<br>Density: 19<br>Accuracy: 0.500", "Page 36<br>Density: 72<br>Accuracy: 0.614", "Page 37<br>Density: 108<br>Accuracy: 0.452", "Page 38<br>Density: 38<br>Accuracy: 0.537", "Page 39<br>Density: 15<br>Accuracy: 0.886"], "hoverinfo": "text", "marker": {"color": "#4e79a7", "size": 7, "opacity": 0.7}}, {"type": "scatter", "mode": "markers", "name": "GPT", "x": [56, 65, 10, 46, 20, 46, 10, 99, 51, 97, 118, 72, 10, 38, 7, 35, 43, 20, 53, 39, 48, 51, 49, 32, 27, 36, 67, 36, 25, 24, 19, 31, 28, 56, 19, 72, 108, 38, 15], "y": [0.38058100233100234, 0.3023245273245273, 0.6571428571428571, 0.4858452324617738, 0.5484502923976609, 0.46628847867818457, 0.8234458556149733, 0.43075109545310786, 0.5233416801063859, 0.4215997692589079, 0.4429969140340264, 0.42774316328161516, 0.6475524475524476, 0.5927713136536666, 0.6975, 0.353903743315508, 0.5694536713286713, 0.7062928233382779, 0.5147943722943723, 0.5296983992959226, 0.43033560801943155, 0.3446881401426856, 0.32779368944547516, 0.4527303578774167, 0.6834325396825397, 0.4344919786096257, 0.4611288571372605, 0.455, 0.6271985255397577, 0.5487103174603175, 0.678048128342246, 0.6047905525846702, 0.5342035551594375, 0.389257501077354, 0.5903743315508021, 0.4103525855272179, 0.3548290587602562, 0.4531089784398608, 0.6903846153846154], "text": ["Page 1<br>Density: 56<br>Accuracy: 0.381", "Page 2<br>Density: 65<br>Accuracy: 0.302", "Page 3<br>Density: 10<br>Accuracy: 0.657", "Page 4<br>Density: 46<br>Accuracy: 0.486", "Page 5<br>Density: 20<br>Accuracy: 0.548", "Page 6<br>Density: 46<br>Accuracy: 0.466", "Page 7<br>Density: 10<br>Accuracy: 0.823", "Page 8<br>Density: 99<br>Accuracy: 0.431", "Page 9<br>Density: 51<br>Accuracy: 0.523", "Page 10<br>Density: 97<br>Accuracy: 0.422", "Page 11<br>Density: 118<br>Accuracy: 0.443", "Page 12<br>Density: 72<br>Accuracy: 0.428", "Page 13<br>Density: 10<br>Accuracy: 0.648", "Page 14<br>Density: 38<br>Accuracy: 0.593", "Page 15<br>Density: 7<br>Accuracy: 0.698", "Page 16<br>Density: 35<br>Accuracy: 0.354", "Page 17<br>Density: 43<br>Accuracy: 0.569", "Page 18<br>Density: 20<br>Accuracy: 0.706", "Page 19<br>Density: 53<br>Accuracy: 0.515", "Page 20<br>Density: 39<br>Accuracy: 0.530", "Page 21<br>Density: 48<br>Accuracy: 0.430", "Page 22<br>Density: 51<br>Accuracy: 0.345", "Page 23<br>Density: 49<br>Accuracy: 0.328", "Page 24<br>Density: 32<br>Accuracy: 0.453", "Page 25<br>Density: 27<br>Accuracy: 0.683", "Page 26<br>Density: 36<br>Accuracy: 0.434", "Page 27<br>Density: 67<br>Accuracy: 0.461", "Page 28<br>Density: 36<br>Accuracy: 0.455", "Page 29<br>Density: 25<br>Accuracy: 0.627", "Page 30<br>Density: 24<br>Accuracy: 0.549", "Page 31<br>Density: 19<br>Accuracy: 0.678", "Page 32<br>Density: 31<br>Accuracy: 0.605", "Page 33<br>Density: 28<br>Accuracy: 0.534", "Page 34<br>Density: 56<br>Accuracy: 0.389", "Page 35<br>Density: 19<br>Accuracy: 0.590", "Page 36<br>Density: 72<br>Accuracy: 0.410", "Page 37<br>Density: 108<br>Accuracy: 0.355", "Page 38<br>Density: 38<br>Accuracy: 0.453", "Page 39<br>Density: 15<br>Accuracy: 0.690"], "hoverinfo": "text", "marker": {"color": "#f28e2b", "size": 7, "opacity": 0.7}}, {"type": "scatter", "mode": "markers", "name": "Gemini 2.5", "x": [56, 65, 10, 46, 20, 46, 10, 99, 51, 97, 118, 72, 10, 38, 7, 35, 43, 20, 53, 39, 48, 51, 49, 32, 27, 36, 67, 36, 25, 24, 19, 31, 28, 56, 19, 72, 108, 38, 15], "y": [0.6924601787101787, 0.5471427313464412, 0.8285714285714286, 0.5563658430883311, 0.48134920634920636, 0.5738170377416701, 0.8618148395721925, 0.5458524897301987, 0.7647504456327986, 0.663530303030303, 0.5858053727270407, 0.764827563288929, 0.9409090909090909, 0.7463759769642122, 0.7956730769230769, 0.576060606060606, 0.5685751748251748, 0.8302059052059052, 0.5258633033633033, 0.6765071770334928, 0.5730726542549298, 0.6961178631232107, 0.5511940836940837, 0.5444096752920282, 0.7397321428571428, 0.5764705882352941, 0.49440737469230117, 0.7321022727272727, 0.8925925925925926, 0.8139880952380952, 0.7930944055944056, 0.7660300483829896, 0.5356481481481481, 0.5443919558564166, 0.753030303030303, 0.537795078695814, 0.6217432424601542, 0.830952380952381, 0.9727272727272728], "text": ["Page 1<br>Density: 56<br>Accuracy: 0.692", "Page 2<br>Density: 65<br>Accuracy: 0.547", "Page 3<br>Density: 10<br>Accuracy: 0.829", "Page 4<br>Density: 46<br>Accuracy: 0.556", "Page 5<br>Density: 20<br>Accuracy: 0.481", "Page 6<br>Density: 46<br>Accuracy: 0.574", "Page 7<br>Density: 10<br>Accuracy: 0.862", "Page 8<br>Density: 99<br>Accuracy: 0.546", "Page 9<br>Density: 51<br>Accuracy: 0.765", "Page 10<br>Density: 97<br>Accuracy: 0.664", "Page 11<br>Density: 118<br>Accuracy: 0.586", "Page 12<br>Density: 72<br>Accuracy: 0.765", "Page 13<br>Density: 10<br>Accuracy: 0.941", "Page 14<br>Density: 38<br>Accuracy: 0.746", "Page 15<br>Density: 7<br>Accuracy: 0.796", "Page 16<br>Density: 35<br>Accuracy: 0.576", "Page 17<br>Density: 43<br>Accuracy: 0.569", "Page 18<br>Density: 20<br>Accuracy: 0.830", "Page 19<br>Density: 53<br>Accuracy: 0.526", "Page 20<br>Density: 39<br>Accuracy: 0.677", "Page 21<br>Density: 48<br>Accuracy: 0.573", "Page 22<br>Density: 51<br>Accuracy: 0.696", "Page 23<br>Density: 49<br>Accuracy: 0.551", "Page 24<br>Density: 32<br>Accuracy: 0.544", "Page 25<br>Density: 27<br>Accuracy: 0.740", "Page 26<br>Density: 36<br>Accuracy: 0.576", "Page 27<br>Density: 67<br>Accuracy: 0.494", "Page 28<br>Density: 36<br>Accuracy: 0.732", "Page 29<br>Density: 25<br>Accuracy: 0.893", "Page 30<br>Density: 24<br>Accuracy: 0.814", "Page 31<br>Density: 19<br>Accuracy: 0.793", "Page 32<br>Density: 31<br>Accuracy: 0.766", "Page 33<br>Density: 28<br>Accuracy: 0.536", "Page 34<br>Density: 56<br>Accuracy: 0.544", "Page 35<br>Density: 19<br>Accuracy: 0.753", "Page 36<br>Density: 72<br>Accuracy: 0.538", "Page 37<br>Density: 108<br>Accuracy: 0.622", "Page 38<br>Density: 38<br>Accuracy: 0.831", "Page 39<br>Density: 15<br>Accuracy: 0.973"], "hoverinfo": "text", "marker": {"color": "#59a14f", "size": 7, "opacity": 0.7}}, {"type": "scatter", "mode": "markers", "name": "Gemini 3.1", "x": [56, 65, 10, 46, 20, 46, 10, 99, 51, 97, 118, 72, 10, 38, 7, 35, 43, 20, 53, 39, 48, 51, 49, 32, 27, 36, 67, 36, 25, 24, 19, 31, 28, 56, 19, 72, 108, 38, 15], "y": [0.7304799122446182, 0.5302896647816434, 0.9, 0.5746105827246178, 0.6986842105263158, 0.45179195804195804, 0.9577540106951872, 0.6949913536755642, 0.7882215007215008, 0.59364217429396, 0.6765752170013903, 0.7682758337078492, 0.9475524475524475, 0.6088300425065131, 0.9808333333333333, 0.6123543123543124, 0.8065530303030303, 0.8669191919191919, 0.5991591741591742, 0.7318181818181818, 0.6465384615384615, 0.6793631502187651, 0.4705266955266955, 0.6143862265185794, 0.861904761904762, 0.6800802139037433, 0.5823964434258552, 0.6314867424242424, 0.9047619047619048, 0.8952380952380953, 0.8679545454545454, 0.7244015788133435, 0.8169191919191919, 0.5149089635854341, 0.9196969696969697, 0.5677455357142858, 0.5156822228697229, 0.616969696969697, 0.8636363636363636], "text": ["Page 1<br>Density: 56<br>Accuracy: 0.730", "Page 2<br>Density: 65<br>Accuracy: 0.530", "Page 3<br>Density: 10<br>Accuracy: 0.900", "Page 4<br>Density: 46<br>Accuracy: 0.575", "Page 5<br>Density: 20<br>Accuracy: 0.699", "Page 6<br>Density: 46<br>Accuracy: 0.452", "Page 7<br>Density: 10<br>Accuracy: 0.958", "Page 8<br>Density: 99<br>Accuracy: 0.695", "Page 9<br>Density: 51<br>Accuracy: 0.788", "Page 10<br>Density: 97<br>Accuracy: 0.594", "Page 11<br>Density: 118<br>Accuracy: 0.677", "Page 12<br>Density: 72<br>Accuracy: 0.768", "Page 13<br>Density: 10<br>Accuracy: 0.948", "Page 14<br>Density: 38<br>Accuracy: 0.609", "Page 15<br>Density: 7<br>Accuracy: 0.981", "Page 16<br>Density: 35<br>Accuracy: 0.612", "Page 17<br>Density: 43<br>Accuracy: 0.807", "Page 18<br>Density: 20<br>Accuracy: 0.867", "Page 19<br>Density: 53<br>Accuracy: 0.599", "Page 20<br>Density: 39<br>Accuracy: 0.732", "Page 21<br>Density: 48<br>Accuracy: 0.647", "Page 22<br>Density: 51<br>Accuracy: 0.679", "Page 23<br>Density: 49<br>Accuracy: 0.471", "Page 24<br>Density: 32<br>Accuracy: 0.614", "Page 25<br>Density: 27<br>Accuracy: 0.862", "Page 26<br>Density: 36<br>Accuracy: 0.680", "Page 27<br>Density: 67<br>Accuracy: 0.582", "Page 28<br>Density: 36<br>Accuracy: 0.631", "Page 29<br>Density: 25<br>Accuracy: 0.905", "Page 30<br>Density: 24<br>Accuracy: 0.895", "Page 31<br>Density: 19<br>Accuracy: 0.868", "Page 32<br>Density: 31<br>Accuracy: 0.724", "Page 33<br>Density: 28<br>Accuracy: 0.817", "Page 34<br>Density: 56<br>Accuracy: 0.515", "Page 35<br>Density: 19<br>Accuracy: 0.920", "Page 36<br>Density: 72<br>Accuracy: 0.568", "Page 37<br>Density: 108<br>Accuracy: 0.516", "Page 38<br>Density: 38<br>Accuracy: 0.617", "Page 39<br>Density: 15<br>Accuracy: 0.864"], "hoverinfo": "text", "marker": {"color": "#b07aa1", "size": 7, "opacity": 0.7}}, {"type": "scatter", "mode": "markers", "name": "Claude (thinking)", "x": [56, 65, 10, 46, 20, 46, 10, 99, 51, 97, 118, 72, 10, 38, 7, 35, 43, 20, 53, 39, 48, 51, 49, 32, 27, 36, 67, 36, 25, 24, 19, 31, 28, 56, 19, 72, 108, 38, 15], "y": [0.6088894944924357, 0.4664224450905601, 0.8707482993197279, 0.47192736846285854, 0.8133771929824561, 0.5450179110105581, 0.9260360962566845, 0.4494250775597525, 0.599482217129276, 0.43875410799517944, 0.43984066082652346, 0.5980113503082297, 0.8826173826173827, 0.6673945988651871, 0.8995833333333333, 0.5862614836144248, 0.7950495337995338, 0.9376492194674013, 0.5433424908424909, 0.7384905445431761, 0.6729492302073572, 0.5118993731110892, 0.6049395743145743, 0.5295498863881217, 0.8029761904761905, 0.6807040998217468, 0.47571697093755916, 0.5031060606060606, 0.875515873015873, 0.7946649029982363, 0.8799030748663101, 0.8113668194550547, 0.6485838779956427, 0.5980957892416225, 0.707397504456328, 0.5566387518731268, 0.470732250845171, 0.5934500273938776, 0.9545454545454546], "text": ["Page 1<br>Density: 56<br>Accuracy: 0.609", "Page 2<br>Density: 65<br>Accuracy: 0.466", "Page 3<br>Density: 10<br>Accuracy: 0.871", "Page 4<br>Density: 46<br>Accuracy: 0.472", "Page 5<br>Density: 20<br>Accuracy: 0.813", "Page 6<br>Density: 46<br>Accuracy: 0.545", "Page 7<br>Density: 10<br>Accuracy: 0.926", "Page 8<br>Density: 99<br>Accuracy: 0.449", "Page 9<br>Density: 51<br>Accuracy: 0.599", "Page 10<br>Density: 97<br>Accuracy: 0.439", "Page 11<br>Density: 118<br>Accuracy: 0.440", "Page 12<br>Density: 72<br>Accuracy: 0.598", "Page 13<br>Density: 10<br>Accuracy: 0.883", "Page 14<br>Density: 38<br>Accuracy: 0.667", "Page 15<br>Density: 7<br>Accuracy: 0.900", "Page 16<br>Density: 35<br>Accuracy: 0.586", "Page 17<br>Density: 43<br>Accuracy: 0.795", "Page 18<br>Density: 20<br>Accuracy: 0.938", "Page 19<br>Density: 53<br>Accuracy: 0.543", "Page 20<br>Density: 39<br>Accuracy: 0.738", "Page 21<br>Density: 48<br>Accuracy: 0.673", "Page 22<br>Density: 51<br>Accuracy: 0.512", "Page 23<br>Density: 49<br>Accuracy: 0.605", "Page 24<br>Density: 32<br>Accuracy: 0.530", "Page 25<br>Density: 27<br>Accuracy: 0.803", "Page 26<br>Density: 36<br>Accuracy: 0.681", "Page 27<br>Density: 67<br>Accuracy: 0.476", "Page 28<br>Density: 36<br>Accuracy: 0.503", "Page 29<br>Density: 25<br>Accuracy: 0.876", "Page 30<br>Density: 24<br>Accuracy: 0.795", "Page 31<br>Density: 19<br>Accuracy: 0.880", "Page 32<br>Density: 31<br>Accuracy: 0.811", "Page 33<br>Density: 28<br>Accuracy: 0.649", "Page 34<br>Density: 56<br>Accuracy: 0.598", "Page 35<br>Density: 19<br>Accuracy: 0.707", "Page 36<br>Density: 72<br>Accuracy: 0.557", "Page 37<br>Density: 108<br>Accuracy: 0.471", "Page 38<br>Density: 38<br>Accuracy: 0.593", "Page 39<br>Density: 15<br>Accuracy: 0.955"], "hoverinfo": "text", "marker": {"color": "#e15759", "size": 7, "opacity": 0.7}}], {
+  xaxis: { title: 'Text density (named + unnamed travelers + con + e)' },
+  yaxis: { title: 'Mean accuracy', range: [0, 1] },
+  legend: { orientation: 'h', y: -0.2 },
+  margin: { t: 20, b: 80 },
+  hovermode: 'closest'
+}, {responsive: true});
+</script>
+<h2>Per-page complexity ranking</h2>
+<p class='note'>Click any column header to sort.</p>
+<table id='page-table'>
+<tr><th data-col='0' data-type='num'>Page<span class='arrow'>&#9650;</span></th><th data-col='1' data-type='num'>Mean accuracy<span class='arrow'>&#9650;</span></th><th data-col='2' data-type='num'>Text density<span class='arrow'>&#9650;</span></th><th data-col='3' data-type='num'>Named<span class='arrow'>&#9650;</span></th><th data-col='4' data-type='num'>Unnamed<span class='arrow'>&#9650;</span></th><th data-col='5' data-type='num'>Brackets<span class='arrow'>&#9650;</span></th><th data-col='6' data-type='num'>con<span class='arrow'>&#9650;</span></th><th data-col='7' data-type='num'>e<span class='arrow'>&#9650;</span></th></tr>
+<tr><td class='label'>11</td><td style='background:#a5ffa5'>0.502</td><td>118</td><td>62</td><td>33</td><td>11</td><td>15</td><td>8</td></tr>
+<tr><td class='label'>37</td><td style='background:#a9ffa9'>0.483</td><td>108</td><td>49</td><td>35</td><td>13</td><td>16</td><td>8</td></tr>
+<tr><td class='label'>8</td><td style='background:#a8ffa8'>0.487</td><td>99</td><td>43</td><td>39</td><td>6</td><td>14</td><td>3</td></tr>
+<tr><td class='label'>10</td><td style='background:#a5ffa5'>0.502</td><td>97</td><td>53</td><td>26</td><td>10</td><td>15</td><td>3</td></tr>
+<tr><td class='label'>12</td><td style='background:#93ff93'>0.600</td><td>72</td><td>38</td><td>18</td><td>6</td><td>9</td><td>7</td></tr>
+<tr><td class='label'>36</td><td style='background:#9fff9f'>0.537</td><td>72</td><td>36</td><td>22</td><td>8</td><td>10</td><td>4</td></tr>
+<tr><td class='label'>27</td><td style='background:#a7ffa7'>0.494</td><td>67</td><td>35</td><td>17</td><td>7</td><td>12</td><td>3</td></tr>
+<tr><td class='label'>2</td><td style='background:#acffac'>0.463</td><td>65</td><td>35</td><td>18</td><td>4</td><td>9</td><td>3</td></tr>
+<tr><td class='label'>1</td><td style='background:#99ff99'>0.569</td><td>56</td><td>34</td><td>12</td><td>5</td><td>4</td><td>6</td></tr>
+<tr><td class='label'>34</td><td style='background:#a2ffa2'>0.518</td><td>56</td><td>29</td><td>16</td><td>6</td><td>8</td><td>3</td></tr>
+<tr><td class='label'>19</td><td style='background:#a0ffa0'>0.532</td><td>53</td><td>26</td><td>15</td><td>3</td><td>7</td><td>5</td></tr>
+<tr><td class='label'>9</td><td style='background:#90ff90'>0.619</td><td>51</td><td>33</td><td>11</td><td>2</td><td>3</td><td>4</td></tr>
+<tr><td class='label'>22</td><td style='background:#9fff9f'>0.534</td><td>51</td><td>21</td><td>16</td><td>2</td><td>11</td><td>3</td></tr>
+<tr><td class='label'>23</td><td style='background:#a9ffa9'>0.482</td><td>49</td><td>33</td><td>8</td><td>6</td><td>6</td><td>2</td></tr>
+<tr><td class='label'>21</td><td style='background:#94ff94'>0.595</td><td>48</td><td>27</td><td>12</td><td>6</td><td>4</td><td>5</td></tr>
+<tr><td class='label'>4</td><td style='background:#a5ffa5'>0.504</td><td>46</td><td>28</td><td>8</td><td>0</td><td>7</td><td>3</td></tr>
+<tr><td class='label'>6</td><td style='background:#a4ffa4'>0.507</td><td>46</td><td>26</td><td>10</td><td>4</td><td>8</td><td>2</td></tr>
+<tr><td class='label'>17</td><td style='background:#86ff86'>0.677</td><td>43</td><td>14</td><td>23</td><td>1</td><td>5</td><td>1</td></tr>
+<tr><td class='label'>20</td><td style='background:#89ff89'>0.656</td><td>39</td><td>22</td><td>10</td><td>5</td><td>7</td><td>0</td></tr>
+<tr><td class='label'>14</td><td style='background:#8cff8c'>0.640</td><td>38</td><td>22</td><td>8</td><td>0</td><td>5</td><td>3</td></tr>
+<tr><td class='label'>38</td><td style='background:#92ff92'>0.606</td><td>38</td><td>31</td><td>3</td><td>7</td><td>1</td><td>3</td></tr>
+<tr><td class='label'>26</td><td style='background:#99ff99'>0.570</td><td>36</td><td>24</td><td>6</td><td>1</td><td>2</td><td>4</td></tr>
+<tr><td class='label'>28</td><td style='background:#9bff9b'>0.557</td><td>36</td><td>19</td><td>11</td><td>1</td><td>4</td><td>2</td></tr>
+<tr><td class='label'>16</td><td style='background:#a3ffa3'>0.515</td><td>35</td><td>20</td><td>10</td><td>3</td><td>5</td><td>0</td></tr>
+<tr><td class='label'>24</td><td style='background:#a1ffa1'>0.524</td><td>32</td><td>22</td><td>3</td><td>4</td><td>1</td><td>6</td></tr>
+<tr><td class='label'>32</td><td style='background:#82ff82'>0.696</td><td>31</td><td>16</td><td>7</td><td>2</td><td>7</td><td>1</td></tr>
+<tr><td class='label'>33</td><td style='background:#8fff8f'>0.624</td><td>28</td><td>18</td><td>5</td><td>3</td><td>4</td><td>1</td></tr>
+<tr><td class='label'>25</td><td style='background:#7dff7d'>0.726</td><td>27</td><td>12</td><td>9</td><td>2</td><td>6</td><td>0</td></tr>
+<tr><td class='label'>29</td><td style='background:#6eff6e'>0.807</td><td>25</td><td>13</td><td>6</td><td>0</td><td>2</td><td>4</td></tr>
+<tr><td class='label'>30</td><td style='background:#79ff79'>0.745</td><td>24</td><td>22</td><td>1</td><td>3</td><td>1</td><td>0</td></tr>
+<tr><td class='label'>5</td><td style='background:#8fff8f'>0.627</td><td>20</td><td>11</td><td>4</td><td>0</td><td>2</td><td>3</td></tr>
+<tr><td class='label'>18</td><td style='background:#6cff6c'>0.822</td><td>20</td><td>11</td><td>5</td><td>2</td><td>3</td><td>1</td></tr>
+<tr><td class='label'>31</td><td style='background:#74ff74'>0.776</td><td>19</td><td>14</td><td>3</td><td>4</td><td>2</td><td>0</td></tr>
+<tr><td class='label'>35</td><td style='background:#83ff83'>0.694</td><td>19</td><td>17</td><td>1</td><td>2</td><td>1</td><td>0</td></tr>
+<tr><td class='label'>39</td><td style='background:#62ff62'>0.874</td><td>15</td><td>10</td><td>3</td><td>1</td><td>2</td><td>0</td></tr>
+<tr><td class='label'>3</td><td style='background:#6cff6c'>0.822</td><td>10</td><td>4</td><td>5</td><td>1</td><td>1</td><td>0</td></tr>
+<tr><td class='label'>7</td><td style='background:#64ff64'>0.864</td><td>10</td><td>6</td><td>2</td><td>2</td><td>2</td><td>0</td></tr>
+<tr><td class='label'>13</td><td style='background:#6cff6c'>0.819</td><td>10</td><td>6</td><td>3</td><td>1</td><td>1</td><td>0</td></tr>
+<tr><td class='label'>15</td><td style='background:#6bff6b'>0.824</td><td>7</td><td>5</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+</table>
+<script>
+(function() {
+  const table = document.getElementById('page-table');
+  const headers = table.querySelectorAll('th');
+  let sortCol = -1, sortAsc = true;
+  headers.forEach(th => {
+    th.addEventListener('click', () => {
+      const col = parseInt(th.dataset.col);
+      if (sortCol === col) sortAsc = !sortAsc;
+      else { sortCol = col; sortAsc = true; }
+      headers.forEach(h => h.classList.remove('sorted'));
+      th.classList.add('sorted');
+      headers.forEach(h => {
+        h.querySelector('.arrow').textContent = h === th ? (sortAsc ? '▲' : '▼') : '▲';
+      });
+      const tbody = table;
+      const rows = Array.from(table.querySelectorAll('tr')).slice(1);
+      rows.sort((a, b) => {
+        let va = a.children[col].textContent.trim();
+        let vb = b.children[col].textContent.trim();
+        const fa = parseFloat(va), fb = parseFloat(vb);
+        if (!isNaN(fa) && !isNaN(fb)) {
+          return sortAsc ? fa - fb : fb - fa;
+        }
+        return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+      });
+      const headerRow = table.querySelector('tr');
+      table.innerHTML = '';
+      table.appendChild(headerRow);
+      rows.forEach(r => table.appendChild(r));
+    });
+  });
+})();
+</script>
+</body></html>
