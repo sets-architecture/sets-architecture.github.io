@@ -10,36 +10,37 @@
 
     {% seo %}
 
-    <!-- Libre Franklin + EB Garamond (Google Fonts) -->
+    <!-- Libre Franklin (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- Site CSS -->
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
   </head>
-  <body>
+  <body class="{{ page.body_class | default: '' }}">
     <!-- Header -->
     <header>
 
   <div class="wrap header-bar">
     <a class="brand" href="{{ '/' | relative_url }}">
-      <span class="dot" aria-hidden="true"></span><span>{{ site.title }}</span>
+      <img class="brand-logo" src="{{ '/assets/images/sets-logo.png' | relative_url }}" alt="" aria-hidden="true">
+      <span>{{ site.title }}</span>
     </a>
     {% include nav.html %}
   </div>
 </header>
 
     <!-- Main content -->
-    <main class="wrap">
+    <main{% unless page.body_class == "landing" %} class="wrap"{% endunless %}>
       {{ content }}
     </main>
 
     <!-- Footer -->
     <footer>
       <div class="wrap footer-grid">
-        <!-- <span>© <span id="year"></span> {{ site.title }}</span> -->
-        <span>Updated {% if page.updated %}{{ page.updated | date: "%B %-d, %Y" }}{% else %}August 27, 2025{% endif %}</span>
+        <p class="footer-tagline">A Set-Based AI Architecture for Knowledge Integration and Discovery</p>
+        <p class="footer-updated">Updated {% if page.updated %}{{ page.updated | date: "%B %-d, %Y" }}{% else %}August 27, 2025{% endif %}</p>
       </div>
     </footer>
 
