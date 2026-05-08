@@ -40,7 +40,7 @@
     <footer>
       <div class="wrap footer-grid">
         <p class="footer-tagline">A Set-Based AI Architecture for Knowledge Integration and Discovery</p>
-        <p class="footer-updated">Updated {% if page.updated %}{{ page.updated | date: "%B %-d, %Y" }}{% else %}August 27, 2025{% endif %}</p>
+        <p class="footer-updated">Updated {% if page.last_modified_at %}{{ page.last_modified_at | date: "%B %-d, %Y" }}{% else %}{{ site.time | date: "%B %-d, %Y" }}{% endif %}</p>
       </div>
     </footer>
 

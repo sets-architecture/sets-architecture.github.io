@@ -2,9 +2,9 @@ title: SETS
 description: SETS project page.
 theme: null
 
-# GitHub Pages-supported plugins
 plugins:
   - jekyll-seo-tag
+  - jekyll-last-modified-at
 
 markdown: kramdown
 kramdown:

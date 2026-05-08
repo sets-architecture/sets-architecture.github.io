@@ -2,7 +2,6 @@
 layout: default
 title: Deep source analysis with LLMs
 description: SETS project page.
-updated: 2026-04-17
 ---
 
 <section class="hero">

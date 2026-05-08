@@ -2,7 +2,6 @@
 layout: default
 title: SETS
 description: SETS project page.
-updated: 2026-04-17
 body_class: landing
 ---
 

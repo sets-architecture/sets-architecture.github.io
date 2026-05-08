@@ -5,4 +5,5 @@ gem "webrick"
 
 group :jekyll_plugins do
   gem "jekyll-seo-tag"
+  gem "jekyll-last-modified-at"
 end
