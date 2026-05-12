@@ -66,35 +66,49 @@ See <a href="evaluate.py#L239-L247">evaluate.py:239-247</a>.
 </tbody></table>
 <hr>
 <h2>2. Per-field accuracy by model × phase</h2>
+<p>
+Computed only on rows that matched a GT traveler (so a model that misses half the travelers does not get a free pass on the half it never produced — those are captured by F1 in section 1).
+</p>
+<p>
+<strong>Scoring per field on a matched row:</strong>
+</p>
+<ul>
+<li><em>Text fields</em> (<code>title</code>, <code>arrival_date</code>, <code>departure_date</code>, <code>place_of_stay</code>, <code>place_of_origin</code>) — <strong>character accuracy</strong> = <code>1 − levenshtein(gt, model) / len(gt)</code> after lowercase + whitespace + small abbreviation-equivalence normalization (<code>flli</code>→<code>fratelli</code>, <code>s.</code>→<code>san</code>, etc.). A 1-character misspelling on a 16-char string scores ~0.94 rather than 0. See <a href="evaluate.py#L96-L128">evaluate.py:96-128</a>.</li>
+<li><em>Binary fields</em> (<code>with_spouse</code>, <code>with_siblings</code>, <code>children_count</code>) — 1.0 if equal, 0.0 if not.</li>
+<li><em>Unscorable cells</em> (e.g. GT title is empty) are excluded from both numerator and denominator — they neither help nor hurt.</li>
+</ul>
+<p>
+This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers across the three projects are directly comparable.
+</p>
 <h3>Phase N — Naive (image only, no expert guidance, no transcription)</h3>
 <table>
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>0.84</td><td>0.29</td><td>0.61</td><td>0.39</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.64</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.80</td><td>0.30</td><td>0.64</td><td>0.40</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.61</td></tr>
-<tr><td>GPT 5.2</td><td>0.77</td><td>0.21</td><td>0.57</td><td>0.20</td><td>0.99</td><td>0.78</td><td>0.99</td><td>0.53</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>0.74</td><td>0.12</td><td>0.67</td><td>0.52</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.60</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.72</td><td>0.33</td><td>0.65</td><td>0.55</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.76</td></tr>
+<tr><td>Claude 4.5</td><td>0.87</td><td>0.32</td><td>0.62</td><td>0.48</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.81</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.87</td><td>0.51</td><td>0.74</td><td>0.58</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.83</td></tr>
+<tr><td>GPT 5.2</td><td>0.78</td><td>0.32</td><td>0.57</td><td>0.49</td><td>0.99</td><td>0.78</td><td>0.99</td><td>0.59</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.84</td><td>0.35</td><td>0.73</td><td>0.58</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.76</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.81</td><td>0.45</td><td>0.71</td><td>0.69</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.95</td></tr>
 </tbody></table>
 <h3>Phase A — Guided (image + expert guidance (no transcription))</h3>
 <table>
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>0.85</td><td>0.55</td><td>0.63</td><td>0.67</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.66</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.80</td><td>0.57</td><td>0.69</td><td>0.53</td><td>1.00</td><td>0.96</td><td>1.00</td><td>0.63</td></tr>
-<tr><td>GPT 5.2</td><td>0.83</td><td>0.49</td><td>0.54</td><td>0.36</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.61</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>0.75</td><td>0.73</td><td>0.82</td><td>0.40</td><td>1.00</td><td>0.94</td><td>0.99</td><td>0.59</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.71</td><td>0.88</td><td>0.82</td><td>0.64</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.72</td></tr>
+<tr><td>Claude 4.5</td><td>0.88</td><td>0.89</td><td>0.88</td><td>0.67</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.81</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.86</td><td>0.94</td><td>0.94</td><td>0.64</td><td>1.00</td><td>0.96</td><td>1.00</td><td>0.84</td></tr>
+<tr><td>GPT 5.2</td><td>0.85</td><td>0.87</td><td>0.80</td><td>0.65</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.61</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.82</td><td>0.97</td><td>0.95</td><td>0.47</td><td>1.00</td><td>0.94</td><td>0.99</td><td>0.71</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.81</td><td>0.97</td><td>0.95</td><td>0.78</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.92</td></tr>
 </tbody></table>
 <h3>Phase B — Guided + Transcription (image + expert guidance + transcription)</h3>
 <table>
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>0.98</td><td>1.00</td><td>0.69</td><td>0.88</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.95</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.98</td><td>1.00</td><td>0.85</td><td>0.89</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.92</td></tr>
-<tr><td>GPT 5.2</td><td>0.91</td><td>1.00</td><td>0.70</td><td>0.85</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.81</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>0.91</td><td>1.00</td><td>0.85</td><td>0.97</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.86</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.90</td><td>1.00</td><td>0.85</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.83</td></tr>
+<tr><td>Claude 4.5</td><td>0.99</td><td>1.00</td><td>0.97</td><td>0.81</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.99</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>1.00</td><td>1.00</td><td>0.99</td><td>0.80</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.99</td></tr>
+<tr><td>GPT 5.2</td><td>0.95</td><td>1.00</td><td>0.97</td><td>0.77</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.96</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.97</td><td>1.00</td><td>0.98</td><td>0.87</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.88</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.94</td><td>1.00</td><td>0.98</td><td>0.88</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
 </tbody></table>
 <hr>
 <h2>3. Per-image F1 by model × phase (variation across 10 runs)</h2>
