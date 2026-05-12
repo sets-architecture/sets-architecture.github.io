@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Propel 1.5 — Analysis Reports</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+    h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+    p.sub { font-size: 0.9rem; color: #555; margin: 0 0 2rem; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+    li:last-child { border-bottom: none; }
+    a { color: #1a5fa8; text-decoration: none; font-size: 0.95rem; }
+    a:hover { text-decoration: underline; }
+    .desc { font-size: 0.82rem; color: #666; margin-top: 0.2rem; }
+    .back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body>
+  <p class="back"><a href="/propel-1.5/">&larr; Propel 1.5</a></p>
+  <h1>Propel 1.5 — Analysis Reports</h1>
+  <p class="sub">3 archival document images &middot; 5 models &middot; 3 prompt phases (naive / guided / guided + transcription) &middot; 10 runs each</p>
+  <ul>
+    <li>
+      <a href="summary.html">Summary</a>
+      <div class="desc">F1 by model and phase, per-field accuracy, per-image F1 variation across runs, and notes on collection caveats. Includes an explanation of how F1 is calculated for this experiment.</div>
+    </li>
+    <li>
+      <a href="results_page_28.html">Results — Page 28</a>
+      <div class="desc">AVS IS 758-781 1766 02.jpg (Ebrei page, 19 travelers). Ground truth plus per-model traveler list for each phase.</div>
+    </li>
+    <li>
+      <a href="results_page_36.html">Results — Page 36</a>
+      <div class="desc">AVS IS 758-781 1770 05 28 p1.jpg (37 travelers, the densest page). Ground truth plus per-model traveler list for each phase.</div>
+    </li>
+    <li>
+      <a href="results_page_39.html">Results — Page 39</a>
+      <div class="desc">AVS IS 758-781 1770 08.jpg (10 travelers). Ground truth plus per-model traveler list for each phase.</div>
+    </li>
+    <li>
+      <a href="field_results_page_28.html">Per-field results — Page 28</a>
+      <div class="desc">Side-by-side per-field comparison (name, dates, place of stay, family, origin) of every model and phase against ground truth for page 28.</div>
+    </li>
+    <li>
+      <a href="field_results_page_36.html">Per-field results — Page 36</a>
+      <div class="desc">Side-by-side per-field comparison of every model and phase against ground truth for page 36.</div>
+    </li>
+    <li>
+      <a href="field_results_page_39.html">Per-field results — Page 39</a>
+      <div class="desc">Side-by-side per-field comparison of every model and phase against ground truth for page 39.</div>
+    </li>
+    <li>
+      <a href="scores_summary.csv">Raw scores (CSV)</a>
+      <div class="desc">Underlying per-image, per-run precision, recall, F1, and per-field accuracy for every (model, phase, run, page) combination.</div>
+    </li>
+  </ul>
+</body>
+</html>
