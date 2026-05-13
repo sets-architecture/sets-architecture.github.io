@@ -121,36 +121,33 @@ const chartData = {"page_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1
 const pageLabels = chartData.page_ids.map(p => 'p' + p);
 
 const accTrace = {
-  type: 'scatter', mode: 'lines+markers',
-  name: 'Mean accuracy (%)',
+  type: 'bar', name: 'Mean accuracy (%)',
   x: pageLabels, y: chartData.accuracy_pct,
-  line: {color: '#1a7a1a', width: 2},
-  marker: {size: 6},
+  marker: {color: '#1a7a1a'},
   hovertemplate: 'Page %{x}<br>Accuracy: %{y:.1f}%<extra></extra>'
 };
 
 const structTrace = {
-  type: 'scatter', mode: 'lines+markers',
-  name: 'Structural (norm %)',
+  type: 'bar', name: 'Structural (norm %)',
   x: pageLabels, y: chartData.structural_norm,
-  line: {color: '#1f77b4', width: 2},
-  marker: {size: 6},
+  marker: {color: '#1f77b4'},
   customdata: chartData.structural_raw,
   hovertemplate: 'Page %{x}<br>Structural: %{y:.1f}%<br>(raw: %{customdata})<extra></extra>'
 };
 
 const visTrace = {
-  type: 'scatter', mode: 'lines+markers',
-  name: 'Visual (norm %)',
+  type: 'bar', name: 'Visual (norm %)',
   x: pageLabels, y: chartData.visual_norm,
-  line: {color: '#ff7f0e', width: 2},
-  marker: {size: 6},
+  marker: {color: '#ff7f0e'},
   customdata: chartData.visual_raw,
   hovertemplate: 'Page %{x}<br>Visual: %{y:.1f}%<br>(raw: %{customdata:,} components)<extra></extra>'
 };
 
 Plotly.newPlot('compare-chart', [accTrace, structTrace, visTrace], {
   margin: {t: 20, b: 60, l: 50, r: 20},
+  barmode: 'group',
+  bargap: 0.15,
+  bargroupgap: 0.05,
   xaxis: {title: 'Page ID', type: 'category', tickfont: {size: 9}},
   yaxis: {title: 'Value (%)', range: [0, 105], dtick: 10},
   legend: {orientation: 'h', y: -0.18},
