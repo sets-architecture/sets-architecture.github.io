@@ -1,0 +1,128 @@
+---
+layout: default
+title: Data Extraction — Deep Sources
+description: Structured data extraction across 3 representative pages and 3 prompt phases.
+---
+
+<style>
+  .dx-page { max-width: 860px; margin: 0 auto; line-height: 1.5; }
+  .dx-page h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .dx-page h2 { font-size: 1.05rem; margin: 2.2rem 0 0.8rem; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; color: #333; }
+  .dx-page h2 .legend { font-size: 0.75rem; color: #888; font-weight: normal; margin-left: 0.6rem; }
+  .dx-page p.sub { font-size: 0.9rem; color: #555; margin: 0 0 0.4rem; }
+  .dx-page p.intro { font-size: 0.88rem; color: #555; margin: 0 0 2rem; }
+  .dx-page ul.report-list { list-style: none; padding: 0; margin: 0; }
+  .dx-page ul.report-list li { padding: 0.55rem 0; border-bottom: 1px solid #eee; display: flex; align-items: baseline; gap: 0.8rem; }
+  .dx-page ul.report-list li:last-child { border-bottom: none; }
+  .dx-page .report-main { flex: 1; min-width: 0; }
+  .dx-page .report-title { font-size: 0.95rem; font-weight: 600; color: #222; }
+  .dx-page .report-title a { color: #1a5fa8; text-decoration: none; }
+  .dx-page .report-title a:hover { text-decoration: underline; }
+  .dx-page .desc { font-size: 0.82rem; color: #666; margin-top: 0.2rem; }
+  .dx-page .pair { display: flex; gap: 0.4rem; flex-shrink: 0; }
+  .dx-page .pill {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.78rem; text-decoration: none; border: 1px solid;
+    font-weight: 500;
+  }
+  .dx-page .pill.page  { color: #6a3aa0; border-color: #d6c7e6; background: #f4eef9; }
+  .dx-page .pill.page:hover { background: #6a3aa0; color: #fff; }
+  .breadcrumb { max-width: 860px; margin: 0 auto 1.5rem; font-size: 0.82rem; color: #888; }
+  .breadcrumb a { color: #1a5fa8; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb .sep { margin: 0 0.35rem; color: #bbb; }
+  .breadcrumb [aria-current="page"] { color: #555; }
+</style>
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="{{ '/' | relative_url }}">SETS</a><span class="sep">&rsaquo;</span>
+  <a href="{{ '/deep-sources/' | relative_url }}">Deep Sources</a><span class="sep">&rsaquo;</span>
+  <span aria-current="page">Data Extraction</span>
+</nav>
+
+<div class="dx-page">
+
+<h1>Data Extraction</h1>
+<p class="sub">3 archival document images &middot; 5 models &middot; 3 prompt phases &middot; 10 runs each</p>
+<p class="intro">
+  Structured data extraction against a 9-field schema (name, titles, dates,
+  place of stay, family, origin, etc.) on three pages chosen to span page density: 18 travelers
+  (page 28, an <i>Ebrei</i> page), 37 travelers (page 36, the densest), and 10 travelers (page 39).
+  Each (model, page) combination is run under three phases — <b>naive</b> (questions only),
+  <b>guided</b> (with expert-authored domain knowledge), and <b>guided + transcription</b>
+  (guidance plus a pre-computed transcription) — for 10 runs each. Scoring is F1 against ground truth.
+</p>
+
+<!-- ============================================================ -->
+<h2>Setup &amp; Reference</h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/data-extraction/gt_all_pages.html">Ground Truth — All Pages</a></div>
+      <div class="desc">The authoritative per-traveler readings for all three pages in the 9-field schema requested from the models. A single reference for reviewing model output.</div>
+    </div>
+  </li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>Overall Results</h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/data-extraction/summary.html">Summary</a></div>
+      <div class="desc">F1 by model and phase, per-field accuracy, per-image F1 variation across runs, and notes on collection caveats. Includes how F1 is calculated for this experiment.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/data-extraction/scores_summary.csv">Raw Scores (CSV)</a></div>
+      <div class="desc">Underlying per-image, per-run precision, recall, F1, and per-field accuracy for every (model, phase, run, page) combination.</div>
+    </div>
+  </li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>Per-page Analyses <span class="legend">click a pill to view that page</span></h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title">Compare (interactive)</div>
+      <div class="desc">Toggle the best run for any (model, phase) on/off and compare per-field, row-by-row against ground truth. Cells colored green (match) / red (mismatch).</div>
+    </div>
+    <div class="pair">
+      <a class="pill page" href="/deep-sources/data-extraction/compare_page_28.html">page 28</a>
+      <a class="pill page" href="/deep-sources/data-extraction/compare_page_36.html">page 36</a>
+      <a class="pill page" href="/deep-sources/data-extraction/compare_page_39.html">page 39</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Results</div>
+      <div class="desc">Ground truth plus per-model traveler list for each phase.</div>
+    </div>
+    <div class="pair">
+      <a class="pill page" href="/deep-sources/data-extraction/results_page_28.html">page 28</a>
+      <a class="pill page" href="/deep-sources/data-extraction/results_page_36.html">page 36</a>
+      <a class="pill page" href="/deep-sources/data-extraction/results_page_39.html">page 39</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Per-field Results</div>
+      <div class="desc">Side-by-side per-field comparison (name, dates, place of stay, family, origin) of every model and phase against ground truth.</div>
+    </div>
+    <div class="pair">
+      <a class="pill page" href="/deep-sources/data-extraction/field_results_page_28.html">page 28</a>
+      <a class="pill page" href="/deep-sources/data-extraction/field_results_page_36.html">page 36</a>
+      <a class="pill page" href="/deep-sources/data-extraction/field_results_page_39.html">page 39</a>
+    </div>
+  </li>
+</ul>
+
+<p class="intro" style="margin-top: 2.5rem; font-size: 0.8rem; color: #888;">
+  Page 28 = AVS IS 758-781 1766 02 (Ebrei page, 18 travelers) &middot;
+  Page 36 = AVS IS 758-781 1770 05 28 p1 (37 travelers, densest) &middot;
+  Page 39 = AVS IS 758-781 1770 08 (10 travelers)
+</p>
+
+</div>

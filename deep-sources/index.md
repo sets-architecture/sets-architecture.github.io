@@ -9,7 +9,7 @@ description: SETS project page.
 </section>
 
 <section id="about">
-   
+
     <p>Preliminary work on the development of SETS began in the Spring of 2025 when the team was awarded a Propel grant from
     the Dean of Research at Stanford University. The Propel grant funded experiments to improve efficiency in learning
     from archival handwritten sources, a complex and time-consuming task that severely constrains the scope of research
@@ -33,36 +33,51 @@ description: SETS project page.
       A[1.1 Deep Source Analysis by Scholar] --> B[1.2 Image Pre-processing & Text Transcription]
       B --> C[1.3 Naive LLM Document Analysis]
       C --> D[1.4 Expert-guided LLM Document Analysis]
-   
+      D --> E[1.5 LLM Data Extraction]
+
 
       A1[Establishing sophisticated benchmark<br/>for archival document understanding]
       B1[Comparison of methods and models<br/>for document digitization]
       C1[Measure confidence, entropy, and accuracy<br/>on 21 information retrieval tasks<br/>across three frontier models]
       D1[Evaluate scholar-language model<br/>interaction on analysis tasks]
-     
+      E1[Structured per-traveler extraction<br/>across naive, guided, and<br/>guided + transcription phases]
+
 
       A -.-> A1
       B -.-> B1
       C -.-> C1
       D -.-> D1
+      E -.-> E1
 
       style A fill:#e1f5fe
       style B fill:#f3e5f5
       style C fill:#e8f5e8
       style D fill:#fff3e0
-  
+      style E fill:#fce4ec
+
     </div>
     <p class="small"></p>
-  </div> 
-  
+  </div>
+
 <h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.1: Deep Source Analysis</h4>
-<p>We propose a real-world benchmark based on an expert analysis of deep sources. We address the critique that most benchmarks test breadth over depth by assuming that AI and scholars will work in collaboration. We address concerns that current benchmarks do not adequately present real-world relevant tasks by testing with an actual use case employing actual source materials (see examples <a href="/archives/">here</a>), rather than artificial tasks or generated images. <a href="/propel-1.1/">Read the report.</a></p>
+<p>We propose a real-world benchmark based on an expert analysis of deep sources. We address the critique that most benchmarks test breadth over depth by assuming that AI and scholars will work in collaboration. We address concerns that current benchmarks do not adequately present real-world relevant tasks by testing with an actual use case employing actual source materials (see examples <a href="/archives/">here</a>), rather than artificial tasks or generated images. <a href="/deep-sources/propel-1.1/">Read the report.</a></p>
 <h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.2: Image pre-processing</h4>
-<p>For many archives professionally produced digital images do not exist. Rather, scholars often enter archives with their own digital camera and are permitted to photograph documents themselves under sufficient but not ideal lighting conditions. The images for this case study were acquired this way. We experiment with existing methods to improve machine-readability of photographed archival manuscripts. We arrive at: 1. a merely adequate expedient method and 2. a preferred method that is computationally costly. Further work will need to be done to improve upon this preferred method. <a href="/propel-1.2/">Read the report.</a></p>
+<p>For many archives professionally produced digital images do not exist. Rather, scholars often enter archives with their own digital camera and are permitted to photograph documents themselves under sufficient but not ideal lighting conditions. The images for this case study were acquired this way. We experiment with existing methods to improve machine-readability of photographed archival manuscripts. We arrive at: 1. a merely adequate expedient method and 2. a preferred method that is computationally costly. Further work will need to be done to improve upon this preferred method. <a href="/deep-sources/propel-1.2/">Read the report.</a></p>
 <h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.3: Naive Deep Source Analysis</h4>
-<p>This experiment measures how the models’ answers to a set of questions posed about 39 document images compare to the ground truth. For each image there were three runs across the frontier models: Claude Opus, GPT 5.2, Gemini 2.5 Pro, Gemini 3.1 Pro, and Claude Opus with thinking. <a href="/propel-1.3/">Read the report.</a></p>
+<p>This experiment measures how the models’ answers to a set of questions posed about 39 document images compare to the ground truth. For each image there were three runs across the frontier models: Claude Opus, GPT 5.2, Gemini 2.5 Pro, Gemini 3.1 Pro, and Claude Opus with thinking. <a href="/deep-sources/propel-1.3/">Read the report.</a> &middot; <a href="{{ '/deep-sources/question-answering/' | relative_url }}">View analyses</a></p>
 <h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.4: Expert-directed Deep Source Analysis</h4>
-<p>This experiment builds on 1.1 and 1.3 to complete a manual, close evaluation of how LLMs fare when provided with expert scholarly guidance. We ran this experiment over the same 39 deep source documents used in 1.3 and we evaluate the same range of LLMs’ responses to the 22 questions. The difference is that we provide the LLMs with guidance established in 1.1. <a href="/propel-1.4/">Read the report.</a></p>
+<p>This experiment builds on 1.1 and 1.3 to complete a manual, close evaluation of how LLMs fare when provided with expert scholarly guidance. We ran this experiment over the same 39 deep source documents used in 1.3 and we evaluate the same range of LLMs’ responses to the 22 questions. The difference is that we provide the LLMs with guidance established in 1.1. <a href="/deep-sources/propel-1.4/">Read the report.</a> &middot; <a href="{{ '/deep-sources/question-answering/' | relative_url }}">View analyses</a></p>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.5: LLM Data Extraction</h4>
+<p>This experiment extends 1.3 and 1.4 from question answering to structured data extraction, asking models to populate a 9-field per-traveler schema (name, titles, dates, place of stay, family, origin, etc.) for three representative pages spanning page density (10, 18, and 37 travelers). Each (model, page) is run under three phases — naive, guided, and guided + transcription — for 10 runs each. <a href="{{ '/deep-sources/data-extraction/' | relative_url }}">View analyses</a></p>
+</section>
+
+<section id="analyses">
+  <h3 style="margin-top:0;">Analysis Reports</h3>
+  <p>Two experiment sets have produced quantitative results. Each links to a consolidated set of analysis reports:</p>
+  <ul>
+    <li><a href="{{ '/deep-sources/question-answering/' | relative_url }}"><b>Naive vs Guided Question Answering</b></a> — 22 questions across 39 archival page images, with and without expert guidance.</li>
+    <li><a href="{{ '/deep-sources/data-extraction/' | relative_url }}"><b>Data Extraction</b></a> — 9-field structured extraction across 3 representative pages and 3 prompt phases.</li>
+  </ul>
 </section>
 
 <section id="team" class="people" aria-labelledby="team-title">

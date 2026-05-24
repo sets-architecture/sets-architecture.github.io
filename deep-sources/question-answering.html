@@ -1,0 +1,277 @@
+---
+layout: default
+title: Naive vs Guided Question Answering — Deep Sources
+description: Naive vs Guided question answering analyses across 39 archival document images.
+---
+
+<style>
+  .qa-page { max-width: 860px; margin: 0 auto; line-height: 1.5; }
+  .qa-page h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .qa-page h2 { font-size: 1.05rem; margin: 2.2rem 0 0.8rem; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; color: #333; }
+  .qa-page h2 .legend { font-size: 0.75rem; color: #888; font-weight: normal; margin-left: 0.6rem; }
+  .qa-page p.sub { font-size: 0.9rem; color: #555; margin: 0 0 0.4rem; }
+  .qa-page p.intro { font-size: 0.88rem; color: #555; margin: 0 0 2rem; }
+  .qa-page ul.report-list { list-style: none; padding: 0; margin: 0; }
+  .qa-page ul.report-list li { padding: 0.55rem 0; border-bottom: 1px solid #eee; display: flex; align-items: baseline; gap: 0.8rem; }
+  .qa-page ul.report-list li:last-child { border-bottom: none; }
+  .qa-page .report-main { flex: 1; min-width: 0; }
+  .qa-page .report-title { font-size: 0.95rem; font-weight: 600; color: #222; }
+  .qa-page .report-title a { color: #1a5fa8; text-decoration: none; }
+  .qa-page .report-title a:hover { text-decoration: underline; }
+  .qa-page .desc { font-size: 0.82rem; color: #666; margin-top: 0.2rem; }
+  .qa-page .pair { display: flex; gap: 0.4rem; flex-shrink: 0; }
+  .qa-page .pill {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.78rem; text-decoration: none; border: 1px solid;
+    font-weight: 500;
+  }
+  .qa-page .pill.naive  { color: #1a5fa8; border-color: #c2d6ec; background: #f0f6fc; }
+  .qa-page .pill.naive:hover  { background: #1a5fa8; color: #fff; }
+  .qa-page .pill.guided { color: #1a7a1a; border-color: #c8e0c8; background: #f1f8f1; }
+  .qa-page .pill.guided:hover { background: #1a7a1a; color: #fff; }
+  .breadcrumb { max-width: 860px; margin: 0 auto 1.5rem; font-size: 0.82rem; color: #888; }
+  .breadcrumb a { color: #1a5fa8; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb .sep { margin: 0 0.35rem; color: #bbb; }
+  .breadcrumb [aria-current="page"] { color: #555; }
+</style>
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="{{ '/' | relative_url }}">SETS</a><span class="sep">&rsaquo;</span>
+  <a href="{{ '/deep-sources/' | relative_url }}">Deep Sources</a><span class="sep">&rsaquo;</span>
+  <span aria-current="page">Question Answering</span>
+</nav>
+
+<div class="qa-page">
+
+<h1>Naive vs Guided Question Answering</h1>
+<p class="sub">39 archival document images &middot; 5 models &middot; 10 runs each</p>
+<p class="intro">
+  Two experimental conditions: <b>Naive</b> — models prompted with the questions only;
+  <b>Guided</b> — same questions with an expert-authored domain-knowledge block prepended.
+  Pills indicate which condition each report covers.
+</p>
+
+<!-- ============================================================ -->
+<h2>Setup &amp; Reference <span class="legend">applies to both experiments</span></h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/22_questions.html">Question Definitions</a></div>
+      <div class="desc">The 22 questions asked of each page image — categories, data types, and answer formats.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/eval_guidelines.html">Evaluation Guidelines</a></div>
+      <div class="desc">Scoring rules, pre-processing, illegibility handling, and equivalence dictionary.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/expert_guidance.html">Expert Guidance</a></div>
+      <div class="desc">The domain-knowledge block injected into the system prompt for guided-condition runs.</div>
+    </div>
+  </li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>Cross-experiment Comparisons <span class="legend">naive vs guided</span></h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/naive_vs_guided_summary.html">Naive vs Guided Summary</a></div>
+      <div class="desc">Compact comparison: overall accuracy, per-question best result, and full model breakdown.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/naive_vs_guided.html">Naive vs Guided Comparison</a></div>
+      <div class="desc">All 5 models compared across naive and guided conditions; per-question accuracy and deltas.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/count_error_comparison.html">Count Error: Naive vs Guided</a></div>
+      <div class="desc">Per-page signed error from GT for all 10 counting questions, with naive and guided overlaid for direct comparison.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/guidance_revision.html">Guidance Revision: Before vs After</a></div>
+      <div class="desc">Per-question comparison of original vs revised expert guidance across all 5 models.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/gemini31_vs_claude_thinking.html">Gemini 3.1 vs Claude Thinking</a></div>
+      <div class="desc">Head-to-head between the two thinking models across naive and guided conditions.</div>
+    </div>
+  </li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>Per-experiment Analyses <span class="legend">click a pill to view that condition</span></h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title">Evaluation Report (t0)</div>
+      <div class="desc">Full per-question accuracy table at temperature 0 across all models.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/eval_report_t0.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/eval_report_t0.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Question Breakdown</div>
+      <div class="desc">Per-question detail with accuracy and variability.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/questions.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/per_question_accuracy.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Agreement Analysis</div>
+      <div class="desc">Cross-model agreement patterns per question.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/agreement.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/agreement.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Difficulty Analysis</div>
+      <div class="desc">Which questions are hardest and easiest across models.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/difficulty.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/difficulty.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Run Chart</div>
+      <div class="desc">Accuracy across 10 runs — consistency and variability over time.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/run_chart.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/run_chart.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Temperature Analysis</div>
+      <div class="desc">Comparison of t0 vs t_varied temperature configurations.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/temperature.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/temperature.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Text Questions</div>
+      <div class="desc">Character accuracy deep dive for OCR-dependent questions.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/text_questions.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/text_questions.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Bracket Analysis</div>
+      <div class="desc">Curly bracket question accuracy and patterns.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/brackets.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/brackets.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Bracket Errors</div>
+      <div class="desc">Detailed error analysis for bracket-related questions.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/bracket_errors.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/bracket_errors.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Count Accuracy</div>
+      <div class="desc">How accuracy varies with the number of instances on a page — do models struggle more at the extremes?</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/count_accuracy.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/count_accuracy.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Image Difficulty</div>
+      <div class="desc">Per-image accuracy heatmap highlighting where models struggle and disagree.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/images.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/image_difficulty.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Page Viewer</div>
+      <div class="desc">Per-image view of model answers and accuracy across all questions.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/page_viewer.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/page_viewer.html">guided</a>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title">Transcription Viewer</div>
+      <div class="desc">Browse model transcriptions alongside ground truth per image.</div>
+    </div>
+    <div class="pair">
+      <a class="pill naive"  href="/deep-sources/question-answering/naive/transcription_viewer.html">naive</a>
+      <a class="pill guided" href="/deep-sources/question-answering/guided/transcription_viewer.html">guided</a>
+    </div>
+  </li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>Guided-only Analyses <span class="legend">guided condition</span></h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/images.html">Image Complexity Grid</a></div>
+      <div class="desc">Thumbnail grid of all 39 pages, sortable by page ID, structural complexity, visual complexity, or accuracy.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/complexity.html">Image Complexity vs Accuracy</a></div>
+      <div class="desc">Structural complexity (text density, traveler counts, brackets) vs model accuracy. Correlations and per-page ranking.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/response_distribution.html">Response Distribution (Q9, Q11)</a></div>
+      <div class="desc">Box plots of raw model response values per page — actual counts, not accuracy. Toggle models on/off.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/deep-sources/question-answering/guided/tokens.html">Token Usage</a></div>
+      <div class="desc">Comparative token usage across models — per-image averages, grand totals, and cost efficiency.</div>
+    </div>
+  </li>
+</ul>
+
+</div>
