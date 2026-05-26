@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Question Definitions</title>
+<title>Questions</title>
 <style>
   body { font-family: -apple-system, sans-serif; margin: 2rem; color: #222; }
   h1 { font-size: 1.4rem; margin-bottom: 0.3rem; }
@@ -15,33 +15,47 @@
   th.sorted .arrow { color: #222; }
   td.qid { font-weight: bold; text-align: center; white-space: nowrap; }
   td.cat { white-space: nowrap; }
+  td.fcat { white-space: nowrap; }
+  td.tags { white-space: nowrap; font-family: ui-monospace, SFMono-Regular, monospace;
+            font-size: 0.75rem; color: #555; }
+  td.tags .none { color: #bbb; }
   td.dtype { white-space: nowrap; }
   td.format { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 0.78rem; }
   code { background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.78rem; }
   tr:hover { background: #fafafa; }
-  /* Category color bands */
+  /* Category color bands (existing scheme) */
   .cat-characteristic { background: #e8f5e9; }
   .cat-spatial { background: #e3f2fd; }
   .cat-counting { background: #fff8e1; }
   .cat-transcription { background: #fce4ec; }
   .cat-counting-spatial { background: #f3e5f5; }
   .cat-second-order { background: #e0f7fa; }
+  /* Format category color bands (proposed neutral scheme) */
+  .fcat-binary    { background: #eceff1; }
+  .fcat-integer   { background: #fff3e0; }
+  .fcat-paired    { background: #ffe0b2; }
+  .fcat-shorttext { background: #f0f4c3; }
+  .fcat-multitext { background: #f8bbd0; }
 </style>
 </head>
 <body>
 
 <h1>Question Definitions</h1>
-<p class="note">22 questions asked of each page image. Click column headers to sort.</p>
+<p class="note">22 questions asked of each page image. Click column headers to sort.
+The <em>Category</em> column uses the existing semantic grouping; <em>Format category</em>
+and <em>Tags</em> show the proposed neutral scheme that describes the question as posed
+(not how a model might approach it).</p>
 
 <table id="qtable">
 <thead>
 <tr>
   <th data-col="0" data-type="num">Q#<span class="arrow">&#9650;</span></th>
-  <th data-col="1" data-type="str">Category<span class="arrow">&#9650;</span></th>
-  <th data-col="2" data-type="str">Model Question<span class="arrow">&#9650;</span></th>
-  <th data-col="3" data-type="str">Field Name<span class="arrow">&#9650;</span></th>
-  <th data-col="4" data-type="str">Data Type<span class="arrow">&#9650;</span></th>
-  <th data-col="5" data-type="str">Format<span class="arrow">&#9650;</span></th>
+  <th data-col="1" data-type="str">Category by human task<span class="arrow">&#9650;</span></th>
+  <th data-col="2" data-type="str">Question<span class="arrow">&#9650;</span></th>
+  <th data-col="3" data-type="str">Answer Type<span class="arrow">&#9650;</span></th>
+  <th data-col="4" data-type="str"> Answer Format<span class="arrow">&#9650;</span></th>
+  <th data-col="5" data-type="str">Format category<span class="arrow">&#9650;</span></th>
+  <th data-col="6" data-type="str">Tags<span class="arrow">&#9650;</span></th>
 </tr>
 </thead>
 <tbody>
@@ -49,177 +63,199 @@
   <td class="qid">1</td>
   <td class="cat cat-characteristic">Characteristic features</td>
   <td>Is there a date (with year) near or at the top of the page?</td>
-  <td><code>has_date</code></td>
   <td class="dtype">Boolean (Y/N)</td>
   <td class="format"><code>Y</code>, <code>N</code>, or <code>illegible</code></td>
+  <td class="fcat fcat-binary">Binary response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">2</td>
   <td class="cat cat-second-order">Second Order Transcription</td>
   <td>If so, what is the year?</td>
-  <td><code>date_year_extracted</code></td>
   <td class="dtype">Integer</td>
   <td class="format">4-digit integer (e.g. <code>1768</code>); leave blank if Q1 is N</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags">response-conditioned, rule-conditioned</td>
 </tr>
 <tr>
   <td class="qid">3</td>
   <td class="cat cat-characteristic">Characteristic features</td>
   <td>Does the page have two columns?</td>
-  <td><code>has_two_columns</code></td>
   <td class="dtype">Boolean (Y/N)</td>
   <td class="format"><code>Y</code>, <code>N</code>, or <code>illegible</code></td>
+  <td class="fcat fcat-binary">Binary response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">4</td>
   <td class="cat cat-characteristic">Characteristic features</td>
   <td>Is the page signed?</td>
-  <td><code>is_signed</code></td>
   <td class="dtype">Boolean (Y/N)</td>
   <td class="format"><code>Y</code>, <code>N</code>, or <code>illegible</code></td>
+  <td class="fcat fcat-binary">Binary response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">5</td>
   <td class="cat cat-spatial">Spatial location</td>
   <td>If it is signed, where does the signature appear on the page?</td>
-  <td><code>signature_location</code></td>
   <td class="dtype">String</td>
   <td class="format">Two words (e.g. <code>bottom right</code> or <code>top center</code>); leave blank if Q4 is N</td>
+  <td class="fcat fcat-shorttext">Short-text response</td>
+  <td class="tags">response-conditioned</td>
 </tr>
 <tr>
   <td class="qid">6</td>
   <td class="cat cat-characteristic">Characteristic features</td>
   <td>Is there a small circular mark in the top left corner of the page?</td>
-  <td><code>has_top_left_mark</code></td>
   <td class="dtype">Boolean (Y/N)</td>
   <td class="format"><code>Y</code>, <code>N</code>, or <code>illegible</code></td>
+  <td class="fcat fcat-binary">Binary response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">7</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many additional small circular marks are on the page (not part of a word, but as an annotation mark)?</td>
-  <td><code>additional_archivist_marks_count</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0; excludes the top-left mark counted in Q6</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">8</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many instances of quondam?</td>
-  <td><code>quondam_total</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">9</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many instances of "con" as a preposition are on the page?</td>
-  <td><code>con_total</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">10</td>
   <td class="cat cat-transcription">Transcription</td>
   <td>What two words immediately follow each instance of "con"?</td>
-  <td><code>text_after_con</code></td>
   <td class="dtype">Array of Strings</td>
   <td class="format">Pipe-separated list, one entry per instance: <code>word1 word2 | word3 word4</code>; leave blank if Q9 is 0</td>
+  <td class="fcat fcat-multitext">Multi-entry text response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">11</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many instances of "e" as a conjunction?</td>
-  <td><code>e_conjunction_total</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0; include both <code>e</code> and <code>ed</code></td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">12</td>
   <td class="cat cat-transcription">Transcription</td>
   <td>What two words immediately follow "e" as a conjunction?</td>
-  <td><code>text_after_e</code></td>
   <td class="dtype">Array of Strings</td>
   <td class="format">Pipe-separated list, one entry per instance: <code>word1 word2 | word3 word4</code>; leave blank if Q11 is 0</td>
+  <td class="fcat fcat-multitext">Multi-entry text response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">13</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many travelers are mentioned by name?</td>
-  <td><code>named_travelers_total</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">14</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many travelers are mentioned who are not named?</td>
-  <td><code>unnamed_travelers_total</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">15</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many instances of place of origin and nationality describing the travelers appear in the document?</td>
-  <td><code>unique_places_of_origin_nationality</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0; count each unique place and/or nationality once</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">16</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many unique places of stay are mentioned on the page?</td>
-  <td><code>unique_places_of_stay</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0; count each unique place once across both columns</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">17</td>
   <td class="cat cat-counting-spatial">Counting and Spatial location</td>
   <td>How many places of stay (count all) are mentioned per column?</td>
-  <td><code>place_of_stay_left</code>, <code>place_of_stay_right</code></td>
-  <td class="dtype">Integer, Integer</td>
-  <td class="format">Two integers separated by <code>|</code> in left-to-right order: <code>N | N</code></td>
+  <td class="dtype">Integer</td>
+  <td class="format">Two integers separated by <code>|</code> in left-to-right order.</td>
+  <td class="fcat fcat-paired">Paired-integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">18</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many indications of place of stay (i.e. 'in casa di [x]) include a person's name?</td>
-  <td><code>total_place_of_stay_with_person_name</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0; count every instance, even if the same name repeats</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">19</td>
   <td class="cat cat-counting">Counting</td>
   <td>How many curly brackets appear on the page?</td>
-  <td><code>bracket_total</code></td>
   <td class="dtype">Integer</td>
   <td class="format">Integer &ge; 0</td>
+  <td class="fcat fcat-integer">Integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">20</td>
   <td class="cat cat-counting-spatial">Counting and Spatial location</td>
   <td>How many curly brackets appear per column?</td>
-  <td><code>bracket_left</code>, <code>bracket_right</code></td>
-  <td class="dtype">Integer, Integer</td>
-  <td class="format">Two integers separated by <code>|</code> in left-to-right order: <code>N | N</code></td>
+  <td class="dtype">Integer</td>
+  <td class="format">Two integers separated by <code>|</code> in left-to-right order.</td>
+  <td class="fcat fcat-paired">Paired-integer response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">21</td>
   <td class="cat cat-characteristic">Characteristic features</td>
   <td>Where there are curly brackets, is there an annotation describing the bracketed information?</td>
-  <td><code>has_bracket_annotation</code></td>
   <td class="dtype">Boolean (Y/N)</td>
   <td class="format"><code>Y</code>, <code>N</code>, or <code>illegible</code>; leave blank if Q19 is 0</td>
+  <td class="fcat fcat-binary">Binary response</td>
+  <td class="tags"><span class="none">—</span></td>
 </tr>
 <tr>
   <td class="qid">22</td>
   <td class="cat cat-transcription">Transcription</td>
   <td>Write the words in the annotation.</td>
-  <td><code>bracket_annotation_text</code></td>
   <td class="dtype">String</td>
   <td class="format">Pipe-separated list, one entry per bracket: <code>text1 | text2</code>; leave blank if Q21 is N</td>
+  <td class="fcat fcat-multitext">Multi-entry text response</td>
+  <td class="tags">response-conditioned</td>
 </tr>
 </tbody>
 </table>
@@ -240,7 +276,7 @@ headers.forEach(th => {
     th.classList.add('sorted');
     headers.forEach(h => {
       h.querySelector('.arrow').textContent = h === th
-        ? (sortAsc ? '\u25B2' : '\u25BC') : '\u25B2';
+        ? (sortAsc ? '▲' : '▼') : '▲';
     });
 
     const tbody = table.querySelector('tbody');
