@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evaluation Guidelines — Data Extraction</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.55; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.1rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  h3 { font-size: 1.0rem; margin-top: 1.5rem; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 2rem 0; }
+  table { border-collapse: collapse; font-size: 0.85rem; margin: 0.8rem 0 1.5rem; }
+  th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
+  a { color: #1858a7; }
+  ul, ol { line-height: 1.6; }
+  p.note { font-size: 0.85rem; color: #555; }
+  .back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+</style>
+</head>
+<body>
+<p class="back"><a href="/deep-sources/data-extraction/">&larr; Data Extraction</a></p>
+
+<h1>Evaluation Guidelines</h1>
+<p>This document defines the rules used to score model responses against ground truth in the Venice 39 data-extraction experiment. It is <b>not</b> shown to models during testing — it records the answer-key logic and acceptable equivalences applied after model output is collected. The implementation lives in <a href="evaluate.py">evaluate.py</a>.</p>
+
+<hr>
+
+<h2>1. Pre-processing</h2>
+<p>Applied to both ground truth and model values before any comparison:</p>
+<ol>
+<li><b>Lowercase</b> the entire string.</li>
+<li><b>Collapse whitespace</b> (any run of whitespace → single space) and trim leading/trailing spaces.</li>
+<li><b>Apply the abbreviation equivalence dictionary</b> (Section 5) token-by-token, so <code>q.m.</code>, <code>q.m</code>, <code>qm</code>, <code>q(uonda)m</code>, and <code>q(uondam)</code> all collapse to <code>quondam</code> before scoring.</li>
+</ol>
+<p class="note">For name matching only, an additional punctuation strip (<code>[^\w\s?]</code>) is applied — see Section 2. The <code>?</code> character is preserved everywhere because it marks illegible glyphs in ground truth.</p>
+
+<hr>
+
+<h2>2. Name matching (which model rows pair with which GT rows)</h2>
+<p>Each model row (one traveler record) is paired with at most one ground-truth row using <b>greedy best-match</b> on a name-similarity score in <code>[0, 1]</code>:</p>
+<ul>
+<li><b>Name normalization</b>: lowercase, strip punctuation, collapse whitespace. <code>?</code> in either name is treated as a wildcard for one character.</li>
+<li><b>Similarity</b> = max of two signals:
+<ul>
+<li><code>difflib.SequenceMatcher</code> character-level ratio</li>
+<li>Token-set overlap: <code>|tokens_a ∩ tokens_b| / max(|tokens_a|, |tokens_b|)</code></li>
+</ul>
+The token-set component boosts matches where the model reorders or drops minor tokens.</li>
+<li><b>Threshold</b>: pairs below similarity <code>0.70</code> are not accepted as matches.</li>
+<li><b>Tiebreaker</b>: when the same name appears in GT twice (e.g. a traveler with both an arrival and a departure row), <b>arrival- and departure-date alignment</b> are used as secondary signals — preferring the GT row whose dates match the model row.</li>
+</ul>
+<p>The result is split into three buckets:</p>
+<ul>
+<li><b>Matched</b>: the (model row, GT row) pairs above threshold</li>
+<li><b>Unmatched model rows</b>: false positives — counted against precision</li>
+<li><b>Unmatched GT rows</b>: false negatives — counted against recall</li>
+</ul>
+<p>See <a href="evaluate.py#L171-L224">evaluate.py:171-224</a>.</p>
+
+<hr>
+
+<h2>3. Precision, recall, F1 per image</h2>
+<ul>
+<li><code>precision = matched / n_model</code> — of the rows the model produced, how many landed on a real GT traveler</li>
+<li><code>recall = matched / n_gt</code> — of the GT travelers, how many the model found</li>
+<li><code>F1 = 2 · precision · recall / (precision + recall)</code></li>
+</ul>
+<p class="note">F1 measures <b>traveler identification</b> only — whether the right set of travelers was produced, not whether their fields were transcribed correctly. Per-field accuracy is reported separately (Section 4).</p>
+
+<hr>
+
+<h2>4. Per-field scoring (only on matched rows)</h2>
+<p>Once a model row has been paired with a GT row, the nine fields are scored independently. A model that fails to find a GT traveler does <b>not</b> get a free pass on the field accuracy of that row — they are accounted for by the lower recall in Section 3.</p>
+
+<h3>4a. Text fields (character accuracy)</h3>
+<p>The fields <code>title</code>, <code>arrival_date</code>, <code>departure_date</code>, <code>place_of_stay</code>, and <code>place_of_origin</code> are scored by <b>character accuracy</b>:</p>
+<p><code>char_accuracy(gt, model) = max(0, 1 − levenshtein(gt, model) / len(gt))</code></p>
+<p>The strings are normalized per Section 1 before measuring edit distance, so a 1-character misspelling on a 16-character GT scores ~0.94 rather than 0, and abbreviation variants count as identical. See <a href="evaluate.py#L125-L145">evaluate.py:125-145</a>.</p>
+
+<h3>4b. Exact-match fields</h3>
+<p>The fields <code>with_spouse</code>, <code>with_siblings</code>, and <code>children_count</code> are scored by strict equality (1.0 or 0.0). The first two are Y/N booleans; <code>children_count</code> is an integer — they're grouped because all three are scored by exact match rather than by character similarity.</p>
+
+<h3>4c. Unscorable cells</h3>
+<p>If the GT value for a field is empty (e.g. the GT title is blank because the document mentions no title for that traveler), the cell is excluded from <i>both</i> numerator and denominator of the per-field average. It neither helps nor hurts the model.</p>
+
+<hr>
+
+<h2>5. Abbreviation equivalence dictionary</h2>
+<p>Before any text comparison, each token is replaced by its canonical form using the table below. The mapping is applied identically to GT and model output, so two strings that look different but spell the same Venetian abbreviation score as identical.</p>
+
+<table>
+<thead><tr><th>Variant(s)</th><th>Canonical form</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>q.m.</code>, <code>q.m</code>, <code>qm</code>, <code>q(uonda)m</code>, <code>q(uondam)</code></td><td><code>quondam</code></td><td>"the late" — used before the name of a predeceased father</td></tr>
+<tr><td><code>flli</code></td><td><code>fratelli</code></td><td>brothers / siblings</td></tr>
+<tr><td><code>gio.</code></td><td><code>giovanni</code></td><td>given name Giovanni</td></tr>
+<tr><td><code>s.</code></td><td><code>san</code></td><td>"saint" (masculine) before a parish name</td></tr>
+<tr><td><code>s.t</code></td><td><code>santo</code></td><td>"saint" (masculine, full form)</td></tr>
+<tr><td><code>s.ta</code></td><td><code>santa</code></td><td>"saint" (feminine)</td></tr>
+</tbody></table>
+
+<p class="note">The dictionary is intentionally narrow — only abbreviations that GT and models use interchangeably across the same document. Source: <a href="evaluate.py#L58-L75">evaluate.py:58-75</a>. The same table is also used in the question-answering experiment so per-field numbers are comparable across the three projects.</p>
+
+<hr>
+
+<h2>6. Aggregation across pages, runs, and models</h2>
+<p>The F1 numbers reported in Section 1 of the <a href="summary.html">summary</a> are <b>micro-averaged</b> within a (model, phase) cell: <code>total_matched / total_model</code> and <code>total_matched / total_gt</code> are summed across every successful image and run, then F1 is computed from those pooled rates. Pages with more travelers (page 36 with 37 travelers vs. page 39 with 10) therefore carry more weight in the aggregate.</p>
+<p>Failed runs (parse errors, MAX_TOKENS truncation, etc.) are excluded — neither <code>n_gt</code> nor <code>n_model</code> for a failed image contributes. See <a href="evaluate.py#L314-L319">evaluate.py:314-319</a>.</p>
+
+<hr>
+
+<h2>7. What evaluation does and does not measure</h2>
+<ul>
+<li>A <b>perfect F1</b> means the model emitted the right set of named travelers — no more, no less. It says nothing about how accurately the fields for each traveler were transcribed.</li>
+<li>A <b>perfect place_of_stay accuracy</b> on matched rows means the surviving rows transcribed that field correctly. It says nothing about rows the model missed entirely.</li>
+<li>The two together — F1 + per-field accuracy on matched rows — are the full picture. A model with F1 = 1.00 and arrival-date accuracy of 0.70 has correctly identified <i>who</i> is on the page but not <i>when</i> they were there.</li>
+</ul>
+
+</body>
+</html>
