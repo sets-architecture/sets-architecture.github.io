@@ -24,6 +24,41 @@ td.qlabel { text-align: left; font-size: 0.78rem; max-width: 160px; white-space:
 <h1>Expert Guidance Revision: Before vs After</h1>
 <p class="note">Both runs use the same models, t0 config, 10 runs. "Before" = original guidance, "After" = revised guidance.</p>
 
+<h2>Nature of the revision</h2>
+<p class="note" style="margin-bottom:0.8rem;">
+  The revision narrowed in on the description of <b>M.V.</b> (<i>More Veneto</i>) used in the guidance paragraph about the Venetian calendar.
+  The cosmetic shift from <code>MV</code> to <code>M.V.</code> is not material &mdash; both forms are accepted by the evaluator.
+  The substantive change is in red below: an <b>explicit operational rule</b> ("a year must be added") replaces the previous version's implicit
+  inference left to the model.
+</p>
+
+<div style="border:1px solid #e0e0e0; border-radius:6px; padding:0.8rem 1rem; background:#fafafa; margin-bottom:0.6rem; line-height:1.55;">
+  <div style="font-size:0.78rem; color:#888; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.3rem;">Before</div>
+  <p style="margin:0; font-size:0.9rem;">
+    MV: this indication follows the dates for the months of January and February to indicate that dates are recorded
+    in the Venetian calendar convention for which the first of the year is March 1st
+    <span style="color:#b91c1c;">(and therefore what is recorded in these sheets, for example, as January or February 1766
+    corresponds to January or February 1767 out of Venice)</span>.
+  </p>
+</div>
+
+<div style="border:1px solid #e0e0e0; border-radius:6px; padding:0.8rem 1rem; background:#fafafa; margin-bottom:1.2rem; line-height:1.55;">
+  <div style="font-size:0.78rem; color:#888; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.3rem;">After</div>
+  <p style="margin:0; font-size:0.9rem;">
+    M.V.: this acronym (abbreviation of &lsquo;More Veneto,&rsquo; Latin for &lsquo;according to the Venetian custom&rsquo;)
+    follows the dates for the months of January and February to indicate that these were recorded according to the Venetian calendar
+    in which the year begins March 1st.
+    <span style="color:#b91c1c;">When M.V. appears, this means that a year must be added to the date to make it consistent with
+    non-Venetian calendars</span>
+    (for example, January or February 1766 corresponds to January or February 1767 on the standard calendar).
+  </p>
+</div>
+
+<p class="note">
+  The example sentence carries the rule implicitly in the Before version; in the After version, the rule is stated directly and the
+  example illustrates it. This is the change that most plausibly drives Q2's accuracy delta in the tables below.
+</p>
+
 <h2>Overall Accuracy</h2>
 <table>
 <tr><th>Model</th><th>Before</th><th>After</th><th>&Delta;</th></tr>
