@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><meta charset='utf-8'>
-<title>Image Complexity Grid</title>
+<title>Image Density Grid</title>
 <style>
     body { font-family: system-ui, sans-serif; max-width: 100%; margin: 1rem 1.5rem; color: #222; }
     h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
@@ -25,17 +25,17 @@
     </style>
 <script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script>
 </head><body>
-<h1>Image Complexity Grid</h1>
-<p class='note'>Thumbnails of all 39 pages with their complexity ratings. Click a thumbnail to view the full-size image. <b>Structural</b> = sum of named travelers, unnamed travelers, con instances, e instances (from ground truth). <b>Visual</b> = connected ink components from Sauvola binarization (≥5 px).</p>
+<h1>Image Density Grid</h1>
+<p class='note'>Thumbnails of all 39 pages with their density ratings. Click a thumbnail to view the full-size image. <b>Structural</b> = sum of named travelers, unnamed travelers, con instances, e instances (from ground truth). <b>Visual</b> = connected ink components from Sauvola binarization (≥5 px).</p>
 <div class='chart-section'>
-<p class='note' style='margin-top:0;'>Accuracy (raw %), structural complexity (min-max normalized to 0–100% of the corpus range, 7–118), and visual complexity (min-max normalized, 423–2,695 components). Toggle traces in the legend. Note the inverse relationship: higher complexity → lower accuracy.</p>
+<p class='note' style='margin-top:0;'>Accuracy (raw %), structural density (min-max normalized to 0–100% of the corpus range, 7–118), and visual density (min-max normalized, 423–2,695 components). Toggle traces in the legend. Note the inverse relationship: higher density → lower accuracy.</p>
 <div id='compare-chart'></div>
 </div>
 <div class='controls'>
 <span>Sort by:</span>
 <button data-sort='page_id' class='active'>Page ID</button>
-<button data-sort='structural'>Structural complexity</button>
-<button data-sort='visual_components'>Visual complexity</button>
+<button data-sort='structural'>Structural density</button>
+<button data-sort='visual_components'>Visual density</button>
 <button data-sort='accuracy'>Mean accuracy</button>
 <span style='margin-left:auto;'>Order:</span>
 <button id='order-asc'>Ascending</button>
