@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gemini 3.1 — Named Travelers Across Task Framings</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.55; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.05rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  h3 { font-size: 0.98rem; margin-top: 1.5rem; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 2rem 0; }
+  table { border-collapse: collapse; font-size: 0.85rem; margin: 0.6rem 0 1.5rem; }
+  th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: right; vertical-align: top; }
+  th { background: #f0f0f0; }
+  th:first-child, td:first-child { text-align: left; }
+  td.gt { background: #f8f8f8; font-weight: 600; }
+  td.exact { color: #146c2e; font-weight: 600; }
+  td.miss { color: #8a3f00; }
+  td.bigmiss { color: #b91c1c; font-weight: 600; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
+  a { color: #1858a7; }
+  ul { line-height: 1.6; }
+  p.note { font-size: 0.85rem; color: #555; }
+  .back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .legend { display: flex; gap: 1.2rem; font-size: 0.78rem; color: #555; margin: 0 0 1rem; flex-wrap: wrap; }
+  .legend span:before { content: ''; display: inline-block; width: 10px; height: 10px; margin-right: 4px; vertical-align: middle; border: 1px solid #ccc; }
+  .legend .ok:before     { background: #146c2e; border-color: #146c2e; }
+  .legend .miss:before   { background: #8a3f00; border-color: #8a3f00; }
+  .legend .bigmiss:before{ background: #b91c1c; border-color: #b91c1c; }
+</style>
+</head>
+<body>
+<p class="back"><a href="/deep-sources/data-extraction/">&larr; Data Extraction</a></p>
+
+<h1>Gemini 3.1 — Named Travelers Across Task Framings</h1>
+<p>
+  Same model, same three page images, three task framings. The numbers below are mean counts across 10 t&nbsp;=&nbsp;0 runs.
+  This isolates a behaviour that's easy to miss when only one experiment is in view: Gemini 3.1's recall of <em>who is on the page</em>
+  depends sharply on whether you ask for a count or ask it to enumerate.
+</p>
+
+<hr>
+
+<h2>1. The numbers</h2>
+
+<table>
+<thead>
+<tr>
+  <th rowspan="2">Page</th>
+  <th colspan="2">Ground truth</th>
+  <th colspan="2">Q&amp;A &mdash; Q13 "How many travelers are mentioned by name?"</th>
+  <th colspan="3">Data extraction &mdash; <code>n_model</code> (length of emitted traveler list)</th>
+</tr>
+<tr>
+  <th>Q&amp;A<br><small>mentions</small></th>
+  <th>DE<br><small>unique rows</small></th>
+  <th>Naive</th>
+  <th>Guided</th>
+  <th>Naive&nbsp;(N)</th>
+  <th>Guided&nbsp;(A)</th>
+  <th>Guided + transcription (B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><b>Page 28</b><br><small style="color:#888;font-weight:normal;">Feb 20, 1769 (Ebrei)</small></td>
+  <td class="gt">19</td>
+  <td class="gt">18</td>
+  <td class="miss">17.0</td>
+  <td class="miss">17.5 <small style="color:#888;">(16&ndash;19)</small></td>
+  <td class="exact">19.0</td>
+  <td class="exact">19.0</td>
+  <td class="exact">19.0</td>
+</tr>
+<tr>
+  <td><b>Page 36</b><br><small style="color:#888;font-weight:normal;">May 28, 1770 (densest)</small></td>
+  <td class="gt">36</td>
+  <td class="gt">37</td>
+  <td class="bigmiss">28.0</td>
+  <td class="bigmiss">28.5 <small style="color:#888;">(28&ndash;29)</small></td>
+  <td class="miss">34.0</td>
+  <td class="exact">36.0</td>
+  <td class="exact">36.0</td>
+</tr>
+<tr>
+  <td><b>Page 39</b><br><small style="color:#888;font-weight:normal;">Aug 20, 1770</small></td>
+  <td class="gt">10</td>
+  <td class="gt">10</td>
+  <td>9.0</td>
+  <td>9.0</td>
+  <td class="exact">10.0</td>
+  <td class="exact">10.0</td>
+  <td class="exact">10.0</td>
+</tr>
+</tbody>
+</table>
+
+<div class="legend">
+  <span class="ok">matches a GT</span>
+  <span class="miss">undercounts by 1&ndash;3</span>
+  <span class="bigmiss">undercounts by &ge; 5</span>
+</div>
+
+<hr>
+
+<h2>2. What the table says</h2>
+
+<p>
+  <b>The same model produces two systematically different counts depending on output shape.</b>
+  On page 36, asked directly, Gemini 3.1 says <b>28</b> travelers are named. Asked to extract them, it emits a list of <b>36</b> traveler
+  records &mdash; off by one against the data-extraction GT of 37, but closing nearly the entire eight-traveler shortfall the direct count shows.
+  Structured emission isn't perfect (we'll see a duplication error on page 28 below), but it's <em>dramatically</em> closer than counting in a vacuum.
+</p>
+
+<p>
+  This isolates <b>task framing</b> as the variable. Enumerating forces the model to "look" once per row; a direct count appears to be
+  pulled from a small-number prior rather than from an exhaustive scan. The gap widens with page size &mdash; page 39 (10 GT) is off by 1,
+  page 28 (19 GT) by 1.5&ndash;2, page 36 (36 GT) by 7&ndash;8.
+</p>
+
+<p>
+  <b>Guidance helps a little; transcription helps a lot.</b> Adding expert domain guidance nudges the Q&amp;A count up by half a traveler on
+  pages 28 and 36 (17.0&nbsp;&rarr;&nbsp;17.5 and 28.0&nbsp;&rarr;&nbsp;28.5), and in the data-extraction setting it closes the page-36 gap
+  by two records (34&nbsp;&rarr;&nbsp;36). But it doesn't change the model's <em>strategy</em> &mdash; the direct count still undershoots,
+  and the page-28 duplication persists across every data-extraction phase.
+</p>
+
+<hr>
+
+<h2>3. Why the two ground truths differ on page 28</h2>
+
+<p>
+  Q13 asks "<i>How many travelers are mentioned by name?</i>" &mdash; not "how many <em>unique</em> travelers." Each GT applies a different
+  counting convention, each internally consistent with the task it serves:
+</p>
+<ul>
+  <li>
+    <b>Q&amp;A GT counts mentions.</b> On page 28, Mandolin Todros appears in the left column as an arrival and again in the right column
+    as a departure (bracketed with Regina Todros). That's <b>two mentions</b> of the same person, so the Q&amp;A GT total is <b>19</b>.
+  </li>
+  <li>
+    <b>Data-extraction GT counts unique traveler records.</b> The data-extraction schema asks for one row per traveler with separate
+    <code>arrival_date</code> and <code>departure_date</code> fields, so Mandolin Todros contributes <b>one row</b> capturing both events.
+    The DE GT for page 28 is <b>18</b>.
+  </li>
+</ul>
+
+<h3>The extra Gemini 3.1 record on page 28 is not faithful &mdash; it is a duplication error</h3>
+<p>
+  Gemini 3.1 emits 19 records on page 28 in every phase. That number happens to equal the Q&amp;A mention count, but the model isn't
+  answering the Q&amp;A question &mdash; it's filling out the data-extraction schema, which asks for one row per traveler. Inspecting the
+  output (see <a href="field_results_page_28.html">Per-field results &mdash; Page 28</a>) confirms: row 1 is "Mandolin Todros" with the
+  arrival date, and the 19th row is a second "Mandolin Todros" instead of being collapsed into row 1's <code>departure_date</code> field.
+  That is the duplication the schema explicitly forbids; it shows up as a 1-row precision dent against the DE GT and produces the F1 = 0.97
+  plateau we noted in <a href="summary.html">summary.html</a> section 2.
+</p>
+
+<p class="note">
+  Data sources: Q&amp;A answers from <code>venice-39-guided</code> / <code>venice-39-naive</code> checkpoints
+  (file <code>eval_gemini31_t0_run01.json</code> &ndash; <code>run10.json</code>);
+  data-extraction <code>n_model</code> from <code>venice-39-data-extraction/scores_phase_{n,a,b}/score_gemini31_phase{n,a,b}_run*.json</code>.
+  All numbers are means across 10 runs at temperature 0; ranges noted in parentheses where runs disagreed.
+</p>
+
+</body>
+</html>
