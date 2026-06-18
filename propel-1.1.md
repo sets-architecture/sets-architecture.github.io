@@ -5,7 +5,7 @@ description: Expert Analysis of Archival Document Images.
 permalink: /propel-1.1/
 ---
 
-<p class="parent-link"><a href="{{ '/deep-sources/' | relative_url }}">← Deep Source Analysis with LLMs</a></p>
+<p class="parent-link"><a href="{{ '/preliminary-work/' | relative_url }}">← Deep Source Analysis with LLMs</a></p>
 
 # Propel Experiment 1.1: Expert Analysis of Archival Document Images
 

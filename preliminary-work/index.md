@@ -1,19 +1,16 @@
 ---
 layout: default
-title: Deep source analysis with LLMs
+title: LLMs and Handwritten Archival Documents
 description: SETS project page.
 ---
 
 <section class="hero">
-  <h1>SETS: Deep Source Analysis with LLMs</h1>
+  <h1>SETS: LLMs and Handwritten Archival Documents</h1>
 </section>
 
 <section id="about">
 
-    <p>Preliminary work on the development of SETS began in the Spring of 2025 when the team was awarded a Propel grant from
-    the Dean of Research at Stanford University. The Propel grant funded experiments to improve efficiency in learning
-    from archival handwritten sources, a complex and time-consuming task that severely constrains the scope of research
-    agendas. We examined approaches to scaling the analysis of several archival images. This operationrequired defining: 1. the components of scholarly analysis;  and 2. the dimensions to be considered when designing evaluation metrics.</p>
+    <p>Preliminary work on the development of SETS began in the Spring of 2025 when the team was awarded a Propel grant from the Dean of Research at Stanford University. The Propel grant funded experiments to improve efficiency in learning from archival handwritten sources, a complex and time-consuming task that severely constrains the scope of research agendas. We examined approaches to scaling the analysis of several archival images. This operationrequired defining: 1. the components of scholarly analysis;  and 2. the dimensions to be considered when designing evaluation metrics.</p>
       <p>Our first step was creating a benchmark for human-model interaction in the analysis of deep sources (Lee et al, 2024). This evaluation framework aims to improve upon existing benchmarks for multi-modal models by taking a deep and focused approach rather than a broader but flatter approach (Yue et al, 2024). Our framework attends to the complexity of deep sources as textual, visual, and physical objects, while also taking into account the theoretical and methodological approaches of the scholar.</p>
       <p>Whereas existing benchmarks address general reasoning capabilities, we offer a benchmark for deep sources that evaluates models on an actual workflow, measuring real task completion rather than using proxy metrics. Our benchmark design is grounded in the following assumptions:</p>
       <ul>
@@ -30,7 +27,7 @@ description: SETS project page.
     <!-- Mermaid diagram -->
     <div class="mermaid">
     flowchart LR
-      A[1.1 Deep Source Analysis by Scholar] --> B[1.2 Image Pre-processing & Text Transcription]
+      A[1.1 Archival Document Analysis by Scholar] --> B[1.2 Image Pre-processing & Text Transcription]
       B --> C[1.3 Naive LLM Document Analysis]
       C --> D[1.4 Expert-guided LLM Document Analysis]
       D --> E[1.5 LLM Data Extraction]

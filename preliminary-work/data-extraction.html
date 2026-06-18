@@ -36,7 +36,7 @@ description: Structured data extraction across 3 representative pages and 3 prom
 
 <nav class="breadcrumb" aria-label="Breadcrumb">
   <a href="{{ '/' | relative_url }}">SETS</a><span class="sep">&rsaquo;</span>
-  <a href="{{ '/deep-sources/' | relative_url }}">Deep Sources</a><span class="sep">&rsaquo;</span>
+  <a href="{{ '/preliminary-work/' | relative_url }}">Deep Sources</a><span class="sep">&rsaquo;</span>
   <span aria-current="page">Data Extraction</span>
 </nav>
 
@@ -58,25 +58,25 @@ description: Structured data extraction across 3 representative pages and 3 prom
 <ul class="report-list">
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/deep-sources/pages/">Pages &mdash; Image + Transcription Viewer</a></div>
+      <div class="report-title"><a href="/preliminary-work/pages/">Pages &mdash; Image + Transcription Viewer</a></div>
       <div class="desc">Side-by-side viewer of the three archival pages used in the experiment, with the same transcription text the models received. Switch between pages 28, 36, and 39.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/deep-sources/data-extraction/eval_guidelines.html">Evaluation Guidelines</a></div>
+      <div class="report-title"><a href="/preliminary-work/data-extraction/eval_guidelines.html">Evaluation Guidelines</a></div>
       <div class="desc">Scoring rules: name matching, character accuracy for text fields, exact-match for booleans and integer counts, and the full abbreviation equivalence table (e.g. <code>q.m. / qm / q(uonda)m → quondam</code>).</div>
     </div>
   </li>
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/deep-sources/data-extraction/expert_guidance.html">Expert Guidance</a></div>
+      <div class="report-title"><a href="/preliminary-work/data-extraction/expert_guidance.html">Expert Guidance</a></div>
       <div class="desc">The domain-knowledge block prepended to the system prompt for guided-condition runs — Venetian archival conventions, the M.V. calendar, named-vs-unnamed traveler rules, family vocabulary, and abbreviations.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/deep-sources/data-extraction/gt_all_pages.html">Ground Truth — All Pages</a></div>
+      <div class="report-title"><a href="/preliminary-work/data-extraction/gt_all_pages.html">Ground Truth — All Pages</a></div>
       <div class="desc">The authoritative per-traveler readings for all three pages in the 9-field schema requested from the models. A single reference for reviewing model output.</div>
     </div>
   </li>
@@ -87,19 +87,19 @@ description: Structured data extraction across 3 representative pages and 3 prom
 <ul class="report-list">
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/deep-sources/data-extraction/summary.html">Summary</a></div>
+      <div class="report-title"><a href="/preliminary-work/data-extraction/summary.html">Summary</a></div>
       <div class="desc">F1 by model and phase, per-field accuracy, per-image F1 variation across runs, and notes on collection caveats. Includes how F1 is calculated for this experiment.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/deep-sources/data-extraction/gemini31_named_travelers.html">Gemini 3.1 &mdash; Named Travelers Across Task Framings</a></div>
+      <div class="report-title"><a href="/preliminary-work/data-extraction/gemini31_named_travelers.html">Gemini 3.1 &mdash; Named Travelers Across Task Framings</a></div>
       <div class="desc">Same model, same three page images: direct-count (Q13 naive + guided) vs structured emission (data extraction N / A / B). Isolates the task-framing effect on counting and explains why the two ground truths differ (mentions vs unique rows).</div>
     </div>
   </li>
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/deep-sources/data-extraction/scores_summary.csv">Raw Scores (CSV)</a></div>
+      <div class="report-title"><a href="/preliminary-work/data-extraction/scores_summary.csv">Raw Scores (CSV)</a></div>
       <div class="desc">Underlying per-image, per-run precision, recall, F1, and per-field accuracy for every (model, phase, run, page) combination.</div>
     </div>
   </li>
@@ -114,9 +114,9 @@ description: Structured data extraction across 3 representative pages and 3 prom
       <div class="desc">Toggle the best run for any (model, phase) on/off and compare per-field, row-by-row against ground truth. Cells colored green (match) / red (mismatch).</div>
     </div>
     <div class="pair">
-      <a class="pill page" href="/deep-sources/data-extraction/compare_page_28.html">page 28</a>
-      <a class="pill page" href="/deep-sources/data-extraction/compare_page_36.html">page 36</a>
-      <a class="pill page" href="/deep-sources/data-extraction/compare_page_39.html">page 39</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/compare_page_28.html">page 28</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/compare_page_36.html">page 36</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/compare_page_39.html">page 39</a>
     </div>
   </li>
   <li>
@@ -125,9 +125,9 @@ description: Structured data extraction across 3 representative pages and 3 prom
       <div class="desc">Ground truth plus per-model traveler list for each phase.</div>
     </div>
     <div class="pair">
-      <a class="pill page" href="/deep-sources/data-extraction/results_page_28.html">page 28</a>
-      <a class="pill page" href="/deep-sources/data-extraction/results_page_36.html">page 36</a>
-      <a class="pill page" href="/deep-sources/data-extraction/results_page_39.html">page 39</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/results_page_28.html">page 28</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/results_page_36.html">page 36</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/results_page_39.html">page 39</a>
     </div>
   </li>
   <li>
@@ -136,9 +136,9 @@ description: Structured data extraction across 3 representative pages and 3 prom
       <div class="desc">Side-by-side per-field comparison (name, dates, place of stay, family, origin) of every model and phase against ground truth.</div>
     </div>
     <div class="pair">
-      <a class="pill page" href="/deep-sources/data-extraction/field_results_page_28.html">page 28</a>
-      <a class="pill page" href="/deep-sources/data-extraction/field_results_page_36.html">page 36</a>
-      <a class="pill page" href="/deep-sources/data-extraction/field_results_page_39.html">page 39</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/field_results_page_28.html">page 28</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/field_results_page_36.html">page 36</a>
+      <a class="pill page" href="/preliminary-work/data-extraction/field_results_page_39.html">page 39</a>
     </div>
   </li>
 </ul>

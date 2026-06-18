@@ -2,10 +2,10 @@
 layout: default
 title: Propel 1.2
 description: Historical document pre-processing and LLM transcription.
-permalink: /deep-sources/propel-1.2/
+permalink: /preliminary-work/propel-1.2/
 ---
 
-<p class="parent-link"><a href="{{ '/deep-sources/' | relative_url }}">← Deep Source Analysis with LLMs</a></p>
+<p class="parent-link"><a href="{{ '/preliminary-work/' | relative_url }}">← Deep Source Analysis with LLMs</a></p>
 
 # Historical Document Processing: From non-professional photographs taken in the archive to digital text
 
