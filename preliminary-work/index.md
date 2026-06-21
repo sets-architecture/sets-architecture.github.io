@@ -11,12 +11,12 @@ description: SETS project page.
 <section id="about">
 
     <p>Preliminary work on the development of SETS began in the Spring of 2025 when the team was awarded a Propel grant from the Dean of Research at Stanford University. The Propel grant funded experiments to improve efficiency in learning from archival handwritten sources, a complex and time-consuming task that severely constrains the scope of research agendas. We examined approaches to scaling the analysis of several archival images. This operationrequired defining: 1. the components of scholarly analysis;  and 2. the dimensions to be considered when designing evaluation metrics.</p>
-      <p>Our first step was creating a benchmark for human-model interaction in the analysis of deep sources (Lee et al, 2024). This evaluation framework aims to improve upon existing benchmarks for multi-modal models by taking a deep and focused approach rather than a broader but flatter approach (Yue et al, 2024). Our framework attends to the complexity of deep sources as textual, visual, and physical objects, while also taking into account the theoretical and methodological approaches of the scholar.</p>
-      <p>Whereas existing benchmarks address general reasoning capabilities, we offer a benchmark for deep sources that evaluates models on an actual workflow, measuring real task completion rather than using proxy metrics. Our benchmark design is grounded in the following assumptions:</p>
+      <p>Our first step was creating a benchmark for human-model interaction in the analysis of handwritten archival sources (Lee et al, 2024). This evaluation framework aims to improve upon existing benchmarks for multi-modal models by taking a handwritten archival and focused approach rather than a broader but flatter approach (Yue et al, 2024). Our framework attends to the complexity of handwritten archival sources as textual, visual, and physical objects, while also taking into account the theoretical and methodological approaches of the scholar.</p>
+      <p>Whereas existing benchmarks address general reasoning capabilities, we offer a benchmark for handwritten archival sources that evaluates models on an actual workflow, measuring real task completion rather than using proxy metrics. Our benchmark design is grounded in the following assumptions:</p>
       <ul>
       <li>A world model in the humanities is not singular and general, but discipline-specific, informed by previous research,  evolving as research insights emerge and as interpretive paradigms change.</li>
-      <li>Deep sources hold information in their physical qualities that cannot be accessed in current digital surrogates.</li>
-      <li>While the potential to scale-up research in the humanities motivates our interest in AI, deep sources will always be a minority data domain because their unique qualities are intertwined with historical moments, geographical setting, political circumstances, etc.</li>
+      <li>Handwritten archival sources hold information in their physical qualities that cannot be accessed in current digital surrogates.</li>
+      <li>While the potential to scale-up research in the humanities motivates our interest in AI, handwritten archival sources will always be a minority data domain because their unique qualities are intertwined with historical moments, geographical setting, political circumstances, etc.</li>
     </ul>
 </section>
 
@@ -56,29 +56,29 @@ description: SETS project page.
     <p class="small"></p>
   </div>
 
-<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.1: Deep Source Analysis</h4>
-<p>We propose a real-world benchmark based on an expert analysis of deep sources. We address the critique that most benchmarks test breadth over depth by assuming that AI and scholars will work in collaboration. We address concerns that current benchmarks do not adequately present real-world relevant tasks by testing with an actual use case employing actual source materials (see examples <a href="/archives/">here</a>), rather than artificial tasks or generated images. <a href="/deep-sources/propel-1.1/">Read the report.</a></p>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.1: Handwritten archival Source Analysis</h4>
+<p>We propose a real-world benchmark based on an expert analysis of handwritten archival sources. We address the critique that most benchmarks test breadth over depth by assuming that AI and scholars will work in collaboration. We address concerns that current benchmarks do not adequately present real-world relevant tasks by testing with an actual use case employing actual source materials (see examples <a href="/archives/">here</a>), rather than artificial tasks or generated images. <a href="/handwritten archival-sources/propel-1.1/">Read the report.</a></p>
 <h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.2: Image pre-processing</h4>
-<p>For many archives professionally produced digital images do not exist. Rather, scholars often enter archives with their own digital camera and are permitted to photograph documents themselves under sufficient but not ideal lighting conditions. The images for this case study were acquired this way. We experiment with existing methods to improve machine-readability of photographed archival manuscripts. We arrive at: 1. a merely adequate expedient method and 2. a preferred method that is computationally costly. Further work will need to be done to improve upon this preferred method. <a href="/deep-sources/propel-1.2/">Read the report.</a></p>
-<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.3: Naive Deep Source Analysis</h4>
-<p>This experiment measures how the models’ answers to a set of questions posed about 39 document images compare to the ground truth. For each image there were three runs across the frontier models: Claude Opus, GPT 5.2, Gemini 2.5 Pro, Gemini 3.1 Pro, and Claude Opus with thinking. <a href="/deep-sources/propel-1.3/">Read the report.</a> &middot; <a href="{{ '/deep-sources/question-answering/' | relative_url }}">View analyses</a></p>
-<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.4: Expert-directed Deep Source Analysis</h4>
-<p>This experiment builds on 1.1 and 1.3 to complete a manual, close evaluation of how LLMs fare when provided with expert scholarly guidance. We ran this experiment over the same 39 deep source documents used in 1.3 and we evaluate the same range of LLMs’ responses to the 22 questions. The difference is that we provide the LLMs with guidance established in 1.1. <a href="/deep-sources/propel-1.4/">Read the report.</a> &middot; <a href="{{ '/deep-sources/question-answering/' | relative_url }}">View analyses</a></p>
+<p>For many archives professionally produced digital images do not exist. Rather, scholars often enter archives with their own digital camera and are permitted to photograph documents themselves under sufficient but not ideal lighting conditions. The images for this case study were acquired this way. We experiment with existing methods to improve machine-readability of photographed archival manuscripts. We arrive at: 1. a merely adequate expedient method and 2. a preferred method that is computationally costly. Further work will need to be done to improve upon this preferred method. <a href="/handwritten archival-sources/propel-1.2/">Read the report.</a></p>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.3: Naive Handwritten archival Source Analysis</h4>
+<p>This experiment measures how the models’ answers to a set of questions posed about 39 document images compare to the ground truth. For each image there were three runs across the frontier models: Claude Opus, GPT 5.2, Gemini 2.5 Pro, Gemini 3.1 Pro, and Claude Opus with thinking. <a href="/handwritten archival-sources/propel-1.3/">Read the report.</a> &middot; <a href="{{ '/handwritten archival-sources/question-answering/' | relative_url }}">View analyses</a></p>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.4: Expert-directed Handwritten archival Source Analysis</h4>
+<p>This experiment builds on 1.1 and 1.3 to complete a manual, close evaluation of how LLMs fare when provided with expert scholarly guidance. We ran this experiment over the same 39 handwritten archival source documents used in 1.3 and we evaluate the same range of LLMs’ responses to the 22 questions. The difference is that we provide the LLMs with guidance established in 1.1. <a href="/handwritten archival-sources/propel-1.4/">Read the report.</a> &middot; <a href="{{ '/handwritten archival-sources/question-answering/' | relative_url }}">View analyses</a></p>
 <h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.5: LLM Data Extraction</h4>
-<p>This experiment extends 1.3 and 1.4 from question answering to structured data extraction, asking models to populate a 9-field per-traveler schema (name, titles, dates, place of stay, family, origin, etc.) for three representative pages spanning page density (10, 18, and 37 travelers). Each (model, page) is run under three phases — naive, guided, and guided + transcription — for 10 runs each. <a href="{{ '/deep-sources/data-extraction/' | relative_url }}">View analyses</a></p>
+<p>This experiment extends 1.3 and 1.4 from question answering to structured data extraction, asking models to populate a 9-field per-traveler schema (name, titles, dates, place of stay, family, origin, etc.) for three representative pages spanning page density (10, 18, and 37 travelers). Each (model, page) is run under three phases — naive, guided, and guided + transcription — for 10 runs each. <a href="{{ '/handwritten archival-sources/data-extraction/' | relative_url }}">View analyses</a></p>
 </section>
 
 <section id="analyses">
   <h3 style="margin-top:0;">Analysis Reports</h3>
   <p>Two experiment sets have produced quantitative results. Each links to a consolidated set of analysis reports:</p>
   <ul>
-    <li><a href="{{ '/deep-sources/question-answering/' | relative_url }}"><b>Naive vs Guided Question Answering</b></a> — 22 questions across 39 archival page images, with and without expert guidance.</li>
-    <li><a href="{{ '/deep-sources/data-extraction/' | relative_url }}"><b>Data Extraction</b></a> — 9-field structured extraction across 3 representative pages and 3 prompt phases.</li>
+    <li><a href="{{ '/handwritten archival-sources/question-answering/' | relative_url }}"><b>Naive vs Guided Question Answering</b></a> — 22 questions across 39 archival page images, with and without expert guidance.</li>
+    <li><a href="{{ '/handwritten archival-sources/data-extraction/' | relative_url }}"><b>Data Extraction</b></a> — 9-field structured extraction across 3 representative pages and 3 prompt phases.</li>
   </ul>
 </section>
 
 <section id="team" class="people" aria-labelledby="team-title">
-  <h2 id="team-title">The Deep Source Analysis research team</h2>
+  <h2 id="team-title">The Handwritten archival Source Analysis research team</h2>
   <div class="investigators">
     <div class="person">
       <span class="mug"><img src="{{ '/assets/images/people/ceserani-giovanna.webp' | relative_url }}" alt=""></span>
