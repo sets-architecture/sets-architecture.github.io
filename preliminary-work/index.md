@@ -8,18 +8,23 @@ description: SETS project page.
   <h1>SETS: LLMs and Handwritten Archival Documents</h1>
 </section>
 
+
+<section id="about">
+    <p>Preliminary work on the development of SETS began in the Spring of 2025 when the team was awarded a Propel grant from the Dean of Research at Stanford University. The Propel grant funded experiments to improve efficiency in learning from archival handwritten sources, a complex and time-consuming task that severely constrains the scope of research agendas. 
+
+</section>
 <section id="analyses">
-  <h3 style="margin-top:0;">Phase II Analysis Reports, Completed June 2026</h3>
-  <p>Two experiment sets have produced quantitative results. Each links to a consolidated set of analysis reports:</p>
+  <h3 style="margin-top:0;">Phase II: Completed June 2026</h3>
+  <p>The Propel funded work launched us into a more refined set of experiments. The following pages link to sets of analysis reports:</p>
   <ul>
     <li><a href="{{ '/handwritten archival-sources/question-answering/' | relative_url }}"><b>Naive vs Guided Question Answering</b></a> — 22 questions across 39 archival page images, with and without expert guidance.</li>
     <li><a href="{{ '/handwritten archival-sources/data-extraction/' | relative_url }}"><b>Data Extraction</b></a> — 9-field structured extraction across 3 representative pages and 3 prompt phases.</li>
   </ul>
 </section>
+<section id="phase-1">
+      <h3 style="margin-top:0;">Phase I, Completed November 2025</h3>
 
-<section id="about">
-  <h3 style="margin-top:0;">Phase I, Completed November 2025</h3>
-    <p>Preliminary work on the development of SETS began in the Spring of 2025 when the team was awarded a Propel grant from the Dean of Research at Stanford University. The Propel grant funded experiments to improve efficiency in learning from archival handwritten sources, a complex and time-consuming task that severely constrains the scope of research agendas. We examined approaches to scaling the analysis of several archival images. This operationrequired defining: 1. the components of scholarly analysis;  and 2. the dimensions to be considered when designing evaluation metrics.</p>
+   <p>We examined approaches to scaling the analysis of several archival images. This operationrequired defining: 1. the components of scholarly analysis;  and 2. the dimensions to be considered when designing evaluation metrics.</p>
       <p>Our first step was creating a benchmark for human-model interaction in the analysis of handwritten archival sources (Lee et al, 2024). This evaluation framework aims to improve upon existing benchmarks for multi-modal models by taking a handwritten archival and focused approach rather than a broader but flatter approach (Yue et al, 2024). Our framework attends to the complexity of handwritten archival sources as textual, visual, and physical objects, while also taking into account the theoretical and methodological approaches of the scholar.</p>
       <p>Whereas existing benchmarks address general reasoning capabilities, we offer a benchmark for handwritten archival sources that evaluates models on an actual workflow, measuring real task completion rather than using proxy metrics. Our benchmark design is grounded in the following assumptions:</p>
       <ul>
