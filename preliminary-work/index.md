@@ -17,8 +17,8 @@ description: SETS project page.
   <h3 style="margin-top:0;">Phase II: Completed June 2026</h3>
   <p>The Propel funded work launched us into a more refined set of experiments. The following pages link to sets of analysis reports:</p>
   <ul>
-    <li><a href="{{ '/handwritten archival-sources/question-answering/' | relative_url }}"><b>Naive vs Guided Question Answering</b></a> — 22 questions across 39 archival page images, with and without expert guidance.</li>
-    <li><a href="{{ '/handwritten archival-sources/data-extraction/' | relative_url }}"><b>Data Extraction</b></a> — 9-field structured extraction across 3 representative pages and 3 prompt phases.</li>
+    <li><a href="{{ '/preliminary-work/question-answering/' | relative_url }}"><b>Naive vs Guided Question Answering</b></a> — 22 questions across 39 archival page images, with and without expert guidance.</li>
+    <li><a href="{{ '/preliminary-work/data-extraction/' | relative_url }}"><b>Data Extraction</b></a> — 9-field structured extraction across 3 representative pages and 3 prompt phases.</li>
   </ul>
 </section>
 <section id="phase-1">
