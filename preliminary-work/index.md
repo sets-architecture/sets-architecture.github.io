@@ -56,7 +56,7 @@ description: SETS project page.
     <p class="small"></p>
   </div>
 
-<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.1: Handwritten archival Source Analysis</h4>
+<h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.1: Handwritten Archival Source Analysis</h4>
 <p>We propose a real-world benchmark based on an expert analysis of handwritten archival sources. We address the critique that most benchmarks test breadth over depth by assuming that AI and scholars will work in collaboration. We address concerns that current benchmarks do not adequately present real-world relevant tasks by testing with an actual use case employing actual source materials (see examples <a href="/archives/">here</a>), rather than artificial tasks or generated images. <a href="/handwritten archival-sources/propel-1.1/">Read the report.</a></p>
 <h4 id="outcomes-title" style="margin-top:0;">Propel Experiment 1.2: Image pre-processing</h4>
 <p>For many archives professionally produced digital images do not exist. Rather, scholars often enter archives with their own digital camera and are permitted to photograph documents themselves under sufficient but not ideal lighting conditions. The images for this case study were acquired this way. We experiment with existing methods to improve machine-readability of photographed archival manuscripts. We arrive at: 1. a merely adequate expedient method and 2. a preferred method that is computationally costly. Further work will need to be done to improve upon this preferred method. <a href="/handwritten archival-sources/propel-1.2/">Read the report.</a></p>
