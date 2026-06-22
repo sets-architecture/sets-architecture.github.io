@@ -271,7 +271,13 @@
 
 <hr>
 
-<h2>6. What This Document Does Not Cover</h2>
+<h2 id="naive-vs-guided-prompt-differences">6. Note on the ANSWER RULES across the Naive and Guided conditions</h2>
+
+<p>The ANSWER RULES differ between the Naive and Guided conditions in how models should handle unreadable characters in "transcription" questions (Q2 year, and Q10/Q12/Q22 word lists). The guided prompt explicitly enables a <code>?</code>-for-illegible convention; the naive prompt instructs the model to "give its best attempt." For Q10/Q12/Q22, character-accuracy scoring treats <code>?</code> exactly like any other character. Only GPT used <code>?</code> on Q2 (16 of 390 guided responses). The partial-credit contributes approximately 1.9 percentage points to GPT's guided Q2 score (61.0%) out of the +9.6-point improvement over its naive Q2 score (51.4%).</p>
+
+<hr>
+
+<h2>7. What This Document Does Not Cover</h2>
 
 <ul>
 <li>The model prompt and question list: see <code>questions.md</code></li>

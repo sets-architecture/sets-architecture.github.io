@@ -18,6 +18,7 @@ td.cat { background: #e8e8e8; font-weight: bold; font-size: 0.78rem; text-align:
 </style></head><body>
 <h1>Propel 1.3 vs 1.4: Naive vs Guided</h1>
 <p class="note">Propel 1.3 = naive (no expert guidance). Propel 1.4 = guided (expert domain guidance injected). Same models, same questions, same images. Claude (thinking) at t1; all others at t0, 10 runs each. &Delta; = guided &minus; naive.</p>
+<p class="note">The ANSWER RULES differ between the Naive and Guided conditions in how models should handle unreadable characters in "transcription" questions (Q2 year, and Q10/Q12/Q22 word lists). <a href="eval_guidelines.html#naive-vs-guided-prompt-differences">See the full note in the evaluation guidelines.</a></p>
 <h2>Overall Accuracy</h2>
 <table>
 <tr><th>Model</th><th>Naive (1.3)</th><th>Guided (1.4)</th><th>&Delta;</th></tr>
