@@ -17,10 +17,10 @@
 <h1>Per-Image Difficulty Analysis</h1>
 <p><b>Models:</b> Claude, GPT, Gemini 2.5, Gemini 3.1, Claude (thinking) &nbsp;|&nbsp; <b>Pages:</b> 39 &nbsp;|&nbsp; <b>Runs (t0):</b> 10</p>
 <h2>1. Per-Image Accuracy Heatmap</h2>
-<p class='note'>Mean accuracy across all 22 questions for each model × page. Sorted by overall mean (lowest first). <b>Structural</b> = named + unnamed travelers + con + e (from ground truth). <b>Visual</b> = connected ink components (Sauvola).</p>
+<p class='note'>Mean accuracy across all 22 questions for each model × page. Sorted by overall mean (lowest first). <b>Structural density</b> = named + unnamed travelers + con + e (from ground truth). <b>Visual density</b> = connected ink components (Sauvola).</p>
 <div class="legend"><span>Low → High:</span><div class="swatch"></div></div>
 <table>
-<tr><th>#</th><th>Page</th><th>Image</th><th>Claude</th><th>GPT</th><th>Gemini 2.5</th><th>Gemini 3.1</th><th>Claude (thinking)</th><th>Mean</th><th>Spread</th><th>Structural</th><th>Visual</th></tr>
+<tr><th>#</th><th>Page</th><th>Image</th><th>Claude</th><th>GPT</th><th>Gemini 2.5</th><th>Gemini 3.1</th><th>Claude (thinking)</th><th>Mean</th><th>Spread</th><th>Structural density</th><th>Visual density</th></tr>
 <tr><td>1</td><td>2</td><td class='left'>1767/8 02 01 n1</td><td style='background:#abffab'>47%</td><td style='background:#c9ffc9'>30%</td><td style='background:#9dff9d'>55%</td><td style='background:#a0ffa0'>53%</td><td style='background:#acffac'>47%</td><td style='background:#acffac'><b>46%</b></td><td style='background:#4fff4f'>24%</td><td>65</td><td>2,695</td></tr>
 <tr><td>2</td><td>23</td><td class='left'>1768 MV 01 09</td><td style='background:#aeffae'>45%</td><td style='background:#c4ffc4'>33%</td><td style='background:#9cff9c'>55%</td><td style='background:#abffab'>47%</td><td style='background:#93ff93'>60%</td><td style='background:#a9ffa9'><b>48%</b></td><td style='background:#4bff4b'>28%</td><td>49</td><td>1,989</td></tr>
 <tr><td>3</td><td>37</td><td class='left'>1770 05 28 n2</td><td style='background:#aeffae'>45%</td><td style='background:#c0ffc0'>35%</td><td style='background:#90ff90'>62%</td><td style='background:#a3ffa3'>52%</td><td style='background:#abffab'>47%</td><td style='background:#a9ffa9'><b>48%</b></td><td style='background:#4bff4b'>27%</td><td>108</td><td>2,502</td></tr>
@@ -64,7 +64,7 @@
 <h2>2. 10 Pages Where All Models Struggle Most</h2>
 <p class='note'>The 10 pages with the lowest mean accuracy across all models. Likely document quality or complexity issues.</p>
 <table>
-<tr><th>Page</th><th>Image</th><th>Claude</th><th>GPT</th><th>Gemini 2.5</th><th>Gemini 3.1</th><th>Claude (thinking)</th><th>Mean</th><th>Spread</th><th>Structural</th><th>Visual</th></tr>
+<tr><th>Page</th><th>Image</th><th>Claude</th><th>GPT</th><th>Gemini 2.5</th><th>Gemini 3.1</th><th>Claude (thinking)</th><th>Mean</th><th>Spread</th><th>Structural density</th><th>Visual density</th></tr>
 <tr><td>2</td><td class='left'>1767/8 02 01 n1</td><td style='background:#abffab'>47%</td><td style='background:#c9ffc9'>30%</td><td style='background:#9dff9d'>55%</td><td style='background:#a0ffa0'>53%</td><td style='background:#acffac'>47%</td><td style='background:#acffac'><b>46%</b></td><td style='background:#4fff4f'>24%</td><td>65</td><td>2,695</td></tr>
 <tr><td>23</td><td class='left'>1768 MV 01 09</td><td style='background:#aeffae'>45%</td><td style='background:#c4ffc4'>33%</td><td style='background:#9cff9c'>55%</td><td style='background:#abffab'>47%</td><td style='background:#93ff93'>60%</td><td style='background:#a9ffa9'><b>48%</b></td><td style='background:#4bff4b'>28%</td><td>49</td><td>1,989</td></tr>
 <tr><td>37</td><td class='left'>1770 05 28 n2</td><td style='background:#aeffae'>45%</td><td style='background:#c0ffc0'>35%</td><td style='background:#90ff90'>62%</td><td style='background:#a3ffa3'>52%</td><td style='background:#abffab'>47%</td><td style='background:#a9ffa9'><b>48%</b></td><td style='background:#4bff4b'>27%</td><td>108</td><td>2,502</td></tr>
@@ -79,7 +79,7 @@
 <h2>3. Pages with Largest Model Disagreement</h2>
 <p class='note'>Top 10 pages by spread (max model accuracy − min model accuracy). High spread = one model much better or worse than others on this page. Also shows which model leads.</p>
 <table>
-<tr><th>Page</th><th>Image</th><th>Claude</th><th>GPT</th><th>Gemini 2.5</th><th>Gemini 3.1</th><th>Claude (thinking)</th><th>Spread</th><th>Best Model</th><th>Structural</th><th>Visual</th></tr>
+<tr><th>Page</th><th>Image</th><th>Claude</th><th>GPT</th><th>Gemini 2.5</th><th>Gemini 3.1</th><th>Claude (thinking)</th><th>Spread</th><th>Best Model</th><th>Structural density</th><th>Visual density</th></tr>
 <tr><td>35</td><td class='left'>1770 05 21 n3</td><td style='background:#a5ffa5'>50%</td><td style='background:#95ff95'>59%</td><td style='background:#78ff78'>75%</td><td style='background:#5aff5a'><b>92%</b></td><td style='background:#80ff80'>71%</td><td style='background:#4bff4b'><b>42%</b></td><td>Gemini 3.1</td><td>19</td><td>1,571</td></tr>
 <tr><td>8</td><td class='left'>1768 05 08 n1</td><td style='background:#c7ffc7'>31%</td><td style='background:#b2ffb2'>43%</td><td style='background:#9dff9d'>55%</td><td style='background:#82ff82'><b>69%</b></td><td style='background:#afffaf'>45%</td><td style='background:#4bff4b'><b>38%</b></td><td>Gemini 3.1</td><td>99</td><td>2,691</td></tr>
 <tr><td>38</td><td class='left'>1770 05 28 n3</td><td style='background:#9fff9f'>54%</td><td style='background:#aeffae'>45%</td><td style='background:#6aff6a'><b>83%</b></td><td style='background:#90ff90'>62%</td><td style='background:#95ff95'>59%</td><td style='background:#4bff4b'><b>38%</b></td><td>Gemini 2.5</td><td>38</td><td>1,915</td></tr>
