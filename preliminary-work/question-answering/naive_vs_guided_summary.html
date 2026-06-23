@@ -18,7 +18,6 @@ td.cat { background: #e8e8e8; font-weight: bold; font-size: 0.78rem; text-align:
 </style></head><body>
 <h1>Propel 1.3 vs 1.4: Naive vs Guided</h1>
 <p class="note">Propel 1.3 = naive (no expert guidance). Propel 1.4 = guided (expert domain guidance injected). Same models, same questions, same images. Claude (thinking) at t1; all others at t0, 10 runs each. &Delta; = guided &minus; naive.</p>
-<p class="note">The ANSWER RULES differ between the Naive and Guided conditions in how models should handle unreadable characters in "transcription" questions (Q2 year, and Q10/Q12/Q22 word lists). <a href="eval_guidelines.html#naive-vs-guided-prompt-differences">See the full note in the evaluation guidelines.</a></p>
 <h2>Overall Accuracy</h2>
 <table>
 <tr><th>Model</th><th>Naive (1.3)</th><th>Guided (1.4)</th><th>&Delta;</th></tr>
@@ -32,12 +31,12 @@ td.cat { background: #e8e8e8; font-weight: bold; font-size: 0.78rem; text-align:
 <p class="note">For each question, the highest accuracy across all 5 models.</p>
 <table>
 <tr><th>Q#</th><th>Type</th><th>Category</th><th>Description</th><th>Best Naive</th><th>Best Model</th><th>Best Guided</th><th>Best Model</th><th>&Delta;</th></tr>
-<tr><td>Q1</td><td>Bool</td><td>Characteristic features</td><td class="qlabel">Has date?</td><td>100.0%</td><td>Gem3.1</td><td>100.0%</td><td>Claude/Gem3.1/ClaudeT</td><td class="neutral">0.0</td></tr>
-<tr><td>Q2</td><td>Int</td><td>Second Order Transcription</td><td class="qlabel">Year?</td><td>67.9%</td><td>Gem2.5</td><td>71.9%</td><td>Gem2.5</td><td class="pos">+4.1</td></tr>
-<tr><td>Q3</td><td>Bool</td><td>Characteristic features</td><td class="qlabel">Two columns?</td><td>97.2%</td><td>GPT</td><td>100.0%</td><td>Gem3.1</td><td class="pos">+2.8</td></tr>
-<tr><td>Q4</td><td>Bool</td><td>Characteristic features</td><td class="qlabel">Signed?</td><td>100.0%</td><td>Gem3.1</td><td>100.0%</td><td>GPT/Gem3.1/ClaudeT</td><td class="neutral">0.0</td></tr>
+<tr><td>Q1</td><td>Bool</td><td>Feature identification</td><td class="qlabel">Has date?</td><td>100.0%</td><td>Gem3.1</td><td>100.0%</td><td>Claude/Gem3.1/ClaudeT</td><td class="neutral">0.0</td></tr>
+<tr><td>Q2</td><td>Int</td><td>Transcription + Rule-based resolution</td><td class="qlabel">Year?</td><td>67.9%</td><td>Gem2.5</td><td>71.9%</td><td>Gem2.5</td><td class="pos">+4.1</td></tr>
+<tr><td>Q3</td><td>Bool</td><td>Feature identification</td><td class="qlabel">Two columns?</td><td>97.2%</td><td>GPT</td><td>100.0%</td><td>Gem3.1</td><td class="pos">+2.8</td></tr>
+<tr><td>Q4</td><td>Bool</td><td>Feature identification</td><td class="qlabel">Signed?</td><td>100.0%</td><td>Gem3.1</td><td>100.0%</td><td>GPT/Gem3.1/ClaudeT</td><td class="neutral">0.0</td></tr>
 <tr><td>Q5</td><td>Str</td><td>Spatial location</td><td class="qlabel">Signature location</td><td>100.0%</td><td>Gem3.1</td><td>100.0%</td><td>GPT/Gem2.5/Gem3.1/ClaudeT</td><td class="neutral">0.0</td></tr>
-<tr><td>Q6</td><td>Bool</td><td>Characteristic features</td><td class="qlabel">Top-left mark?</td><td>90.0%</td><td>Gem2.5</td><td>91.0%</td><td>Gem2.5</td><td class="pos">+1.0</td></tr>
+<tr><td>Q6</td><td>Bool</td><td>Feature identification</td><td class="qlabel">Top-left mark?</td><td>90.0%</td><td>Gem2.5</td><td>91.0%</td><td>Gem2.5</td><td class="pos">+1.0</td></tr>
 <tr><td>Q7</td><td>Int</td><td>Counting</td><td class="qlabel">Archivist marks</td><td>62.6%</td><td>Gem3.1</td><td>72.3%</td><td>Gem3.1</td><td class="pos">+9.7</td></tr>
 <tr><td>Q8</td><td>Int</td><td>Counting</td><td class="qlabel">Quondam count</td><td>67.2%</td><td>Gem3.1</td><td>65.9%</td><td>Gem3.1</td><td class="neg">&minus;1.3</td></tr>
 <tr><td>Q9</td><td>Int</td><td>Counting</td><td class="qlabel">Con count</td><td>69.7%</td><td>ClaudeT</td><td>71.8%</td><td>Gem2.5</td><td class="pos">+2.1</td></tr>
@@ -48,11 +47,11 @@ td.cat { background: #e8e8e8; font-weight: bold; font-size: 0.78rem; text-align:
 <tr><td>Q14</td><td>Int</td><td>Counting</td><td class="qlabel">Unnamed travelers</td><td>48.2%</td><td>Gem2.5</td><td>53.7%</td><td>Gem2.5</td><td class="pos">+5.5</td></tr>
 <tr><td>Q15</td><td>Int</td><td>Counting</td><td class="qlabel">Places of origin</td><td>34.4%</td><td>Gem3.1</td><td>37.6%</td><td>Claude</td><td class="pos">+3.2</td></tr>
 <tr><td>Q16</td><td>Int</td><td>Counting</td><td class="qlabel">Unique places of stay</td><td>52.6%</td><td>Gem3.1</td><td>51.7%</td><td>Gem2.5</td><td class="neg">&minus;0.9</td></tr>
-<tr><td>Q17</td><td>Pair</td><td>Counting and Spatial location</td><td class="qlabel">Stay per column</td><td>60.3%</td><td>Gem2.5</td><td>64.1%</td><td>Gem2.5</td><td class="pos">+3.8</td></tr>
+<tr><td>Q17</td><td>Pair</td><td>Counting + Spatial location</td><td class="qlabel">Stay per column</td><td>60.3%</td><td>Gem2.5</td><td>64.1%</td><td>Gem2.5</td><td class="pos">+3.8</td></tr>
 <tr><td>Q18</td><td>Int</td><td>Counting</td><td class="qlabel">Stay w/ person name</td><td>81.3%</td><td>Gem2.5</td><td>86.6%</td><td>Gem2.5</td><td class="pos">+5.3</td></tr>
 <tr><td>Q19</td><td>Int</td><td>Counting</td><td class="qlabel">Bracket total</td><td>72.8%</td><td>Gem3.1</td><td>77.4%</td><td>Gem3.1</td><td class="pos">+4.6</td></tr>
-<tr><td>Q20</td><td>Pair</td><td>Counting and Spatial location</td><td class="qlabel">Brackets per column</td><td>72.8%</td><td>Gem3.1</td><td>77.4%</td><td>Gem3.1</td><td class="pos">+4.6</td></tr>
-<tr><td>Q21</td><td>Bool</td><td>Characteristic features</td><td class="qlabel">Bracket annotation?</td><td>97.1%</td><td>Claude</td><td>97.7%</td><td>ClaudeT</td><td class="pos">+0.6</td></tr>
+<tr><td>Q20</td><td>Pair</td><td>Counting + Spatial location</td><td class="qlabel">Brackets per column</td><td>72.8%</td><td>Gem3.1</td><td>77.4%</td><td>Gem3.1</td><td class="pos">+4.6</td></tr>
+<tr><td>Q21</td><td>Bool</td><td>Feature identification</td><td class="qlabel">Bracket annotation?</td><td>97.1%</td><td>Claude</td><td>97.7%</td><td>ClaudeT</td><td class="pos">+0.6</td></tr>
 <tr><td>Q22</td><td>Text</td><td>Transcription</td><td class="qlabel">Annotation text</td><td>90.8%</td><td>Gem3.1</td><td>90.1%</td><td>Gem3.1</td><td class="neg">&minus;0.7</td></tr>
 </table>
 <h2>Full Per-Question, Per-Model Breakdown</h2>
@@ -60,7 +59,7 @@ td.cat { background: #e8e8e8; font-weight: bold; font-size: 0.78rem; text-align:
 <table>
 <tr><th rowspan='2'>Q#</th><th rowspan='2'>Description</th><th colspan='3'>Claude</th><th colspan='3'>GPT</th><th colspan='3'>Gemini 2.5</th><th colspan='3'>Gemini 3.1</th><th colspan='3'>Claude (thinking)</th></tr>
 <tr><th>Naive</th><th>Guided</th><th>&Delta;</th><th>Naive</th><th>Guided</th><th>&Delta;</th><th>Naive</th><th>Guided</th><th>&Delta;</th><th>Naive</th><th>Guided</th><th>&Delta;</th><th>Naive</th><th>Guided</th><th>&Delta;</th></tr>
-<tr><td class='cat' colspan='17'>Characteristic features</td></tr>
+<tr><td class='cat' colspan='17'>Feature identification</td></tr>
 <tr><td>Q1</td><td class='qlabel'>Has date?</td><td>92.3</td><td>100.0</td><td class="pos">+7.7</td><td>77.4</td><td>97.7</td><td class="pos">+20.3</td><td>97.4</td><td>97.4</td><td class="neutral">0.0</td><td>100.0</td><td>100.0</td><td class="neutral">0.0</td><td>97.2</td><td>100.0</td><td class="pos">+2.8</td></tr>
 <tr><td>Q3</td><td class='qlabel'>Two columns?</td><td>92.3</td><td>92.2</td><td class="neg">&minus;0.1</td><td>97.2</td><td>97.4</td><td class="pos">+0.3</td><td>92.8</td><td>97.9</td><td class="pos">+5.1</td><td>95.6</td><td>100.0</td><td class="pos">+4.4</td><td>94.1</td><td>99.2</td><td class="pos">+5.1</td></tr>
 <tr><td>Q4</td><td class='qlabel'>Signed?</td><td>97.4</td><td>92.7</td><td class="neg">&minus;4.7</td><td>92.8</td><td>100.0</td><td class="pos">+7.2</td><td>83.1</td><td>97.4</td><td class="pos">+14.3</td><td>100.0</td><td>100.0</td><td class="neutral">0.0</td><td>95.1</td><td>100.0</td><td class="pos">+4.9</td></tr>
@@ -83,10 +82,10 @@ td.cat { background: #e8e8e8; font-weight: bold; font-size: 0.78rem; text-align:
 <tr><td>Q10</td><td class='qlabel'>Words after con</td><td>85.1</td><td>80.8</td><td class="neg">&minus;4.3</td><td>59.8</td><td>61.6</td><td class="pos">+1.8</td><td>90.9</td><td>90.7</td><td class="neg">&minus;0.1</td><td>90.7</td><td>90.4</td><td class="neg">&minus;0.3</td><td>88.1</td><td>86.9</td><td class="neg">&minus;1.1</td></tr>
 <tr><td>Q12</td><td class='qlabel'>Words after e</td><td>55.4</td><td>54.5</td><td class="neg">&minus;0.9</td><td>43.6</td><td>46.5</td><td class="pos">+3.0</td><td>48.4</td><td>52.0</td><td class="pos">+3.6</td><td>65.2</td><td>67.1</td><td class="pos">+1.9</td><td>59.4</td><td>59.2</td><td class="neg">&minus;0.2</td></tr>
 <tr><td>Q22</td><td class='qlabel'>Annotation text</td><td>83.2</td><td>85.7</td><td class="pos">+2.5</td><td>63.4</td><td>60.0</td><td class="neg">&minus;3.4</td><td>80.4</td><td>83.8</td><td class="pos">+3.4</td><td>90.8</td><td>90.1</td><td class="neg">&minus;0.7</td><td>83.6</td><td>84.5</td><td class="pos">+0.9</td></tr>
-<tr><td class='cat' colspan='17'>Counting and Spatial location</td></tr>
+<tr><td class='cat' colspan='17'>Counting + Spatial location</td></tr>
 <tr><td>Q17</td><td class='qlabel'>Stay per column</td><td>31.0</td><td>31.6</td><td class="pos">+0.6</td><td>22.3</td><td>15.4</td><td class="neg">&minus;6.9</td><td>60.3</td><td>64.1</td><td class="pos">+3.8</td><td>50.0</td><td>47.2</td><td class="neg">&minus;2.8</td><td>34.4</td><td>40.3</td><td class="pos">+5.9</td></tr>
 <tr><td>Q20</td><td class='qlabel'>Brackets per column</td><td>25.6</td><td>23.8</td><td class="neg">&minus;1.8</td><td>52.1</td><td>47.7</td><td class="neg">&minus;4.4</td><td>51.0</td><td>39.5</td><td class="neg">&minus;11.5</td><td>72.8</td><td>77.4</td><td class="pos">+4.6</td><td>35.6</td><td>42.8</td><td class="pos">+7.2</td></tr>
-<tr><td class='cat' colspan='17'>Second Order Transcription</td></tr>
+<tr><td class='cat' colspan='17'>Transcription + Rule-based resolution</td></tr>
 <tr><td>Q2</td><td class='qlabel'>Year?</td><td>50.0</td><td>50.4</td><td class="pos">+0.4</td><td>51.4</td><td>61.0</td><td class="pos">+9.6</td><td>67.9</td><td>71.9</td><td class="pos">+4.1</td><td>67.5</td><td>67.9</td><td class="pos">+0.4</td><td>48.6</td><td>50.7</td><td class="pos">+2.1</td></tr>
 </table>
 </body></html>
