@@ -10,91 +10,233 @@
   h3 { font-size: 1.0rem; margin-top: 1.5rem; }
   p.note { font-size: 0.85rem; color: #555; margin: 0.3rem 0 1.5rem; }
   .guidance { background: #f8f8f8; border: 1px solid #ddd; border-radius: 6px; padding: 1.5rem 2rem; margin-top: 1rem; }
-  .guidance p { margin: 0.8rem 0; }
+  .guidance p { margin: 0.8rem 0; transition: background 0.15s, opacity 0.15s; padding: 2px 6px; border-radius: 4px; }
   .guidance p.intro { font-style: italic; color: #444; }
   .footnote { font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
+
+  /* ---- controls ---- */
+  .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 1.25rem 0 0.5rem; }
+  .controls button { font: inherit; font-size: 0.85rem; padding: 5px 12px; border: 1px solid #bbb; background: #fff; border-radius: 5px; cursor: pointer; color: #333; }
+  .controls button:hover { background: #f0f0f0; }
+  .controls button.active { background: #333; color: #fff; border-color: #333; }
+  .legend { font-size: 0.8rem; color: #555; margin: 0.5rem 0 0; display: none; }
+  .legend.show { display: block; }
+  .legend .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: middle; margin: 0 4px 0 12px; }
+  .stat { font-size: 0.85rem; color: #444; background: #fdf6e3; border: 1px solid #eadba0; border-radius: 5px; padding: 8px 12px; margin: 0.75rem 0; display: none; }
+  .stat.show { display: block; }
+  .stat b { font-variant-numeric: tabular-nums; }
+
+  /* ---- redundancy overlay ---- */
+  .tag { display: none; font-size: 0.7rem; font-weight: 600; padding: 1px 6px; border-radius: 8px; margin-left: 6px; vertical-align: middle; white-space: nowrap; }
+  body.mode-redundancy .guidance p[data-role="restatement"] { background: #fff2cc; }
+  body.mode-redundancy .guidance p[data-role="background"]  { background: #eeeeee; color: #777; }
+  body.mode-redundancy .guidance p[data-role="core"]        { background: #e7f5e9; }
+  body.mode-redundancy .tag { display: inline-block; }
+  .tag.restatement { background: #f0c000; color: #4a3800; }
+  .tag.background  { background: #cfcfcf; color: #444; }
+  .tag.core        { background: #5fb86a; color: #143d18; }
+
+  /* ---- question-alignment overlay ---- */
+  body.mode-align .guidance p[data-role="background"] { opacity: 0.4; }
+  .qbadges { display: none; margin-top: 4px; }
+  body.mode-align .qbadges { display: block; }
+  .qbadge { display: inline-block; font-size: 0.7rem; font-weight: 600; color: #fff; padding: 1px 7px; border-radius: 9px; margin: 2px 4px 0 0; }
+  body:not(.mode-align) .qbadges { display: none; }
 </style>
 </head>
 <body>
 
 <h1>Expert Guidance</h1>
-<p class="note">This domain knowledge block is injected into the system prompt before each model run in the guided condition. It is not used in the naive condition.</p>
+<p class="note">This domain knowledge block is injected into the system prompt before each model run in the guided condition. It is not used in the naive condition. This guidance is specific to the <b>question-answering</b> experiment; the data-extraction experiment uses its own, separately worded block.</p>
+
+
+
+<div class="controls">
+  <span style="font-size:0.85rem;color:#555;">View*:</span>
+  <button id="btn-plain" class="active" onclick="setMode('plain')">Plain</button>
+  <button id="btn-redundancy" onclick="setMode('redundancy')">Highlight redundancy</button>
+  <button id="btn-align" onclick="setMode('align')">Question alignment</button>
+</div>
+
+<div id="stat-redundancy" class="stat"></div>
+
+<div id="legend-redundancy" class="legend">
+  <span class="swatch" style="background:#5fb86a"></span> Core / actionable
+  <span class="swatch" style="background:#f0c000"></span> Restatement (duplicates §1)
+  <span class="swatch" style="background:#cfcfcf"></span> Background / non-actionable context
+</div>
+
+<div id="legend-align" class="legend">
+  Each actionable passage is tagged with the question(s) it informs, colored by category. Non-actionable passages are dimmed.
+  <div style="margin-top:6px">
+    <span class="swatch" style="background:#2d6da3"></span> Feature identification
+    <span class="swatch" style="background:#c4791f"></span> Spatial location
+    <span class="swatch" style="background:#2e8b57"></span> Counting
+    <span class="swatch" style="background:#8e44ad"></span> Transcription
+    <span class="swatch" style="background:#16887a"></span> Counting + Spatial
+    <span class="swatch" style="background:#b8860b"></span> Transcription + Rule-based
+  </div>
+</div>
 
 <div class="guidance">
 
-<p class="intro">Your role is to assist a scholar in extracting data from a handwritten archival document. It is essential to identify areas where the information contained in the document is illegible or otherwise unclear. When a name, number or any text is unclear in transcription questions (year Q2, signature location Q5, word lists Q10, Q12, Q22), use a "?" to represent each character that cannot be deciphered. For counting questions (Q7&ndash;Q9, Q11, Q13&ndash;Q20), do not use "?": simply count only what you can read and give a plain integer. When information is not provided (e.g. a traveler has an arrival date but not a departure date) do not invent a value, simply note that the information is not in the document.</p>
+<p class="intro" data-role="core" data-rule="1">Your role is to assist a scholar in extracting data from a handwritten archival document. It is essential to identify areas where the information contained in the document is illegible or otherwise unclear. When a name, number or any text is unclear in transcription questions (year Q2, word lists Q10, Q12, Q22), use a "?" to represent each character that cannot be deciphered. For counting questions (Q7&ndash;Q9, Q11, Q13&ndash;Q20), do not use "?": simply count only what you can read and give a plain integer. When information is not provided (e.g. a traveler has an arrival date but not a departure date) do not invent a value, simply note that the information is not in the document.<span class="tag core">core · answer rules</span></p>
 
-<p>You will be asked questions of individual documents. The following is some contextual information about these documents including descriptions of what you might encounter.</p>
+<p data-role="background">You will be asked questions of individual documents. The following is some contextual information about these documents including descriptions of what you might encounter.<span class="tag background">background</span></p>
 
 <h2>1. Summary Description</h2>
 
-<p>The information contained in these documents is organized temporally. A date&mdash;most frequently in the order day-month-year&mdash;is placed as a title in the top center of the first page of each record. When subsequent pages do not have this date in the top center, it means that they belong to the same record. Within each record, the arrivals and departures of foreign visitors are for the preceding week (&lsquo;scaduta settimana&rsquo;).</p>
+<p data-role="core" data-q="1,2">The information contained in these documents is organized temporally. A date&mdash;most frequently in the order day-month-year&mdash;is placed as a title in the top center of the first page of each record. When subsequent pages do not have this date in the top center, it means that they belong to the same record. Within each record, the arrivals and departures of foreign visitors are for the preceding week (&lsquo;scaduta settimana&rsquo;).<span class="tag core">core</span></p>
 
-<p>Each page is divided into two columns: the left column lists the record of presences/arrivals (&lsquo;Forestieri annotati riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners noted reported by hoteliers in the past week as follows&rsquo;) in order by day of arrival and grouped by place of stay; the right column lists the record of departures (&lsquo;Forestieri partiti riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners departed reported by hoteliers in the past week as follows&rsquo;) in order by day of departure and grouped by place of stay.</p>
+<p data-role="core" data-q="3,17,20">Each page is divided into two columns: the left column lists the record of presences/arrivals (&lsquo;Forestieri annotati riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners noted reported by hoteliers in the past week as follows&rsquo;) in order by day of arrival and grouped by place of stay; the right column lists the record of departures (&lsquo;Forestieri partiti riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners departed reported by hoteliers in the past week as follows&rsquo;) in order by day of departure and grouped by place of stay.<span class="tag core">core</span></p>
 
-<p>The foreign visitors are listed, each on a new line, by name, sometimes with titles, and with their place of origin (ranging from a country beyond Italy&mdash;expressed as an adjective or by country name&mdash;to another Italian state or a town other than Venice within the Venetian state). Foreign visitors are grouped together with their traveling companions. When a traveling companion is a family member or a working person (such as a domestic servant, or &lsquo;domestico&rsquo;), they are mostly recorded without a name and with a number to indicate how many there were (if more than one). The places of stay are given as the name of the inn or as the name of the host (&lsquo;in casa di&rsquo;: &lsquo;in the home of&rsquo;), followed by the name of the parish to indicate location within the city of Venice.</p>
+<p data-role="core" data-q="13,14,15,16,17,18">The foreign visitors are listed, each on a new line, by name, sometimes with titles, and with their place of origin (ranging from a country beyond Italy&mdash;expressed as an adjective or by country name&mdash;to another Italian state or a town other than Venice within the Venetian state). Foreign visitors are grouped together with their traveling companions. When a traveling companion is a family member or a working person (such as a domestic servant, or &lsquo;domestico&rsquo;), they are mostly recorded without a name and with a number to indicate how many there were (if more than one). The places of stay are given as the name of the inn or as the name of the host (&lsquo;in casa di&rsquo;: &lsquo;in the home of&rsquo;), followed by the name of the parish to indicate location within the city of Venice.<span class="tag core">core</span></p>
 
-<p>Jewish foreign visitors are recorded separately, in pages that include Jewish (&lsquo;Ebrei&rsquo;) in the column titles. Their records follow the same structure of information organization except that they are reported not by hosts or hoteliers but by a dedicated deputy (&lsquo;Forestieri Ebrei annotati [or partiti] riferiti dal Deputato nella scaduta settimana come siegue&rsquo;: &lsquo;Jewish foreigners noted [or departed] reported by the deputy in the past week as follows&rsquo;), and no specific location is given for the places of stay (which are almost all cases of &lsquo;in casa di&rsquo;).</p>
+<p data-role="background">Jewish foreign visitors are recorded separately, in pages that include Jewish (&lsquo;Ebrei&rsquo;) in the column titles. Their records follow the same structure of information organization except that they are reported not by hosts or hoteliers but by a dedicated deputy (&lsquo;Forestieri Ebrei annotati [or partiti] riferiti dal Deputato nella scaduta settimana come siegue&rsquo;: &lsquo;Jewish foreigners noted [or departed] reported by the deputy in the past week as follows&rsquo;), and no specific location is given for the places of stay (which are almost all cases of &lsquo;in casa di&rsquo;).<span class="tag background">background</span></p>
 
 <h2>2. Layered Description</h2>
 
 <h3>2.1 Information gathered from existing curatorial knowledge and scholarship</h3>
 
-<p>These are the records of the Inquisitori di Stato of the Venetian Republic currently held at the Archivio di Stato di Venezia: <a href="https://archiviodistatovenezia.it/it/">https://archiviodistatovenezia.it/it/</a></p>
+<p data-role="background">These are the records of the Inquisitori di Stato of the Venetian Republic currently held at the Archivio di Stato di Venezia: <a href="https://archiviodistatovenezia.it/it/">https://archiviodistatovenezia.it/it/</a><span class="tag background">background</span></p>
 
-<p>Provenance: photos taken in the archive from the series ASV IS 758-81</p>
+<p data-role="background">Provenance: photos taken in the archive from the series ASV IS 758-81<span class="tag background">background</span></p>
 
-<p>An officer noted the arrivals and departures to and from the city of Venice of foreigners passing through, as reported by the hoteliers who hosted these travelers. For Jewish travelers, a single deputy rather than the various hoteliers, was responsible for these reports.</p>
+<p data-role="restatement">An officer noted the arrivals and departures to and from the city of Venice of foreigners passing through, as reported by the hoteliers who hosted these travelers. For Jewish travelers, a single deputy rather than the various hoteliers, was responsible for these reports.<span class="tag restatement">restates &sect;1</span></p>
 
-<p>&lsquo;Foreigner&rsquo; in these records indicates anyone not from the city of Venice, ranging from visitors from other cities in the Venetian state, to visitors from cities in other Italian states or other countries.</p>
+<p data-role="background">&lsquo;Foreigner&rsquo; in these records indicates anyone not from the city of Venice, ranging from visitors from other cities in the Venetian state, to visitors from cities in other Italian states or other countries.<span class="tag background">background</span></p>
 
-<p>Continuity and completeness: While for earlier years these records were sporadic, in the years from 1751 to 1790, they were regularly kept and consistent in form.</p>
+<p data-role="background">Continuity and completeness: While for earlier years these records were sporadic, in the years from 1751 to 1790, they were regularly kept and consistent in form.<span class="tag background">background</span></p>
 
-<p>Written in a consistent hand: The name of the officer making these records from 1765 to 1775 was Giovanni Somazzi.</p>
+<p data-role="background">Written in a consistent hand: The name of the officer making these records from 1765 to 1775 was Giovanni Somazzi.<span class="tag background">background</span></p>
 
 <h3>2.2 Information organization and structure of the documents</h3>
 
-<p>The basic organizing principle is temporal and by week.</p>
+<p data-role="restatement">The basic organizing principle is temporal and by week.<span class="tag restatement">restates &sect;1</span></p>
 
-<p>The date is placed in the center of the first page of the record, most frequently in the order day-month-year. Subsequent pages of the same record do not have a date in the top center.</p>
+<p data-role="restatement" data-q="1,2">The date is placed in the center of the first page of the record, most frequently in the order day-month-year. Subsequent pages of the same record do not have a date in the top center.<span class="tag restatement">restates &sect;1</span></p>
 
-<p>The arrivals and departures of the foreign visitors are recorded for the preceding week (&lsquo;settimana scaduta&rsquo;).</p>
+<p data-role="restatement">The arrivals and departures of the foreign visitors are recorded for the preceding week (&lsquo;settimana scaduta&rsquo;).<span class="tag restatement">restates &sect;1</span></p>
 
-<p>Each page is divided into two columns: The left column lists the records of presences/arrivals (&lsquo;Forestieri annotati riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners noted by hoteliers in the past week as follows&rsquo;) in order by day. The right column lists the records of departures (&lsquo;Forestieri partiti riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners departed recorded by hoteliers in the past week as follows&rsquo;).</p>
+<p data-role="restatement" data-q="3">Each page is divided into two columns: The left column lists the records of presences/arrivals (&lsquo;Forestieri annotati riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners noted by hoteliers in the past week as follows&rsquo;) in order by day. The right column lists the records of departures (&lsquo;Forestieri partiti riferiti da cameranti nella scaduta settimana come siegue&rsquo;: &lsquo;Foreigners departed recorded by hoteliers in the past week as follows&rsquo;).<span class="tag restatement">restates &sect;1</span></p>
 
-<p>Within each column, entries are grouped by the day (of arrival or departure) and place of stay (&lsquo;in casa di [x]&rsquo;: &lsquo;in the house of [x],&rsquo; &lsquo;alla locanda [x]&rsquo;: &lsquo;in the Inn [x]&rsquo;, followed by the name of the parish to indicate in which part of Venice the house or inn was located.</p>
+<p data-role="restatement" data-q="16,17,18">Within each column, entries are grouped by the day (of arrival or departure) and place of stay (&lsquo;in casa di [x]&rsquo;: &lsquo;in the house of [x],&rsquo; &lsquo;alla locanda [x]&rsquo;: &lsquo;in the Inn [x]&rsquo;, followed by the name of the parish to indicate in which part of Venice the house or inn was located.<span class="tag restatement">restates &sect;1</span></p>
 
-<p>The foreign visitors are listed by name and place of origin. Titles are recorded for some travelers (aristocracy, clergy, physicians, military).</p>
+<p data-role="restatement" data-q="13,15">The foreign visitors are listed by name and place of origin. Titles are recorded for some travelers (aristocracy, clergy, physicians, military).<span class="tag restatement">restates &sect;1</span></p>
 
-<p>For some foreign visitors travel companions are noted. These travelers include family members (e.g. &lsquo;moglie&rsquo; or &lsquo;figlio/a&rsquo; or &lsquo;figliolo/a&rsquo;) or servants (e.g. &lsquo;due domestici&rsquo;: &lsquo;two domestic servants&rsquo;, &lsquo;quattro camerieri&rsquo;: &lsquo;four attendants&rsquo;) with their number spelled out if more than one.</p>
+<p data-role="restatement" data-q="14">For some foreign visitors travel companions are noted. These travelers include family members (e.g. &lsquo;moglie&rsquo; or &lsquo;figlio/a&rsquo; or &lsquo;figliolo/a&rsquo;) or servants (e.g. &lsquo;due domestici&rsquo;: &lsquo;two domestic servants&rsquo;, &lsquo;quattro camerieri&rsquo;: &lsquo;four attendants&rsquo;) with their number spelled out if more than one.<span class="tag restatement">restates &sect;1</span></p>
 
-<p>The records for Jewish travelers follow the same structure but are recorded separately and are reported by a dedicated deputy, &lsquo;deputato,&rsquo; not by the hoteliers, and with no additional location information beyond the name of the host (&lsquo;in casa di [x]&rsquo;: &lsquo;in the house of [x]&rsquo;).</p>
+<p data-role="restatement">The records for Jewish travelers follow the same structure but are recorded separately and are reported by a dedicated deputy, &lsquo;deputato,&rsquo; not by the hoteliers, and with no additional location information beyond the name of the host (&lsquo;in casa di [x]&rsquo;: &lsquo;in the house of [x]&rsquo;).<span class="tag restatement">restates &sect;1</span></p>
 
 <h3>2.3 Visual elements in the documents</h3>
 
-<p>At the top left corner of each page that contains one or more British names there is a circular pencil mark. The same circular pencil mark is found next to the particular line, or lines, containing records of British travelers. Therefore these circles in pencil appear as two or more per page; when the line containing the British traveler(s) is the first one, close to the top of the page, there may be only one mark.</p>
+<p data-role="core" data-q="6,7">At the top left corner of each page that contains one or more British names there is a circular pencil mark. The same circular pencil mark is found next to the particular line, or lines, containing records of British travelers. Therefore these circles in pencil appear as two or more per page; when the line containing the British traveler(s) is the first one, close to the top of the page, there may be only one mark.<span class="tag core">core</span></p>
 
-<p>The presence of these marks was observed by the PI when working with the documents in person in the archives; cross-reference with the PI&rsquo;s study of Brinsley Ford Archives in London led to the conclusion that these circular pencil marks were added in the late 1960s when Ford commissioned the archivists in Venice to produce a list of all the British visitors and their time of visit (see letter of November 9, 1965 from Zago Ferruccio to Sir Brinsley Ford and subsequent correspondence).</p>
+<p data-role="background">The presence of these marks was observed by the PI when working with the documents in person in the archives; cross-reference with the PI&rsquo;s study of Brinsley Ford Archives in London led to the conclusion that these circular pencil marks were added in the late 1960s when Ford commissioned the archivists in Venice to produce a list of all the British visitors and their time of visit (see letter of November 9, 1965 from Zago Ferruccio to Sir Brinsley Ford and subsequent correspondence).<span class="tag background">background</span></p>
 
-<p>Column titles are separated from the records below by a continuous line drawn in the same ink as the text.</p>
+<p data-role="background">Column titles are separated from the records below by a continuous line drawn in the same ink as the text.<span class="tag background">background</span></p>
 
-<p>Curly brackets group together foreign visitors who share the same origin (ranging from a country beyond Italy&mdash;expressed adjectivally or by country name&mdash;to another Italian state or a town other than Venice within the Venetian state).</p>
+<p data-role="core" data-q="19,20,21,22">Curly brackets group together foreign visitors who share the same origin (ranging from a country beyond Italy&mdash;expressed adjectivally or by country name&mdash;to another Italian state or a town other than Venice within the Venetian state).<span class="tag core">core</span></p>
 
-<p>Signature: many of the pages are signed by Giovanni Somazzi, who was the agent in this post from 1765 till at least 1790, and signs himself as &lsquo;Giovanni Somazzi, deputato a notar li forestieri&rsquo;: &lsquo;Giovanni Somazzi deputy to the recording of foreigners.&rsquo;</p>
+<p data-role="core" data-q="4,5">Signature: many of the pages are signed by Giovanni Somazzi, who was the agent in this post from 1765 till at least 1790, and signs himself as &lsquo;Giovanni Somazzi, deputato a notar li forestieri&rsquo;: &lsquo;Giovanni Somazzi deputy to the recording of foreigners.&rsquo;<span class="tag core">core</span></p>
 
-<p>A curly fret motif, in the same ink as the text, is used to fill empty space at the end of a line.</p>
+<p data-role="background">A curly fret motif, in the same ink as the text, is used to fill empty space at the end of a line.<span class="tag background">background</span></p>
 
-<p>Double forward slashes, in the same ink as the text, occupy empty spaces on the page to ensure no more text is added after the official recording.</p>
+<p data-role="background">Double forward slashes, in the same ink as the text, occupy empty spaces on the page to ensure no more text is added after the official recording.<span class="tag background">background</span></p>
 
-<p>Dashes, sometimes more similar to fret, fill the empty space within a line between the end of personal names and the indication of their places of origin.</p>
+<p data-role="background">Dashes, sometimes more similar to fret, fill the empty space within a line between the end of personal names and the indication of their places of origin.<span class="tag background">background</span></p>
 
-<p>&lsquo;Siegue&rsquo;: &lsquo;follows&rsquo; is used in the columns title and also at the end of a page and the beginning of the next when the record for a single week occupies multiple pages.</p>
+<p data-role="background">&lsquo;Siegue&rsquo;: &lsquo;follows&rsquo; is used in the columns title and also at the end of a page and the beginning of the next when the record for a single week occupies multiple pages.<span class="tag background">background</span></p>
 
-<p>M.V.: this acronym (abbreviation of &lsquo;More Veneto,&rsquo; Latin for &lsquo;according to the Venetian custom&rsquo;) follows the dates for the months of January and February to indicate that these were recorded according to the Venetian calendar in which the year begins March 1st. When M.V. appears, this means that a year must be added to the date to make it consistent with non-Venetian calendars (for example, January or February 1766 corresponds to January or February 1767 on the standard calendar).</p>
+<p data-role="core" data-q="2">M.V.: this acronym (abbreviation of &lsquo;More Veneto,&rsquo; Latin for &lsquo;according to the Venetian custom&rsquo;) follows the dates for the months of January and February to indicate that these were recorded according to the Venetian calendar in which the year begins March 1st. When M.V. appears, this means that a year must be added to the date to make it consistent with non-Venetian calendars (for example, January or February 1766 corresponds to January or February 1767 on the standard calendar).<span class="tag core">core</span></p>
 
-<p>Many abbreviations are used that were common in 18th-century handwritten Italian texts: for example, contractions (such as the case of &lsquo;Gio&rsquo; as an abbreviation for &lsquo;Giovanni&rsquo;), sometimes including superscript (as in the case of &lsquo;Fran.co&rsquo; for &lsquo;Francesco&rsquo;).</p>
+<p data-role="core" data-q="10,12,22">Many abbreviations are used that were common in 18th-century handwritten Italian texts: for example, contractions (such as the case of &lsquo;Gio&rsquo; as an abbreviation for &lsquo;Giovanni&rsquo;), sometimes including superscript (as in the case of &lsquo;Fran.co&rsquo; for &lsquo;Francesco&rsquo;).<span class="tag core">core</span></p>
 
 </div>
+<p class="note" style="border-left:3px solid #d0d0d0;padding-left:10px;background:#fafafa;">
+<b>* How the overlays were derived.</b> The redundancy classification (core / restatement / background) and the question-category alignment shown below were assigned by <b>Claude Opus 4.8</b> (model <code>claude-opus-4-8</code>), June 2026, not by a deterministic rule. For the alignment overlay, each passage was mapped to the question(s) whose answer it directly informs (e.g. the curly-bracket passage &rarr; Q19&ndash;Q22; the M.V. calendar passage &rarr; Q2), with categories taken from <code>evaluate.py</code>&rsquo;s <code>Q_CATEGORY</code>. For the redundancy overlay, a passage was marked <i>restatement</i> when it duplicates a rule already given in &sect;1 Summary (most of &sect;2.2), and <i>background</i> when it provides provenance or visual context that no question uniquely depends on (e.g. the Ford correspondence, the fret/slash/dash fillers); everything that introduces a question-relevant rule was marked <i>core</i>. The percentages are character-weighted and computed in the browser from these annotations. The classification involves judgment and is intended as an interpretive aid, not a definitive measure.
+</p>
+<script>
+// Question -> category (mirrors evaluate.py Q_CATEGORY)
+var Q_CATEGORY = {
+  1:"Feature identification", 2:"Transcription + Rule-based resolution", 3:"Feature identification",
+  4:"Feature identification", 5:"Spatial location", 6:"Feature identification",
+  7:"Counting", 8:"Counting", 9:"Counting", 10:"Transcription", 11:"Counting", 12:"Transcription",
+  13:"Counting", 14:"Counting", 15:"Counting", 16:"Counting", 17:"Counting + Spatial location",
+  18:"Counting", 19:"Counting", 20:"Counting + Spatial location", 21:"Feature identification",
+  22:"Transcription"
+};
+var CAT_COLOR = {
+  "Feature identification":"#2d6da3",
+  "Spatial location":"#c4791f",
+  "Counting":"#2e8b57",
+  "Transcription":"#8e44ad",
+  "Counting + Spatial location":"#16887a",
+  "Transcription + Rule-based resolution":"#b8860b"
+};
+
+// Build question badges for each annotated paragraph
+document.querySelectorAll('.guidance p[data-q]').forEach(function(p){
+  var ids = p.dataset.q.split(',').filter(Boolean).map(Number);
+  if(!ids.length) return;
+  var box = document.createElement('div');
+  box.className = 'qbadges';
+  ids.forEach(function(id){
+    var cat = Q_CATEGORY[id] || '';
+    var b = document.createElement('span');
+    b.className = 'qbadge';
+    b.style.background = CAT_COLOR[cat] || '#888';
+    b.title = cat;
+    b.textContent = 'Q' + id;
+    box.appendChild(b);
+  });
+  p.appendChild(box);
+});
+
+// Special badge for the global answer-rule paragraph
+document.querySelectorAll('.guidance p[data-rule]').forEach(function(p){
+  var box = document.createElement('div');
+  box.className = 'qbadges';
+  [["Transcription rule","Transcription"],["Counting rule","Counting"]].forEach(function(pair){
+    var b = document.createElement('span');
+    b.className = 'qbadge';
+    b.style.background = CAT_COLOR[pair[1]];
+    b.textContent = pair[0];
+    box.appendChild(b);
+  });
+  p.appendChild(box);
+});
+
+// Compute redundancy statistics from the annotations (character-weighted)
+(function(){
+  var paras = document.querySelectorAll('.guidance p[data-role]');
+  var total = 0, byRole = {core:0, restatement:0, background:0};
+  paras.forEach(function(p){
+    // length of the guidance prose only (exclude appended tag/badge text)
+    var clone = p.cloneNode(true);
+    clone.querySelectorAll('.tag, .qbadges').forEach(function(n){ n.remove(); });
+    var n = clone.textContent.trim().length;
+    total += n;
+    byRole[p.dataset.role] = (byRole[p.dataset.role] || 0) + n;
+  });
+  var pct = function(x){ return total ? Math.round(100 * x / total) : 0; };
+  document.getElementById('stat-redundancy').innerHTML =
+    "Of the guidance block, <b>" + pct(byRole.restatement) + "%</b> is restatement of §1 (sections largely under §2.2) and " +
+    "<b>" + pct(byRole.background) + "%</b> is non-actionable background/provenance — together <b>" +
+    pct(byRole.restatement + byRole.background) + "%</b> of the text does not introduce a rule that any of the 22 questions uniquely depends on. " +
+    "The remaining <b>" + pct(byRole.core) + "%</b> is core/actionable.";
+})();
+
+function setMode(mode){
+  document.body.className = mode === 'plain' ? '' : 'mode-' + mode;
+  ['plain','redundancy','align'].forEach(function(m){
+    document.getElementById('btn-' + m).classList.toggle('active', m === mode);
+  });
+  document.getElementById('stat-redundancy').classList.toggle('show', mode === 'redundancy');
+  document.getElementById('legend-redundancy').classList.toggle('show', mode === 'redundancy');
+  document.getElementById('legend-align').classList.toggle('show', mode === 'align');
+}
+</script>
 
 </body>
 </html>
