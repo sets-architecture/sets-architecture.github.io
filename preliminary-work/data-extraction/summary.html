@@ -31,7 +31,7 @@ a { color: #1858a7; }
 <hr>
 <h2>How F1 is calculated</h2>
 <p>
-F1 in this experiment measures <strong>traveler identification</strong> — did the model produce the same set of named travelers as the ground truth? Per-field accuracy (date, place of stay, etc.) is reported separately in section 3 and is computed only on rows that successfully matched.
+F1 in this experiment measures <strong>traveler identification</strong> — did the model produce the same set of named travelers as the ground truth? Per-field accuracy (date, place of stay, etc.) is reported separately in section 2 and is computed only on rows that successfully matched.
 </p>
 <p>
 <strong>Row matching.</strong> Each model output is a list of traveler records. Each record is paired with at most one ground-truth record by greedy best-match on <strong>name similarity</strong>, computed as the larger of (a) <code>difflib.SequenceMatcher</code> character ratio and (b) token-set overlap, both on a lowercased, punctuation-stripped name. A <code>?</code> in either name matches any character (it marks illegible glyphs). Pairs below similarity <strong>0.70</strong> are not matched. When the same name appears twice in the ground truth (e.g. a traveler who arrived and later departed in the same week), arrival- and departure-date alignment is used as a tiebreaker. See <a href="evaluate.py#L143-L178">evaluate.py:143-178</a>.
@@ -51,245 +51,21 @@ See <a href="evaluate.py#L239-L247">evaluate.py:239-247</a>.
 <strong>Aggregation across images and runs.</strong> The F1 numbers in section 1 are <strong>micro-averaged</strong>: <code>total_matched / total_model</code> and <code>total_matched / total_gt</code> summed across all successful images and runs in a (model, phase) cell, then F1 computed from those pooled rates. Pages with more travelers therefore carry more weight in the aggregate. Failed runs (parse errors, MAX_TOKENS, etc.) are excluded — <code>n_gt</code> / <code>n_model</code> for a failed image are not counted. See <a href="evaluate.py#L314-L319">evaluate.py:314-319</a>.
 </p>
 <p>
-<strong>What F1 does and does not measure.</strong> A perfect F1 means the model emitted the right set of named travelers, no more and no less. It says nothing about whether the dates, place of stay, or family composition for each traveler were transcribed correctly — those are the per-field numbers in section 3. A model can have F1 = 1.00 with a date-field accuracy of 0.70, and that combination is informative: identifying <em>who</em> is on the page is a different skill from transcribing <em>what</em> the page says about them.
+<strong>What F1 does and does not measure.</strong> A perfect F1 means the model emitted the right set of named travelers, no more and no less. It says nothing about whether the dates, place of stay, or family composition for each traveler were transcribed correctly — those are the per-field numbers in section 2. A model can have F1 = 1.00 with a date-field accuracy of 0.70, and that combination is informative: identifying <em>who</em> is on the page is a different skill from transcribing <em>what</em> the page says about them.
 </p>
 <hr>
 <h2>1. F1 by model × phase</h2>
 <table>
 <thead><tr><th>Model</th><th>F1 N</th><th>F1 A</th><th>F1 B</th><th>N→A</th><th>A→B</th><th>N→B</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>0.71</td><td>0.72</td><td>1.00</td><td>+0.01</td><td>+0.28</td><td>+0.28</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.68</td><td>0.77</td><td>1.00</td><td>+0.09</td><td>+0.23</td><td>+0.31</td></tr>
-<tr><td>GPT 5.2</td><td>0.30</td><td>0.30</td><td>1.00</td><td>-0.00</td><td>+0.70</td><td>+0.69</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>0.61</td><td>0.66</td><td>0.99</td><td>+0.05</td><td>+0.34</td><td>+0.38</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.88</td><td>0.96</td><td>0.99</td><td>+0.08</td><td>+0.03</td><td>+0.11</td></tr>
+<tr><td>Claude 4.5</td><td>0.71</td><td>0.74</td><td>1.00</td><td>+0.03</td><td>+0.26</td><td>+0.29</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.68</td><td>0.75</td><td>1.00</td><td>+0.07</td><td>+0.25</td><td>+0.31</td></tr>
+<tr><td>GPT 5.2</td><td>0.30</td><td>0.37</td><td>0.98</td><td>+0.07</td><td>+0.61</td><td>+0.68</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.61</td><td>0.69</td><td>1.00</td><td>+0.08</td><td>+0.31</td><td>+0.39</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.88</td><td>0.91</td><td>0.98</td><td>+0.03</td><td>+0.07</td><td>+0.10</td></tr>
 </tbody></table>
 <hr>
-<h2>2. Per-image F1, precision &amp; recall by model × phase (variation across 10 runs)</h2>
-<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-<p style="font-size:0.82rem; color:#666; margin:0 0 0.6rem;">
-  Mean across 10 runs (point) with min–max range (whisker). Phases: N = Naive, A = Guided, B = Guided + Transcription.
-  F1 decomposes into precision (no false positives → 1.00) and recall (no missed GT travelers → 1.00).
-  When a model plateaus below 1.00 in the precision chart but sits at 1.00 in the recall chart, it is reliably hallucinating an extra traveler.
-</p>
-<div style="display:flex; flex-wrap:wrap; gap:0.4rem 1.2rem; font-size:0.82rem; color:#444; margin:0 0 0.8rem;">
-  <span><span style="display:inline-block; width:18px; height:2px; background:#d97706; vertical-align:middle;"></span> Claude 4.5</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#be185d; vertical-align:middle;"></span> Claude 4.5 + extended thinking</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#16a34a; vertical-align:middle;"></span> GPT 5.2</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#2563eb; vertical-align:middle;"></span> Gemini 2.5 Pro</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#7c3aed; vertical-align:middle;"></span> Gemini 3.1 Pro (preview)</span>
-</div>
-<h3 style="margin:0.4rem 0 0.2rem; font-size:0.95rem;">F1</h3>
-<div id="f1-variation-chart"        style="width:100%; max-width:980px; height:320px; margin:0 0 0.4rem;"></div>
-<h3 style="margin:0.8rem 0 0.2rem; font-size:0.95rem;">Precision</h3>
-<div id="precision-variation-chart" style="width:100%; max-width:980px; height:320px; margin:0 0 0.4rem;"></div>
-<h3 style="margin:0.8rem 0 0.2rem; font-size:0.95rem;">Recall</h3>
-<div id="recall-variation-chart"    style="width:100%; max-width:980px; height:320px; margin:0 0 1rem;"></div>
-<script>
-(function() {
-  const STATS = {
-    'precision': {
-      'Claude 4.5': {
-        28: { N:[0.7222,0.7778,0.8333], A:[0.7895,0.8421,0.8947], B:[0.9474,0.9789,1.0] },
-        36: { N:[0.6571,0.6994,0.7941], A:[0.5588,0.6457,0.7353], B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.72,0.8],         A:[0.8,0.8,0.8],           B:[1.0,1.0,1.0] }
-      },
-      'Claude 4.5 + extended thinking': {
-        28: { N:[0.6667,0.7563,0.8333], A:[0.6842,0.8698,0.9444], B:[0.9474,0.9895,1.0] },
-        36: { N:[0.4706,0.6645,0.8125], A:[0.6757,0.7263,0.7714], B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.75,1.0],         A:[0.7,0.79,0.9],          B:[1.0,1.0,1.0] }
-      },
-      'GPT 5.2': {
-        28: { N:[0.1176,0.2034,0.2778], A:[0.1579,0.2678,0.6111], B:[0.9444,0.9833,1.0] },
-        36: { N:[0.303,0.3604,0.3939],  A:[0.2727,0.3569,0.3939], B:[1.0,1.0,1.0] },
-        39: { N:[0.3,0.3744,0.5],       A:[0.1,0.23,0.3],          B:[1.0,1.0,1.0] }
-      },
-      'Gemini 2.5 Pro': {
-        28: { N:[0.6842,0.7995,0.85],   A:[0.7222,0.7278,0.7778], B:[0.9474,0.9474,0.9474] },
-        36: { N:[0.25,0.4973,0.6944],   A:[0.5789,0.6197,0.6944], B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.67,0.7],         A:[0.4545,0.6273,0.7273], B:[1.0,1.0,1.0] }
-      },
-      'Gemini 3.1 Pro (preview)': {
-        28: { N:[0.8947,0.9263,0.9474], A:[0.9474,0.9474,0.9474], B:[0.9474,0.9474,0.9474] },
-        36: { N:[0.8529,0.8529,0.8529], A:[0.9444,0.9611,0.9722], B:[1.0,1.0,1.0] },
-        39: { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],           B:[1.0,1.0,1.0] }
-      }
-    },
-    'recall': {
-      'Claude 4.5': {
-        28: { N:[0.7222,0.7778,0.8333], A:[0.8333,0.8889,0.9444], B:[1.0,1.0,1.0] },
-        36: { N:[0.6216,0.6595,0.7297], A:[0.5135,0.6,0.6757],     B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.72,0.8],         A:[0.8,0.8,0.8],           B:[1.0,1.0,1.0] }
-      },
-      'Claude 4.5 + extended thinking': {
-        28: { N:[0.6667,0.7556,0.8333], A:[0.7222,0.8778,0.9444], B:[1.0,1.0,1.0] },
-        36: { N:[0.4324,0.5973,0.7027], A:[0.6486,0.7027,0.7568], B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.75,1.0],         A:[0.7,0.79,0.9],          B:[1.0,1.0,1.0] }
-      },
-      'GPT 5.2': {
-        28: { N:[0.1111,0.2111,0.2778], A:[0.1667,0.2778,0.6111], B:[0.9444,0.9833,1.0] },
-        36: { N:[0.2703,0.3135,0.3514], A:[0.2432,0.3135,0.3514], B:[1.0,1.0,1.0] },
-        39: { N:[0.3,0.37,0.5],         A:[0.1,0.23,0.3],          B:[1.0,1.0,1.0] }
-      },
-      'Gemini 2.5 Pro': {
-        28: { N:[0.7222,0.8722,0.9444], A:[0.7222,0.7278,0.7778], B:[1.0,1.0,1.0] },
-        36: { N:[0.1622,0.4351,0.6757], A:[0.5676,0.6189,0.6757], B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.67,0.7],         A:[0.5,0.71,0.8],          B:[1.0,1.0,1.0] }
-      },
-      'Gemini 3.1 Pro (preview)': {
-        28: { N:[0.9444,0.9778,1.0],    A:[1.0,1.0,1.0],           B:[1.0,1.0,1.0] },
-        36: { N:[0.7838,0.7838,0.7838], A:[0.9189,0.9351,0.9459], B:[1.0,1.0,1.0] },
-        39: { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],           B:[1.0,1.0,1.0] }
-      }
-    },
-    'f1': {
-      'Claude 4.5': {
-        28: { N:[0.7222,0.7778,0.8333], A:[0.8108,0.8649,0.9189], B:[0.973,0.9892,1.0] },
-        36: { N:[0.6389,0.6788,0.7606], A:[0.5352,0.622,0.7042],   B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.72,0.8],         A:[0.8,0.8,0.8],           B:[1.0,1.0,1.0] }
-      },
-      'Claude 4.5 + extended thinking': {
-        28: { N:[0.6667,0.7558,0.8333], A:[0.7027,0.8736,0.9444], B:[0.973,0.9946,1.0] },
-        36: { N:[0.4507,0.6287,0.7536], A:[0.6667,0.7142,0.7568], B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.75,1.0],         A:[0.7,0.79,0.9],          B:[1.0,1.0,1.0] }
-      },
-      'GPT 5.2': {
-        28: { N:[0.1143,0.2064,0.2778], A:[0.1622,0.2724,0.6111], B:[0.9444,0.9833,1.0] },
-        36: { N:[0.2857,0.3349,0.3714], A:[0.2571,0.3338,0.3714], B:[1.0,1.0,1.0] },
-        39: { N:[0.3,0.3721,0.5],       A:[0.1,0.23,0.3],          B:[1.0,1.0,1.0] }
-      },
-      'Gemini 2.5 Pro': {
-        28: { N:[0.7027,0.8341,0.8947], A:[0.7222,0.7278,0.7778], B:[0.973,0.973,0.973] },
-        36: { N:[0.1967,0.4612,0.6849], A:[0.5753,0.6192,0.6849], B:[1.0,1.0,1.0] },
-        39: { N:[0.6,0.67,0.7],         A:[0.4762,0.6658,0.7619], B:[1.0,1.0,1.0] }
-      },
-      'Gemini 3.1 Pro (preview)': {
-        28: { N:[0.9189,0.9514,0.973],  A:[0.973,0.973,0.973],     B:[0.973,0.973,0.973] },
-        36: { N:[0.8169,0.8169,0.8169], A:[0.9315,0.9479,0.9589], B:[1.0,1.0,1.0] },
-        39: { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],           B:[1.0,1.0,1.0] }
-      }
-    }
-  };
-  const colors = {
-    'Claude 4.5':                     '#d97706',
-    'Claude 4.5 + extended thinking': '#be185d',
-    'GPT 5.2':                        '#16a34a',
-    'Gemini 2.5 Pro':                 '#2563eb',
-    'Gemini 3.1 Pro (preview)':       '#7c3aed'
-  };
-  const phases = ['N', 'A', 'B'];
-  const pages  = [28, 36, 39];
-  const metricLabel = { f1: 'F1', precision: 'Precision', recall: 'Recall' };
-
-  function render(metric, targetId) {
-    const stats = STATS[metric];
-    const traces = [];
-    Object.keys(stats).forEach(model => {
-      pages.forEach((page, pi) => {
-        const s = stats[model][page];
-        const means    = phases.map(p => s[p][1]);
-        const errPlus  = phases.map(p => +(s[p][2] - s[p][1]).toFixed(3));
-        const errMinus = phases.map(p => +(s[p][1] - s[p][0]).toFixed(3));
-        const cd       = phases.map(p => [s[p][0], s[p][2]]);
-        traces.push({
-          type: 'scatter',
-          mode: 'lines+markers',
-          x: phases, y: means,
-          error_y: { type: 'data', symmetric: false, array: errPlus, arrayminus: errMinus,
-                     thickness: 1, width: 4, color: colors[model] },
-          name: model,
-          legendgroup: model,
-          showlegend: false,
-          line:   { color: colors[model], width: 1.4 },
-          marker: { color: colors[model], size: 6 },
-          xaxis: pi === 0 ? 'x' : 'x' + (pi + 1),
-          yaxis: pi === 0 ? 'y' : 'y' + (pi + 1),
-          customdata: cd,
-          hovertemplate: '<b>' + model + '</b><br>Page ' + page +
-                         '  Phase %{x}<br>mean %{y:.2f}<br>range %{customdata[0]:.2f}–%{customdata[1]:.2f}<extra></extra>'
-        });
-      });
-    });
-    const axisBase = { showgrid: false, showline: true, linecolor: '#999', linewidth: 1,
-                       ticks: 'outside', tickcolor: '#999', tickfont: { size: 10 }, zeroline: false };
-    const xBase = Object.assign({}, axisBase, { type: 'category', categoryorder: 'array', categoryarray: phases });
-    const yBase = Object.assign({}, axisBase, { range: [0, 1.05], dtick: 0.2, tickformat: '.1f' });
-    const layout = {
-      grid: { rows: 1, columns: 3, pattern: 'independent', xgap: 0.10 },
-      xaxis:  Object.assign({}, xBase, { title: { text: 'Page 28', font: { size: 11 } } }),
-      xaxis2: Object.assign({}, xBase, { title: { text: 'Page 36', font: { size: 11 } } }),
-      xaxis3: Object.assign({}, xBase, { title: { text: 'Page 39', font: { size: 11 } } }),
-      yaxis:  Object.assign({}, yBase, { title: { text: metricLabel[metric], font: { size: 11 } } }),
-      yaxis2: Object.assign({}, yBase, { showticklabels: false }),
-      yaxis3: Object.assign({}, yBase, { showticklabels: false }),
-      margin: { l: 50, r: 10, t: 10, b: 40 },
-      paper_bgcolor: 'white',
-      plot_bgcolor:  'white',
-      font: { family: 'system-ui, -apple-system, sans-serif', size: 11, color: '#222' },
-      showlegend: false,
-      hovermode: 'closest'
-    };
-    Plotly.newPlot(targetId, traces, layout, { displayModeBar: false, responsive: true });
-  }
-  render('f1',        'f1-variation-chart');
-  render('precision', 'precision-variation-chart');
-  render('recall',    'recall-variation-chart');
-})();
-</script>
-<details style="margin: 0.4rem 0 1.2rem;">
-<summary style="cursor: pointer; font-size: 0.85rem; color: #555;">Show underlying F1 numbers (table)</summary>
-<table>
-<thead><tr><th>Model</th><th>Phase</th><th>Page</th><th>n</th><th>min</th><th>mean</th><th>max</th><th>std</th></tr></thead>
-<tbody>
-<tr><td>Claude 4.5</td><td>N</td><td>28</td><td>10</td><td>0.72</td><td>0.78</td><td>0.83</td><td>0.05</td></tr>
-<tr><td>Claude 4.5</td><td>N</td><td>36</td><td>10</td><td>0.64</td><td>0.68</td><td>0.76</td><td>0.04</td></tr>
-<tr><td>Claude 4.5</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.72</td><td>0.80</td><td>0.06</td></tr>
-<tr><td>Claude 4.5</td><td>A</td><td>28</td><td>10</td><td>0.81</td><td>0.86</td><td>0.92</td><td>0.06</td></tr>
-<tr><td>Claude 4.5</td><td>A</td><td>36</td><td>10</td><td>0.54</td><td>0.62</td><td>0.70</td><td>0.05</td></tr>
-<tr><td>Claude 4.5</td><td>A</td><td>39</td><td>10</td><td>0.80</td><td>0.80</td><td>0.80</td><td>0.00</td></tr>
-<tr><td>Claude 4.5</td><td>B</td><td>28</td><td>10</td><td>0.97</td><td>0.99</td><td>1.00</td><td>0.01</td></tr>
-<tr><td>Claude 4.5</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Claude 4.5</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>28</td><td>10</td><td>0.67</td><td>0.76</td><td>0.83</td><td>0.06</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>36</td><td>10</td><td>0.45</td><td>0.63</td><td>0.75</td><td>0.08</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.75</td><td>1.00</td><td>0.11</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>28</td><td>10</td><td>0.70</td><td>0.87</td><td>0.94</td><td>0.07</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>36</td><td>10</td><td>0.67</td><td>0.71</td><td>0.76</td><td>0.04</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>39</td><td>10</td><td>0.70</td><td>0.79</td><td>0.90</td><td>0.07</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>28</td><td>10</td><td>0.97</td><td>0.99</td><td>1.00</td><td>0.01</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>GPT 5.2</td><td>N</td><td>28</td><td>10</td><td>0.11</td><td>0.21</td><td>0.28</td><td>0.05</td></tr>
-<tr><td>GPT 5.2</td><td>N</td><td>36</td><td>10</td><td>0.29</td><td>0.33</td><td>0.37</td><td>0.03</td></tr>
-<tr><td>GPT 5.2</td><td>N</td><td>39</td><td>10</td><td>0.30</td><td>0.37</td><td>0.50</td><td>0.07</td></tr>
-<tr><td>GPT 5.2</td><td>A</td><td>28</td><td>10</td><td>0.16</td><td>0.27</td><td>0.61</td><td>0.16</td></tr>
-<tr><td>GPT 5.2</td><td>A</td><td>36</td><td>10</td><td>0.26</td><td>0.33</td><td>0.37</td><td>0.04</td></tr>
-<tr><td>GPT 5.2</td><td>A</td><td>39</td><td>10</td><td>0.10</td><td>0.23</td><td>0.30</td><td>0.07</td></tr>
-<tr><td>GPT 5.2</td><td>B</td><td>28</td><td>10</td><td>0.94</td><td>0.98</td><td>1.00</td><td>0.03</td></tr>
-<tr><td>GPT 5.2</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>GPT 5.2</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>N</td><td>28</td><td>10</td><td>0.70</td><td>0.83</td><td>0.89</td><td>0.08</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>N</td><td>36</td><td>10</td><td>0.20</td><td>0.46</td><td>0.68</td><td>0.19</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.67</td><td>0.70</td><td>0.05</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>A</td><td>28</td><td>10</td><td>0.72</td><td>0.73</td><td>0.78</td><td>0.02</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>A</td><td>36</td><td>10</td><td>0.58</td><td>0.62</td><td>0.68</td><td>0.05</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>A</td><td>39</td><td>10</td><td>0.48</td><td>0.67</td><td>0.76</td><td>0.13</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>B</td><td>28</td><td>10</td><td>0.97</td><td>0.97</td><td>0.97</td><td>0.00</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>28</td><td>10</td><td>0.92</td><td>0.95</td><td>0.97</td><td>0.03</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>36</td><td>10</td><td>0.82</td><td>0.82</td><td>0.82</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>28</td><td>10</td><td>0.97</td><td>0.97</td><td>0.97</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>36</td><td>10</td><td>0.93</td><td>0.95</td><td>0.96</td><td>0.01</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>28</td><td>10</td><td>0.97</td><td>0.97</td><td>0.97</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-</tbody></table>
-</details>
-<hr>
-<h2>3. Per-field accuracy by model × phase</h2>
+<h2>2. Per-field accuracy by model × phase</h2>
 <p>
 Computed only on rows that matched a GT traveler (so a model that misses half the travelers does not get a free pass on the half it never produced — those are captured by F1 in section 1).
 </p>
@@ -298,153 +74,12 @@ Computed only on rows that matched a GT traveler (so a model that misses half th
 </p>
 <ul>
 <li><em>Text fields</em> (<code>title</code>, <code>arrival_date</code>, <code>departure_date</code>, <code>place_of_stay</code>, <code>place_of_origin</code>) — <strong>character accuracy</strong> = <code>1 − levenshtein(gt, model) / len(gt)</code> after lowercase + whitespace + small abbreviation-equivalence normalization (<code>flli</code>→<code>fratelli</code>, <code>s.</code>→<code>san</code>, etc.). A 1-character misspelling on a 16-char string scores ~0.94 rather than 0. See <a href="evaluate.py#L96-L128">evaluate.py:96-128</a>.</li>
-<li><em>Exact-match fields</em> (<code>with_spouse</code>, <code>with_siblings</code>, <code>children_count</code>) — 1.0 if equal, 0.0 if not. <code>with_spouse</code> and <code>with_siblings</code> are Y/N booleans; <code>children_count</code> is an integer — grouped here because all three are scored by strict equality, not by character similarity.</li>
+<li><em>Binary fields</em> (<code>with_spouse</code>, <code>with_siblings</code>, <code>children_count</code>) — 1.0 if equal, 0.0 if not.</li>
 <li><em>Unscorable cells</em> (e.g. GT title is empty) are excluded from both numerator and denominator — they neither help nor hurt.</li>
 </ul>
 <p>
 This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers across the three projects are directly comparable.
 </p>
-<p style="font-size:0.82rem; color:#666; margin:0.8rem 0 0.4rem;">
-  Each panel shows one field's accuracy across phases (N → A → B). Mean across 10 runs (point); whiskers show min–max range when runs disagree.
-</p>
-<div style="display:flex; flex-wrap:wrap; gap:0.4rem 1.2rem; font-size:0.82rem; color:#444; margin:0 0 0.4rem;">
-  <span><span style="display:inline-block; width:18px; height:2px; background:#d97706; vertical-align:middle;"></span> Claude 4.5</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#be185d; vertical-align:middle;"></span> Claude 4.5 + extended thinking</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#16a34a; vertical-align:middle;"></span> GPT 5.2</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#2563eb; vertical-align:middle;"></span> Gemini 2.5 Pro</span>
-  <span><span style="display:inline-block; width:18px; height:2px; background:#7c3aed; vertical-align:middle;"></span> Gemini 3.1 Pro (preview)</span>
-</div>
-<div id="field-accuracy-chart" style="width:100%; max-width:980px; height:520px; margin:0 0 1rem;"></div>
-<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-<script>
-(function() {
-  const FIELD_STATS = {
-    'Claude 4.5': {
-      title:           { N:[0.8325,0.8725,0.8955], A:[0.8452,0.88,0.9062],   B:[0.9949,0.9949,0.9949] },
-      arrival_date:    { N:[0.2786,0.3183,0.3422], A:[0.8492,0.8865,0.9432], B:[1.0,1.0,1.0] },
-      departure_date:  { N:[0.5786,0.6223,0.6529], A:[0.8294,0.8762,0.9284], B:[0.959,0.9677,0.9735] },
-      place_of_stay:   { N:[0.4442,0.4769,0.545],  A:[0.5947,0.6719,0.7226], B:[0.8186,0.8555,0.8801] },
-      place_of_origin: { N:[0.7904,0.805,0.8189],  A:[0.7293,0.8124,0.8612], B:[0.9912,0.9912,0.9912] },
-      with_spouse:     { N:[1.0,1.0,1.0],          A:[0.9792,0.9958,1.0],    B:[1.0,1.0,1.0] },
-      with_siblings:   { N:[0.9773,0.9781,0.9792], A:[0.9375,0.9798,1.0],    B:[1.0,1.0,1.0] },
-      children_count:  { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] }
-    },
-    'Claude 4.5 + extended thinking': {
-      title:           { N:[0.8015,0.8658,0.9064], A:[0.8298,0.8639,0.908],  B:[0.9949,0.9953,0.9987] },
-      arrival_date:    { N:[0.4335,0.5054,0.5736], A:[0.8222,0.9419,0.9762], B:[1.0,1.0,1.0] },
-      departure_date:  { N:[0.7074,0.739,0.7759],  A:[0.908,0.9403,0.9632],  B:[0.9758,0.9874,0.9902] },
-      place_of_stay:   { N:[0.4785,0.5832,0.6351], A:[0.5935,0.663,0.6937],  B:[0.7092,0.8438,0.9411] },
-      place_of_origin: { N:[0.7517,0.8279,0.8812], A:[0.8027,0.8425,0.9009], B:[0.9745,0.9894,0.9912] },
-      with_spouse:     { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] },
-      with_siblings:   { N:[0.9318,0.9767,1.0],    A:[0.9388,0.9596,1.0],    B:[1.0,1.0,1.0] },
-      children_count:  { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] }
-    },
-    'GPT 5.2': {
-      title:           { N:[0.6917,0.7847,0.85],   A:[0.7868,0.8487,1.0],    B:[0.9107,0.9459,0.991] },
-      arrival_date:    { N:[0.1251,0.3167,0.4641], A:[0.7932,0.865,0.9346],  B:[1.0,1.0,1.0] },
-      departure_date:  { N:[0.5,0.5706,0.6667],    A:[0.7315,0.8033,0.8727], B:[0.9735,0.9736,0.974] },
-      place_of_stay:   { N:[0.4103,0.4936,0.5733], A:[0.5548,0.6549,0.7228], B:[0.6712,0.8111,0.8904] },
-      place_of_origin: { N:[0.4983,0.5931,0.6928], A:[0.5393,0.6125,0.7267], B:[0.9508,0.9554,0.9629] },
-      with_spouse:     { N:[0.95,0.995,1.0],       A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] },
-      with_siblings:   { N:[0.65,0.7791,0.9474],   A:[0.92,0.9846,1.0],      B:[1.0,1.0,1.0] },
-      children_count:  { N:[0.95,0.995,1.0],       A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] }
-    },
-    'Gemini 2.5 Pro': {
-      title:           { N:[0.8048,0.8378,0.8691], A:[0.8025,0.8211,0.866],  B:[0.9376,0.9675,0.9987] },
-      arrival_date:    { N:[0.1745,0.3529,0.4676], A:[0.9583,0.9716,0.9866], B:[1.0,1.0,1.0] },
-      departure_date:  { N:[0.6579,0.7307,0.766],  A:[0.9378,0.9519,0.9667], B:[0.9758,0.9758,0.9758] },
-      place_of_stay:   { N:[0.5257,0.5999,0.6808], A:[0.4244,0.4777,0.5269], B:[0.9023,0.9125,0.9204] },
-      place_of_origin: { N:[0.6411,0.7638,0.8596], A:[0.6499,0.7145,0.818],  B:[0.817,0.8793,0.9745] },
-      with_spouse:     { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] },
-      with_siblings:   { N:[0.9565,0.97,1.0],      A:[0.913,0.938,0.9545],   B:[1.0,1.0,1.0] },
-      children_count:  { N:[1.0,1.0,1.0],          A:[0.975,0.9886,1.0],     B:[1.0,1.0,1.0] }
-    },
-    'Gemini 3.1 Pro (preview)': {
-      title:           { N:[0.8048,0.809,0.8117],  A:[0.8031,0.8083,0.8294], B:[0.8956,0.939,0.9679] },
-      arrival_date:    { N:[0.4474,0.4532,0.4571], A:[0.969,0.9698,0.9705],  B:[1.0,1.0,1.0] },
-      departure_date:  { N:[0.6992,0.7086,0.7181], A:[0.9508,0.9513,0.9516], B:[0.9758,0.9758,0.9758] },
-      place_of_stay:   { N:[0.6603,0.6945,0.7188], A:[0.7746,0.7855,0.7946], B:[0.9144,0.9252,0.936] },
-      place_of_origin: { N:[0.9429,0.9531,0.964],  A:[0.9178,0.9187,0.9211], B:[0.9745,0.9745,0.9745] },
-      with_spouse:     { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] },
-      with_siblings:   { N:[1.0,1.0,1.0],          A:[0.9677,0.968,0.9683],  B:[1.0,1.0,1.0] },
-      children_count:  { N:[1.0,1.0,1.0],          A:[1.0,1.0,1.0],          B:[1.0,1.0,1.0] }
-    }
-  };
-  const colors = {
-    'Claude 4.5':                     '#d97706',
-    'Claude 4.5 + extended thinking': '#be185d',
-    'GPT 5.2':                        '#16a34a',
-    'Gemini 2.5 Pro':                 '#2563eb',
-    'Gemini 3.1 Pro (preview)':       '#7c3aed'
-  };
-  // Field order: text fields first row (4), then place_of_origin + 3 exact-match fields second row (4)
-  const fieldOrder = [
-    ['title','Title'],
-    ['arrival_date','Arrival date'],
-    ['departure_date','Departure date'],
-    ['place_of_stay','Place of stay'],
-    ['place_of_origin','Place of origin'],
-    ['with_spouse','With spouse'],
-    ['with_siblings','With siblings'],
-    ['children_count','Children count']
-  ];
-  const phases = ['N','A','B'];
-
-  const traces = [];
-  Object.keys(FIELD_STATS).forEach(model => {
-    fieldOrder.forEach(([fkey, _], fi) => {
-      const s = FIELD_STATS[model][fkey];
-      const means    = phases.map(p => s[p][1]);
-      const errPlus  = phases.map(p => +(s[p][2] - s[p][1]).toFixed(3));
-      const errMinus = phases.map(p => +(s[p][1] - s[p][0]).toFixed(3));
-      const cd       = phases.map(p => [s[p][0], s[p][2]]);
-      traces.push({
-        type:'scatter', mode:'lines+markers',
-        x: phases, y: means,
-        error_y: { type:'data', symmetric:false, array:errPlus, arrayminus:errMinus,
-                   thickness:1, width:3, color: colors[model] },
-        name: model,
-        legendgroup: model,
-        showlegend: false,
-        line:   { color: colors[model], width: 1.3 },
-        marker: { color: colors[model], size: 5 },
-        xaxis: fi === 0 ? 'x' : 'x' + (fi + 1),
-        yaxis: fi === 0 ? 'y' : 'y' + (fi + 1),
-        customdata: cd,
-        hovertemplate: '<b>' + model + '</b><br>' + fieldOrder[fi][1] +
-                       '<br>Phase %{x}<br>mean %{y:.2f}<br>range %{customdata[0]:.2f}–%{customdata[1]:.2f}<extra></extra>'
-      });
-    });
-  });
-
-  const axisBase = { showgrid: false, showline: true, linecolor: '#999', linewidth: 1,
-                     ticks: 'outside', tickcolor: '#999', tickfont: { size: 9 }, zeroline: false };
-  const xBase = Object.assign({}, axisBase, { type:'category', categoryorder:'array', categoryarray: phases });
-  const yBase = Object.assign({}, axisBase, { range:[0, 1.05], dtick: 0.25, tickformat:'.2f' });
-
-  const layout = {
-    grid: { rows: 2, columns: 4, pattern: 'independent', xgap: 0.10, ygap: 0.30 },
-    margin: { l: 40, r: 10, t: 14, b: 40 },
-    paper_bgcolor: 'white',
-    plot_bgcolor:  'white',
-    font: { family: 'system-ui, -apple-system, sans-serif', size: 10, color: '#222' },
-    showlegend: false,
-    hovermode: 'closest'
-  };
-  // Per-panel axes: title in x-axis label; show y-tick labels only on left column (panels 1, 5)
-  fieldOrder.forEach(([fkey, flabel], fi) => {
-    const xKey = 'xaxis' + (fi === 0 ? '' : (fi + 1));
-    const yKey = 'yaxis' + (fi === 0 ? '' : (fi + 1));
-    const leftColumn = (fi === 0 || fi === 4);
-    layout[xKey] = Object.assign({}, xBase, { title: { text: flabel, font: { size: 11 } } });
-    layout[yKey] = Object.assign({}, yBase, { showticklabels: leftColumn });
-  });
-
-  Plotly.newPlot('field-accuracy-chart', traces, layout, { displayModeBar: false, responsive: true });
-})();
-</script>
-<details style="margin: 0.4rem 0 1rem;">
-<summary style="cursor: pointer; font-size: 0.85rem; color: #555;">Show underlying per-phase tables</summary>
 <h3>Phase N — Naive (image only, no expert guidance, no transcription)</h3>
 <table>
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
@@ -459,30 +94,80 @@ This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers acr
 <table>
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>0.88</td><td>0.89</td><td>0.88</td><td>0.67</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.81</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.86</td><td>0.94</td><td>0.94</td><td>0.66</td><td>1.00</td><td>0.96</td><td>1.00</td><td>0.84</td></tr>
-<tr><td>GPT 5.2</td><td>0.85</td><td>0.87</td><td>0.80</td><td>0.65</td><td>1.00</td><td>0.98</td><td>1.00</td><td>0.61</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>0.82</td><td>0.97</td><td>0.95</td><td>0.48</td><td>1.00</td><td>0.94</td><td>0.99</td><td>0.71</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.81</td><td>0.97</td><td>0.95</td><td>0.79</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.92</td></tr>
+<tr><td>Claude 4.5</td><td>0.88</td><td>0.64</td><td>0.71</td><td>0.59</td><td>1.00</td><td>0.94</td><td>1.00</td><td>0.82</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.85</td><td>0.92</td><td>0.95</td><td>0.63</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.87</td></tr>
+<tr><td>GPT 5.2</td><td>0.82</td><td>0.84</td><td>0.86</td><td>0.54</td><td>1.00</td><td>0.88</td><td>1.00</td><td>0.63</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.80</td><td>0.97</td><td>0.96</td><td>0.49</td><td>1.00</td><td>0.96</td><td>1.00</td><td>0.81</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.80</td><td>0.95</td><td>0.94</td><td>0.76</td><td>1.00</td><td>0.93</td><td>1.00</td><td>0.90</td></tr>
 </tbody></table>
 <h3>Phase B — Guided + Transcription (image + expert guidance + transcription)</h3>
 <table>
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>0.99</td><td>1.00</td><td>0.97</td><td>0.86</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.99</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>1.00</td><td>1.00</td><td>0.99</td><td>0.84</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.99</td></tr>
-<tr><td>GPT 5.2</td><td>0.95</td><td>1.00</td><td>0.97</td><td>0.81</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.96</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>0.97</td><td>1.00</td><td>0.98</td><td>0.91</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.88</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.94</td><td>1.00</td><td>0.98</td><td>0.93</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
+<tr><td>Claude 4.5</td><td>0.97</td><td>0.99</td><td>0.97</td><td>0.83</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.97</td><td>0.99</td><td>0.99</td><td>0.83</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.99</td></tr>
+<tr><td>GPT 5.2</td><td>0.97</td><td>0.99</td><td>0.99</td><td>0.72</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.96</td><td>0.99</td><td>0.99</td><td>0.90</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.98</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.92</td><td>0.99</td><td>0.99</td><td>0.92</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
 </tbody></table>
-</details>
+<hr>
+<h2>3. Per-image F1 by model × phase (variation across 10 runs)</h2>
+<table>
+<thead><tr><th>Model</th><th>Phase</th><th>Page</th><th>n</th><th>min</th><th>mean</th><th>max</th><th>std</th></tr></thead>
+<tbody>
+<tr><td>Claude 4.5</td><td>N</td><td>28</td><td>10</td><td>0.72</td><td>0.78</td><td>0.83</td><td>0.05</td></tr>
+<tr><td>Claude 4.5</td><td>N</td><td>36</td><td>10</td><td>0.64</td><td>0.68</td><td>0.76</td><td>0.04</td></tr>
+<tr><td>Claude 4.5</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.72</td><td>0.80</td><td>0.06</td></tr>
+<tr><td>Claude 4.5</td><td>A</td><td>28</td><td>10</td><td>0.92</td><td>0.92</td><td>0.92</td><td>0.00</td></tr>
+<tr><td>Claude 4.5</td><td>A</td><td>36</td><td>10</td><td>0.61</td><td>0.63</td><td>0.70</td><td>0.03</td></tr>
+<tr><td>Claude 4.5</td><td>A</td><td>39</td><td>10</td><td>0.80</td><td>0.80</td><td>0.80</td><td>0.00</td></tr>
+<tr><td>Claude 4.5</td><td>B</td><td>28</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Claude 4.5</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Claude 4.5</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>28</td><td>10</td><td>0.67</td><td>0.76</td><td>0.83</td><td>0.06</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>36</td><td>10</td><td>0.45</td><td>0.63</td><td>0.75</td><td>0.08</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.75</td><td>1.00</td><td>0.11</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>28</td><td>10</td><td>0.67</td><td>0.80</td><td>0.89</td><td>0.07</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>36</td><td>10</td><td>0.67</td><td>0.71</td><td>0.79</td><td>0.04</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>39</td><td>10</td><td>0.70</td><td>0.81</td><td>0.90</td><td>0.09</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>28</td><td>10</td><td>0.94</td><td>0.99</td><td>1.00</td><td>0.02</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>GPT 5.2</td><td>N</td><td>28</td><td>10</td><td>0.11</td><td>0.21</td><td>0.28</td><td>0.05</td></tr>
+<tr><td>GPT 5.2</td><td>N</td><td>36</td><td>10</td><td>0.29</td><td>0.33</td><td>0.37</td><td>0.03</td></tr>
+<tr><td>GPT 5.2</td><td>N</td><td>39</td><td>10</td><td>0.30</td><td>0.37</td><td>0.50</td><td>0.07</td></tr>
+<tr><td>GPT 5.2</td><td>A</td><td>28</td><td>10</td><td>0.14</td><td>0.29</td><td>0.43</td><td>0.08</td></tr>
+<tr><td>GPT 5.2</td><td>A</td><td>36</td><td>10</td><td>0.34</td><td>0.42</td><td>0.50</td><td>0.05</td></tr>
+<tr><td>GPT 5.2</td><td>A</td><td>39</td><td>10</td><td>0.30</td><td>0.38</td><td>0.40</td><td>0.04</td></tr>
+<tr><td>GPT 5.2</td><td>B</td><td>28</td><td>10</td><td>0.94</td><td>0.94</td><td>0.94</td><td>0.00</td></tr>
+<tr><td>GPT 5.2</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>GPT 5.2</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>N</td><td>28</td><td>10</td><td>0.70</td><td>0.83</td><td>0.89</td><td>0.08</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>N</td><td>36</td><td>10</td><td>0.20</td><td>0.46</td><td>0.68</td><td>0.19</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.67</td><td>0.70</td><td>0.05</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>A</td><td>28</td><td>10</td><td>0.68</td><td>0.72</td><td>0.79</td><td>0.04</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>A</td><td>36</td><td>10</td><td>0.65</td><td>0.68</td><td>0.69</td><td>0.02</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>A</td><td>39</td><td>10</td><td>0.70</td><td>0.70</td><td>0.70</td><td>0.00</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>B</td><td>28</td><td>10</td><td>0.97</td><td>1.00</td><td>1.00</td><td>0.01</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>28</td><td>10</td><td>0.92</td><td>0.95</td><td>0.97</td><td>0.03</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>36</td><td>10</td><td>0.82</td><td>0.82</td><td>0.82</td><td>0.00</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>28</td><td>10</td><td>0.97</td><td>0.97</td><td>0.97</td><td>0.00</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>36</td><td>10</td><td>0.85</td><td>0.87</td><td>0.90</td><td>0.03</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>39</td><td>10</td><td>0.90</td><td>0.96</td><td>1.00</td><td>0.05</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>28</td><td>10</td><td>0.92</td><td>0.94</td><td>0.97</td><td>0.01</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>39</td><td>3</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+</tbody></table>
 <hr>
 <h2>4. Per-image difficulty (averaged across models, phases, runs)</h2>
 <table>
 <thead><tr><th>Page ID</th><th>Filename</th><th>Travelers in GT</th><th>F1 mean</th></tr></thead>
 <tbody>
 <tr><td>28</td><td>AVS IS 758-781 1766 02.jpg</td><td>18</td><td>0.81</td></tr>
-<tr><td>36</td><td>AVS IS 758-781 1770 05 28 p1.jpg</td><td>37</td><td>0.74</td></tr>
+<tr><td>36</td><td>AVS IS 758-781 1770 05 28 p1.jpg</td><td>37</td><td>0.75</td></tr>
 <tr><td>39</td><td>AVS IS 758-781 1770 08.jpg</td><td>10</td><td>0.80</td></tr>
 </tbody></table>
 <hr>
