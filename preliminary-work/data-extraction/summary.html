@@ -15,6 +15,7 @@ th { background: #f0f0f0; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
 a { color: #1858a7; }
 .back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </style>
 </head>
 <body>
@@ -114,55 +115,40 @@ This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers acr
 </tbody></table>
 <hr>
 <h2>3. Per-image F1 by model × phase (variation across 10 runs)</h2>
+<p>
+Split by phase to mirror section 2. Each cell is the <strong>mean F1</strong> across the 10 runs for that (model, phase, page); where the runs varied, the <span class="var" style="display:inline">min–max range and σ (std)</span> follow beneath. A bare number means all runs scored identically (σ = 0). All cells aggregate n = 10 runs except where noted.
+</p>
+<h3>Phase N — Naive (image only, no expert guidance, no transcription)</h3>
 <table>
-<thead><tr><th>Model</th><th>Phase</th><th>Page</th><th>n</th><th>min</th><th>mean</th><th>max</th><th>std</th></tr></thead>
+<thead><tr><th>Model</th><th>Page 28</th><th>Page 36</th><th>Page 39</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>N</td><td>28</td><td>10</td><td>0.72</td><td>0.78</td><td>0.83</td><td>0.05</td></tr>
-<tr><td>Claude 4.5</td><td>N</td><td>36</td><td>10</td><td>0.64</td><td>0.68</td><td>0.76</td><td>0.04</td></tr>
-<tr><td>Claude 4.5</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.72</td><td>0.80</td><td>0.06</td></tr>
-<tr><td>Claude 4.5</td><td>A</td><td>28</td><td>10</td><td>0.92</td><td>0.92</td><td>0.92</td><td>0.00</td></tr>
-<tr><td>Claude 4.5</td><td>A</td><td>36</td><td>10</td><td>0.61</td><td>0.63</td><td>0.70</td><td>0.03</td></tr>
-<tr><td>Claude 4.5</td><td>A</td><td>39</td><td>10</td><td>0.80</td><td>0.80</td><td>0.80</td><td>0.00</td></tr>
-<tr><td>Claude 4.5</td><td>B</td><td>28</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Claude 4.5</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Claude 4.5</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>28</td><td>10</td><td>0.67</td><td>0.76</td><td>0.83</td><td>0.06</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>36</td><td>10</td><td>0.45</td><td>0.63</td><td>0.75</td><td>0.08</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.75</td><td>1.00</td><td>0.11</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>28</td><td>10</td><td>0.67</td><td>0.81</td><td>0.89</td><td>0.07</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>36</td><td>10</td><td>0.67</td><td>0.71</td><td>0.79</td><td>0.04</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>39</td><td>10</td><td>0.70</td><td>0.81</td><td>0.90</td><td>0.09</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>28</td><td>10</td><td>0.94</td><td>0.99</td><td>1.00</td><td>0.02</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>GPT 5.2</td><td>N</td><td>28</td><td>10</td><td>0.11</td><td>0.21</td><td>0.28</td><td>0.05</td></tr>
-<tr><td>GPT 5.2</td><td>N</td><td>36</td><td>10</td><td>0.29</td><td>0.33</td><td>0.37</td><td>0.03</td></tr>
-<tr><td>GPT 5.2</td><td>N</td><td>39</td><td>10</td><td>0.30</td><td>0.37</td><td>0.50</td><td>0.07</td></tr>
-<tr><td>GPT 5.2</td><td>A</td><td>28</td><td>10</td><td>0.14</td><td>0.29</td><td>0.43</td><td>0.08</td></tr>
-<tr><td>GPT 5.2</td><td>A</td><td>36</td><td>10</td><td>0.34</td><td>0.42</td><td>0.50</td><td>0.05</td></tr>
-<tr><td>GPT 5.2</td><td>A</td><td>39</td><td>10</td><td>0.30</td><td>0.38</td><td>0.40</td><td>0.04</td></tr>
-<tr><td>GPT 5.2</td><td>B</td><td>28</td><td>10</td><td>0.94</td><td>0.94</td><td>0.94</td><td>0.00</td></tr>
-<tr><td>GPT 5.2</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>GPT 5.2</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>N</td><td>28</td><td>10</td><td>0.70</td><td>0.83</td><td>0.89</td><td>0.08</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>N</td><td>36</td><td>10</td><td>0.20</td><td>0.46</td><td>0.68</td><td>0.19</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.67</td><td>0.70</td><td>0.05</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>A</td><td>28</td><td>10</td><td>0.68</td><td>0.72</td><td>0.79</td><td>0.04</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>A</td><td>36</td><td>10</td><td>0.65</td><td>0.68</td><td>0.69</td><td>0.02</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>A</td><td>39</td><td>10</td><td>0.70</td><td>0.70</td><td>0.70</td><td>0.00</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>B</td><td>28</td><td>10</td><td>0.97</td><td>1.00</td><td>1.00</td><td>0.01</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>B</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>28</td><td>10</td><td>0.92</td><td>0.95</td><td>0.97</td><td>0.03</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>36</td><td>10</td><td>0.82</td><td>0.82</td><td>0.82</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>N</td><td>39</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>28</td><td>10</td><td>0.97</td><td>0.97</td><td>0.97</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>36</td><td>10</td><td>0.85</td><td>0.87</td><td>0.90</td><td>0.03</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>A</td><td>39</td><td>10</td><td>0.90</td><td>0.96</td><td>1.00</td><td>0.05</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>28</td><td>10</td><td>0.92</td><td>0.94</td><td>0.97</td><td>0.01</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>36</td><td>10</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>B</td><td>39</td><td>3</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Claude 4.5</td><td>0.78<span class="var">0.72–0.83 · σ0.05</span></td><td>0.68<span class="var">0.64–0.76 · σ0.04</span></td><td>0.72<span class="var">0.60–0.80 · σ0.06</span></td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.76<span class="var">0.67–0.83 · σ0.06</span></td><td>0.63<span class="var">0.45–0.75 · σ0.08</span></td><td>0.75<span class="var">0.60–1.00 · σ0.11</span></td></tr>
+<tr><td>GPT 5.2</td><td>0.21<span class="var">0.11–0.28 · σ0.05</span></td><td>0.33<span class="var">0.29–0.37 · σ0.03</span></td><td>0.37<span class="var">0.30–0.50 · σ0.07</span></td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.83<span class="var">0.70–0.89 · σ0.08</span></td><td>0.46<span class="var">0.20–0.68 · σ0.19</span></td><td>0.67<span class="var">0.60–0.70 · σ0.05</span></td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.95<span class="var">0.92–0.97 · σ0.03</span></td><td>0.82</td><td>1.00</td></tr>
 </tbody></table>
+<h3>Phase A — Guided (image + expert guidance (no transcription))</h3>
+<table>
+<thead><tr><th>Model</th><th>Page 28</th><th>Page 36</th><th>Page 39</th></tr></thead>
+<tbody>
+<tr><td>Claude 4.5</td><td>0.92</td><td>0.63<span class="var">0.61–0.70 · σ0.03</span></td><td>0.80</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.81<span class="var">0.67–0.89 · σ0.07</span></td><td>0.71<span class="var">0.67–0.79 · σ0.04</span></td><td>0.81<span class="var">0.70–0.90 · σ0.09</span></td></tr>
+<tr><td>GPT 5.2</td><td>0.29<span class="var">0.14–0.43 · σ0.08</span></td><td>0.42<span class="var">0.34–0.50 · σ0.05</span></td><td>0.38<span class="var">0.30–0.40 · σ0.04</span></td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.72<span class="var">0.68–0.79 · σ0.04</span></td><td>0.68<span class="var">0.65–0.69 · σ0.02</span></td><td>0.70</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.97</td><td>0.87<span class="var">0.85–0.90 · σ0.03</span></td><td>0.96<span class="var">0.90–1.00 · σ0.05</span></td></tr>
+</tbody></table>
+<h3>Phase B — Guided + Transcription (image + expert guidance + transcription)</h3>
+<table>
+<thead><tr><th>Model</th><th>Page 28</th><th>Page 36</th><th>Page 39</th></tr></thead>
+<tbody>
+<tr><td>Claude 4.5</td><td>1.00</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.99<span class="var">0.94–1.00 · σ0.02</span></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT 5.2</td><td>0.94</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>1.00<span class="var">0.97–1.00 · σ0.01</span></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.94<span class="var">0.92–0.97 · σ0.01</span></td><td>1.00</td><td>1.00 <sup>†</sup></td></tr>
+</tbody></table>
+<p style="font-size: 0.8rem; color: #666;"><sup>†</sup> Gemini 3.1 Pro Phase B page 39 aggregates n = 3 successful runs (the other 7 failed to produce parseable JSON); all other cells aggregate n = 10.</p>
 <hr>
 <h2>4. Per-image difficulty (averaged across models, phases, runs)</h2>
 <table>
