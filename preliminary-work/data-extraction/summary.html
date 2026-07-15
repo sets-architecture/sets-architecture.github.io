@@ -34,7 +34,7 @@ a { color: #1858a7; }
 F1 in this experiment measures <strong>traveler identification</strong> — did the model produce the same set of named travelers as the ground truth? Per-field accuracy (date, place of stay, etc.) is reported separately in section 2 and is computed only on rows that successfully matched.
 </p>
 <p>
-<strong>Row matching.</strong> Each model output is a list of traveler records. Each record is paired with at most one ground-truth record by greedy best-match on <strong>name similarity</strong>, computed as the larger of (a) <code>difflib.SequenceMatcher</code> character ratio and (b) token-set overlap, both on a lowercased, punctuation-stripped name. A <code>?</code> in either name matches any character (it marks illegible glyphs). Pairs below similarity <strong>0.70</strong> are not matched. When the same name appears twice in the ground truth (e.g. a traveler who arrived and later departed in the same week), arrival- and departure-date alignment is used as a tiebreaker. See <a href="evaluate.py#L143-L178">evaluate.py:143-178</a>.
+<strong>Row matching.</strong> Each model output is a list of traveler records. Each record is paired with at most one ground-truth record by greedy best-match on <strong>name similarity</strong>, computed as the larger of (a) <code>difflib.SequenceMatcher</code> character ratio and (b) token-set overlap, both on a lowercased, punctuation-stripped name (with the quondam abbreviation variants <code>q.m</code>/<code>qm</code>/<code>q(uonda)m</code>/<code>quondam</code> collapsed to one short canonical so they match fully). A <code>?</code> in either name matches any character (it marks illegible glyphs). Pairs below similarity <strong>0.70</strong> are not matched. When the same name appears twice in the ground truth (e.g. a traveler who arrived and later departed in the same week), arrival- and departure-date alignment is used as a tiebreaker. See <a href="evaluate.py#L143-L178">evaluate.py:143-178</a>.
 </p>
 <p>
 <strong>Precision / recall / F1 per image.</strong>
@@ -59,7 +59,7 @@ See <a href="evaluate.py#L239-L247">evaluate.py:239-247</a>.
 <thead><tr><th>Model</th><th>F1 N</th><th>F1 A</th><th>F1 B</th><th>N→A</th><th>A→B</th><th>N→B</th></tr></thead>
 <tbody>
 <tr><td>Claude 4.5</td><td>0.71</td><td>0.74</td><td>1.00</td><td>+0.03</td><td>+0.26</td><td>+0.29</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.68</td><td>0.75</td><td>1.00</td><td>+0.07</td><td>+0.25</td><td>+0.31</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.69</td><td>0.75</td><td>1.00</td><td>+0.07</td><td>+0.24</td><td>+0.31</td></tr>
 <tr><td>GPT 5.2</td><td>0.30</td><td>0.37</td><td>0.98</td><td>+0.07</td><td>+0.61</td><td>+0.68</td></tr>
 <tr><td>Gemini 2.5 Pro</td><td>0.61</td><td>0.69</td><td>1.00</td><td>+0.08</td><td>+0.31</td><td>+0.39</td></tr>
 <tr><td>Gemini 3.1 Pro (preview)</td><td>0.88</td><td>0.91</td><td>0.98</td><td>+0.03</td><td>+0.07</td><td>+0.10</td></tr>
@@ -75,6 +75,7 @@ Computed only on rows that matched a GT traveler (so a model that misses half th
 <ul>
 <li><em>Text fields</em> (<code>title</code>, <code>arrival_date</code>, <code>departure_date</code>, <code>place_of_stay</code>, <code>place_of_origin</code>) — <strong>character accuracy</strong> = <code>1 − levenshtein(gt, model) / len(gt)</code> after normalization. A 1-character misspelling on a 16-char string scores ~0.94 rather than 0. Normalization lowercases, collapses whitespace, strips trailing punctuation (and a trailing <code>?</code> on GT illegible markers), and applies an equivalence dictionary (expand-both-sides, so a correctly-written abbreviation matches the expanded GT).</li>
 <li><em>Place fields</em> (<code>place_of_stay</code>, <code>place_of_origin</code>) get extra Venetian place normalization built from a corpus scan: a leading connective <code>in</code> and commas are dropped; the saint prefix San/Santo/Santa (and abbreviations <code>S.</code>/<code>St.</code>/<code>Sta</code>/<code>S.ta</code>…) collapse to one canonical, while the plural <strong>Santi is kept distinct</strong>; <code>Cà</code>/<code>Ca&#x27;</code>/<code>Ca</code> collapse together but <strong>not</strong> to <code>Casa</code>; <code>loc.</code>→locanda, <code>osp.</code>→ospizio, <code>m.</code>→maria, and the quondam group (<code>q.m</code>/<code>qm</code>/<code>q(uonda)m</code>…). Genuine misreadings (e.g. <code>Feltrina</code>→<code>Pestiora</code>) are left intact and scored by character accuracy. See <a href="evaluate.py">evaluate.py</a> <code>norm_place</code> / <code>ABBREVIATION_EXPANSIONS</code> / <code>PLACE_EXPANSIONS</code>.</li>
+<li><em>Date fields</em> (<code>arrival_date</code>, <code>departure_date</code>) additionally strip a leading zero from the day (<code>February 09 1769</code> == <code>February 9 1769</code>; GT is non-padded). Differently-formatted dates (day-first, month abbreviations) still differ — those are deviations from the requested <code>Month D YYYY</code>, not equivalents.</li>
 <li><em>Binary fields</em> (<code>with_spouse</code>, <code>with_siblings</code>, <code>children_count</code>) — 1.0 if equal, 0.0 if not.</li>
 <li><em>Unscorable cells</em> (e.g. GT title is empty) are excluded from both numerator and denominator — they neither help nor hurt.</li>
 </ul>
@@ -96,7 +97,7 @@ This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers acr
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
 <tbody>
 <tr><td>Claude 4.5</td><td>0.87</td><td>0.64</td><td>0.71</td><td>0.64</td><td>1.00</td><td>0.94</td><td>1.00</td><td>0.82</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.85</td><td>0.92</td><td>0.95</td><td>0.68</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.87</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.85</td><td>0.93</td><td>0.95</td><td>0.68</td><td>1.00</td><td>0.97</td><td>1.00</td><td>0.88</td></tr>
 <tr><td>GPT 5.2</td><td>0.82</td><td>0.84</td><td>0.86</td><td>0.58</td><td>1.00</td><td>0.88</td><td>1.00</td><td>0.63</td></tr>
 <tr><td>Gemini 2.5 Pro</td><td>0.78</td><td>0.97</td><td>0.96</td><td>0.53</td><td>1.00</td><td>0.96</td><td>1.00</td><td>0.81</td></tr>
 <tr><td>Gemini 3.1 Pro (preview)</td><td>0.80</td><td>0.95</td><td>0.94</td><td>0.80</td><td>1.00</td><td>0.93</td><td>1.00</td><td>0.90</td></tr>
@@ -105,11 +106,11 @@ This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers acr
 <table>
 <thead><tr><th>Model</th><th>title</th><th>arrival_date</th><th>departure_date</th><th>place_of_stay</th><th>with_spouse</th><th>with_siblings</th><th>children_count</th><th>place_of_origin</th></tr></thead>
 <tbody>
-<tr><td>Claude 4.5</td><td>0.97</td><td>0.99</td><td>0.97</td><td>0.87</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>0.97</td><td>0.99</td><td>0.99</td><td>0.85</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.99</td></tr>
-<tr><td>GPT 5.2</td><td>0.97</td><td>0.99</td><td>0.99</td><td>0.77</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
-<tr><td>Gemini 2.5 Pro</td><td>0.96</td><td>0.99</td><td>0.99</td><td>0.93</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.98</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.92</td><td>0.99</td><td>0.99</td><td>0.96</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.98</td></tr>
+<tr><td>Claude 4.5</td><td>0.97</td><td>1.00</td><td>0.97</td><td>0.87</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>0.97</td><td>1.00</td><td>0.99</td><td>0.85</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.99</td></tr>
+<tr><td>GPT 5.2</td><td>0.97</td><td>1.00</td><td>0.99</td><td>0.77</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.97</td></tr>
+<tr><td>Gemini 2.5 Pro</td><td>0.96</td><td>1.00</td><td>0.99</td><td>0.93</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.98</td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.92</td><td>1.00</td><td>0.99</td><td>0.96</td><td>1.00</td><td>1.00</td><td>1.00</td><td>0.98</td></tr>
 </tbody></table>
 <hr>
 <h2>3. Per-image F1 by model × phase (variation across 10 runs)</h2>
@@ -128,7 +129,7 @@ This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers acr
 <tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>28</td><td>10</td><td>0.67</td><td>0.76</td><td>0.83</td><td>0.06</td></tr>
 <tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>36</td><td>10</td><td>0.45</td><td>0.63</td><td>0.75</td><td>0.08</td></tr>
 <tr><td>Claude 4.5 + extended thinking</td><td>N</td><td>39</td><td>10</td><td>0.60</td><td>0.75</td><td>1.00</td><td>0.11</td></tr>
-<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>28</td><td>10</td><td>0.67</td><td>0.80</td><td>0.89</td><td>0.07</td></tr>
+<tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>28</td><td>10</td><td>0.67</td><td>0.81</td><td>0.89</td><td>0.07</td></tr>
 <tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>36</td><td>10</td><td>0.67</td><td>0.71</td><td>0.79</td><td>0.04</td></tr>
 <tr><td>Claude 4.5 + extended thinking</td><td>A</td><td>39</td><td>10</td><td>0.70</td><td>0.81</td><td>0.90</td><td>0.09</td></tr>
 <tr><td>Claude 4.5 + extended thinking</td><td>B</td><td>28</td><td>10</td><td>0.94</td><td>0.99</td><td>1.00</td><td>0.02</td></tr>

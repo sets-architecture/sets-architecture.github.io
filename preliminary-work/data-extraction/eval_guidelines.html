@@ -69,10 +69,18 @@ about them. They are independent: a model can score F1 = 1.00 while its
 Each model row is greedily paired with at most one GT row by <strong>name similarity</strong>:
 </p>
 <ul>
-<li>Names are normalized: lowercased, punctuation stripped, whitespace collapsed. A</li>
+<li>Names are normalized: lowercased, whitespace collapsed, punctuation stripped. A</li>
 </ul>
 <p>
-  <code>?</code> (illegible-glyph marker) is kept.
+  <code>?</code> (illegible-glyph marker) is kept. The quondam abbreviation variants
+<br>
+  (<code>q.m</code> / <code>q.m.</code> / <code>qm</code> / <code>q</code> / <code>q(uonda)m</code> / <code>q(uondam)</code> / <code>quondam</code>) are first
+<br>
+  collapsed to a single short canonical, so e.g. <code>Leon q.m. Iacob Tedesco</code> and
+<br>
+  <code>Leon qm Iacob Tedesco</code> match fully. The short canonical is length-neutral, so
+<br>
+  this equivalence doesn&#x27;t shift unrelated borderline matches across the threshold.
 </p>
 <ul>
 <li>Similarity = the larger of (a) <code>difflib.SequenceMatcher</code> character ratio and</li>
@@ -119,7 +127,8 @@ penalized or rewarded for a field the document does not record.
 <tbody>
 <tr><td><code>with_spouse</code>, <code>with_siblings</code></td><td>Exact Y/N match → 1.0 / 0.0</td></tr>
 <tr><td><code>children_count</code></td><td>Exact integer match → 1.0 / 0.0</td></tr>
-<tr><td><code>title</code>, <code>arrival_date</code>, <code>departure_date</code></td><td><strong>Character accuracy</strong> after base normalization</td></tr>
+<tr><td><code>title</code></td><td><strong>Character accuracy</strong> after base normalization</td></tr>
+<tr><td><code>arrival_date</code>, <code>departure_date</code></td><td><strong>Character accuracy</strong> after base normalization <strong>+ day leading-zero strip</strong> (<code>February 09 1769</code> == <code>February 9 1769</code>; GT is non-padded). Genuinely different or differently-formatted dates (day-first, month abbreviations, raw Italian like <code>9bre</code>) still differ under char_accuracy — those are model deviations from the requested <code>Month D YYYY</code>, not accepted equivalents.</td></tr>
 <tr><td><code>place_of_stay</code>, <code>place_of_origin</code></td><td><strong>Character accuracy</strong> after place normalization (§5)</td></tr>
 </tbody></table>
 <p>
