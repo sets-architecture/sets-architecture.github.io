@@ -116,7 +116,7 @@ This matches venice-39-guided/-naive&#x27;s text-question scoring so numbers acr
 <hr>
 <h2>3. Per-image F1 by model × phase (variation across 10 runs)</h2>
 <p>
-Split by phase to mirror section 2. Each cell is the <strong>mean F1</strong> across the 10 runs for that (model, phase, page); where the runs varied, the <span class="var" style="display:inline">min–max range and σ (std)</span> follow beneath. A bare number means all runs scored identically (σ = 0). All cells aggregate n = 10 runs except where noted.
+Split by phase to mirror section 2. Each cell is the <strong>mean F1</strong> across the runs for that (model, phase, page); where the runs varied, the min–max range and σ (std) follow beneath in grey. A bare number means every run scored identically (σ = 0). Cells aggregate 10 runs except where a <code>†</code> marks fewer successful runs.
 </p>
 <h3>Phase N — Naive (image only, no expert guidance, no transcription)</h3>
 <table>
@@ -146,9 +146,11 @@ Split by phase to mirror section 2. Each cell is the <strong>mean F1</strong> ac
 <tr><td>Claude 4.5 + extended thinking</td><td>0.99<span class="var">0.94–1.00 · σ0.02</span></td><td>1.00</td><td>1.00</td></tr>
 <tr><td>GPT 5.2</td><td>0.94</td><td>1.00</td><td>1.00</td></tr>
 <tr><td>Gemini 2.5 Pro</td><td>1.00<span class="var">0.97–1.00 · σ0.01</span></td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 Pro (preview)</td><td>0.94<span class="var">0.92–0.97 · σ0.01</span></td><td>1.00</td><td>1.00 <sup>†</sup></td></tr>
+<tr><td>Gemini 3.1 Pro (preview)</td><td>0.94<span class="var">0.92–0.97 · σ0.01</span></td><td>1.00</td><td>1.00 †</td></tr>
 </tbody></table>
-<p style="font-size: 0.8rem; color: #666;"><sup>†</sup> Gemini 3.1 Pro Phase B page 39 aggregates n = 3 successful runs (the other 7 failed to produce parseable JSON); all other cells aggregate n = 10.</p>
+<p>
+† Gemini 3.1 Pro (preview) Phase B page 39 aggregates n = 3 — fewer than the standard 10 successful runs (remaining runs failed to produce parseable JSON).
+</p>
 <hr>
 <h2>4. Per-image difficulty (averaged across models, phases, runs)</h2>
 <table>
