@@ -15,9 +15,11 @@
               background: linear-gradient(to right, #ffffff, #00b400); }
     .chart-container { margin: 1rem 0 2rem; }
     canvas { max-width: 100%; }
-    </style>
+    .dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }</style>
 <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
 </head><body>
+<p class="dates">Page generated: 2026-07-23<br>Data (model runs) generated: 2026-04-11</p>
+
 <h1>Accuracy vs Ground Truth Count</h1>
 <p class='note'>For each counting question, pages are grouped by their ground truth value. Each cell shows the mean accuracy across all models and runs for pages with that GT count. Reveals whether models struggle more at the extremes (0 instances or high counts).</p>
 <div class="legend"><span>Low accuracy → High accuracy:</span><div class="swatch"></div></div>

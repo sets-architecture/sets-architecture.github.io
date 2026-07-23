@@ -42,9 +42,13 @@
   body.mode-align .qbadges { display: block; }
   .qbadge { display: inline-block; font-size: 0.7rem; font-weight: 600; color: #fff; padding: 1px 7px; border-radius: 9px; margin: 2px 4px 0 0; }
   body:not(.mode-align) .qbadges { display: none; }
+
+  .back { font-size: 0.82rem; margin-bottom: 1rem; }
+  .back a { color: #1858a7; }
 </style>
 </head>
 <body>
+<p class="back"><a href="/preliminary-work/question-answering.html">&larr; Question Answering</a></p>
 
 <h1>Expert Guidance</h1>
 <p class="note">This domain knowledge block is injected into the system prompt before each model run in the guided condition. It is not used in the naive condition. This guidance is specific to the <b>question-answering</b> experiment; the data-extraction experiment uses its own, separately worded block.</p>

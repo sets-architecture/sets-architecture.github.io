@@ -22,9 +22,11 @@
     .card .row { display: flex; justify-content: space-between; gap: 6px; }
     .chart-section { margin: 1rem 0 1.5rem; padding: 0.6rem; background: #fafafa; border: 1px solid #eee; border-radius: 6px; }
     #compare-chart { width: 100%; height: 360px; }
-    </style>
+    .dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }</style>
 <script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script>
 </head><body>
+<p class="dates">Page generated: 2026-07-23<br>Data (model runs) generated: 2026-04-11</p>
+
 <h1>Image Complexity Grid</h1>
 <p class='note'>Thumbnails of all 39 pages with their complexity ratings and mean accuracy under the guided condition. (<a href='image_difficulty_comparison.html'>Per-page and per-model comparison of guided vs naive accuracy.</a>) Click a thumbnail to view the full-size image. <b>Structural</b> = sum of named travelers, unnamed travelers, con instances, e instances (from ground truth). <b>Visual</b> = connected ink components from Sauvola binarization (≥5 px). <b>Overall density</b> = mean of structural and visual after each is min-max normalized to 0–100% of the corpus range. (Pearson r vs mean accuracy: structural −0.75, visual −0.77, overall −0.81.)</p>
 <div class='chart-section'>
