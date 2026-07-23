@@ -4,18 +4,15 @@
 <meta charset="utf-8">
 <title>Expert Guidance — Data Extraction</title>
 <style>
-  body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.55; }
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.6; }
   h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
-  h2 { font-size: 1.05rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
-  h3 { font-size: 0.98rem; margin-top: 1.5rem; }
   hr { border: none; border-top: 1px solid #ccc; margin: 2rem 0; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
   a { color: #1858a7; }
-  ul, ol { line-height: 1.6; }
   p.note { font-size: 0.85rem; color: #555; }
   p.intro { font-size: 0.9rem; color: #444; }
   .back { font-size: 0.82rem; margin-bottom: 1.5rem; }
-  blockquote { border-left: 3px solid #ccc; margin: 0.5rem 0 1rem; padding: 0.4rem 0.9rem; color: #444; font-size: 0.92rem; background: #fafafa; }
+  .guidance p { margin: 0 0 0.9rem; }
 </style>
 </head>
 <body>
@@ -23,84 +20,50 @@
 
 <h1>Expert Guidance</h1>
 <p class="intro">
-  Domain-knowledge block prepended to the system prompt in the <b>guided</b> (Phase A) and <b>guided + transcription</b> (Phase B) conditions. The naive condition (Phase N) sees only a brief task description and the response schema. The text below is the verbatim guidance authored by the project's archival scholar; it explains how to read 18th-century Venetian arrival/departure registers from the Archivio di Stato di Venezia, series ASV IS 758-781.
+  Domain-knowledge block prepended to the system prompt in the <b>guided</b> (Phase A) and <b>guided + transcription</b> (Phase B) conditions. The naive condition (Phase N) does not receive it. The text below is reproduced <b>verbatim</b> from the source; paragraph breaks have been added for legibility, but no wording has been changed, summarized, or reordered.
 </p>
-<p class="note">Source: <a href="collect_responses.py#L120-L172">collect_responses.py:120-172</a> (constant <code>EXPERT_GUIDANCE</code>).</p>
+<p class="note">Source: <a href="collect_responses.py#L122-L164">collect_responses.py:122-164</a> (constant <code>EXPERT_GUIDANCE</code>).</p>
 
 <hr>
 
-<blockquote>
-You are assisting a scholar in extracting per-traveler data from handwritten 18th-century Venetian archival documents kept at the Archivio di Stato di Venezia (series ASV IS 758-781). Each document is a weekly record of foreign visitors arriving in or departing from Venice, kept by a deputy (Giovanni Somazzi from 1765 to ~1790).
-</blockquote>
-
-<h2>Document structure</h2>
-<ul>
-<li>Each page is dated at the top center, typically in the order day-month-year. Subsequent pages of the same record may not repeat the date.</li>
-<li>Each page is divided into two columns:
-  <ul>
-    <li><b>LEFT column</b>: arrivals (<i>"Forestieri annotati riferiti da cameranti / nella scaduta settimana come siegue"</i>) — listed by day of arrival, grouped by place of stay.</li>
-    <li><b>RIGHT column</b>: departures (<i>"Forestieri partiti riferiti da cameranti / nella scaduta settimana come siegue"</i>) — listed by day of departure, grouped by place of stay.</li>
-  </ul>
-</li>
-<li>Within each column, day markers (e.g. <code>Adi 13 Agosto</code>, <code>//15 d(et)to</code>) group entries by date.</li>
-<li>Place of stay appears as <i>"in casa di [name]"</i> (in the house of) or <i>"alla locanda [name]"</i> (at the inn), followed by the parish to indicate location within Venice.</li>
-<li>For Jewish travelers (<i>"Forestieri Ebrei"</i>), entries are reported by a <i>Deputato</i> (deputy) rather than the hoteliers, and place of stay typically gives only <i>"in casa di [name]"</i> with no parish.</li>
-</ul>
-
-<h2>Calendar — M.V. (More Veneto)</h2>
-<ul>
-<li>The Venetian calendar's year began on March 1, so January and February dates were recorded as the previous year.</li>
-<li>When a date is marked <code>M.V.</code> or appears on a page header dated to January or February, add 1 year to obtain the standard calendar year.</li>
-<li>Example: <code>20 Febbraio 1768 M.V.</code> = 20 February 1769 standard.</li>
-<li>ALWAYS report dates in the standard calendar year. Do not include <code>M.V.</code> in the output.</li>
-</ul>
-
-<h2>Named vs unnamed travelers</h2>
-<ul>
-<li>Include ONLY named foreign visitors (those with first and/or last name). One entry per named traveler.</li>
-<li>Do NOT include unnamed companions:
-  <ul>
-    <li>Servants (<i>"domestici"</i>, <i>"camerieri"</i>, <i>"compagno"</i>) — these are NEVER counted as children.</li>
-    <li>Anonymous family members referenced only by relationship (e.g. <i>"con moglie"</i> = "with wife", <i>"con un figliuolo"</i> = "with one son").</li>
-  </ul>
-</li>
-<li>A named traveler accompanied by family is still ONE entry; record their family using the <code>with_spouse</code> / <code>with_siblings</code> / <code>children_count</code> fields.</li>
-</ul>
-
-<h2>Family vocabulary</h2>
-<ul>
-<li><i>moglie</i> / <i>consorte</i> = wife → <code>with_spouse = "Y"</code></li>
-<li><i>figlio</i> / <i>figliuolo</i> / <i>figliolo</i> (m.) / <i>figliuola</i> / <i>figliola</i> (f.) = child → counted in <code>children_count</code></li>
-<li><i>figliuoli</i> (plural, m. or mixed) = children → count by adjacent number (<i>"cinque figliuoli"</i> = 5)</li>
-<li><i>fratelli</i> (plural, m. or mixed) / <i>F(rate)lli</i> = brothers/siblings — when two named travelers are explicitly bracketed and labeled <i>fratelli</i>, set <code>with_siblings = "Y"</code> for both.</li>
-<li>Numbers may be spelled out (<i>"cinque"</i> = 5, <i>"tre"</i> = 3, <i>"due"</i> = 2, <i>"uno"</i> / <i>"una"</i> = 1) or in digits.</li>
-<li>Servants are NEVER children: <i>"con un domestico"</i> = with one servant (do NOT count).</li>
-</ul>
-
-<h2>Titles</h2>
-<p>Common titles to record in the <code>title</code> field if present: <i>Conte</i> (Co.), <i>Marchese</i> (Marc.), <i>Barone</i>, <i>Cav(alier)</i>, <i>Mons.r</i> (Monsignor), <i>Don</i>, <i>Pre</i> (priest), <i>Canonico</i>, <i>Abbate</i>, <i>Maggiore</i> (Mag.), <i>Cornetta</i>, <i>Vedova</i> (widow). If no title appears, leave the field empty.</p>
-
-<h2>Abbreviations and old Italian</h2>
-<ul>
-<li><code>q(uondam)</code> / <code>q.m</code> = "the late" (predeceased ancestor); commonly precedes the father's name. Include <code>q.m</code> (or <code>q(uonda)m</code>) in the recorded name as written in the document.</li>
-<li>Common contractions: <code>Gio.</code> for "Giovanni", <code>Fran.co</code> for "Francesco", <code>S.t</code> for "Santo", <code>S.ta</code> for "Santa".</li>
-<li><code>S(an)</code> / <code>S(an)t</code> / <code>S(an)ta</code> abbreviates "San" / "Santo" / "Santa" before parish names.</li>
-<li><i>ambedue</i> = both; <i>tutti</i> / <i>tutti e tre</i> = all / all three.</li>
-<li><i>"in casa di [x]"</i> / <i>"alla locanda [x]"</i> / <i>"all'Osp(izi)o de' Poveri"</i> / <i>"all'Albergo"</i> — these are place-of-stay constructions.</li>
-</ul>
-
-<h2>Visual cues</h2>
-<ul>
-<li>Curly brackets group entries that share place of origin or family relationship; the annotation outside the bracket states the shared attribute (e.g. <i>"ambedue Inglesi"</i>, <i>"tutti di Verona"</i>, <i>"ambedue Fratelli"</i>).</li>
-<li>Dashes (—, ---) often fill space between a name and place of origin.</li>
-<li><code>//N: d(et)to</code> introduces a new day grouping (N is the day-of-month).</li>
-</ul>
-
-<h2>Data quality</h2>
-<ul>
-<li>When a name, date, place name, or other text is unclear or partially illegible, use <code>?</code> for each unreadable character (e.g., <code>?lelingen</code> or <code>Kin?gsech</code>). Do NOT invent or guess.</li>
-<li>If a piece of information is genuinely not in the document for a given traveler (e.g., no departure date), leave that field as the empty string. Do NOT use <code>N/A</code>, <code>unknown</code>, or <code>Not provided</code>.</li>
-</ul>
+<div class="guidance">
+<p>The following is some contextual information about these documents including descriptions of what you might encounter.</p>
+<p>1. Summary Description</p>
+<p>The information contained in these documents is organized temporally. A date–-most frequently in the order day-month-year–-is placed as a title in the top center of the first page of each record. When subsequent pages do not have this date in the top center, it means that they belong to the same record. Within each record, the arrivals and departures of foreign visitors are for the preceding week (‘scaduta settimana’).</p>
+<p>Each page is divided into two columns: the left column lists the record of presences/arrivals (‘Forestieri annotati riferiti da cameranti nella scaduta settimana come siegue’: ‘Foreigners noted reported by hoteliers in the past week as follows’) in order by day of arrival and grouped by place of stay; the right column lists the record of departures (‘Forestieri partiti riferiti da cameranti nella scaduta settimana come siegue’: ‘Foreigners departed reported by hoteliers in the past week as follows’) in order by day of departure and grouped by place of stay.</p>
+<p>The foreign visitors are listed, each on a new line, by name, sometimes with titles, and with their place of origin (ranging from a country beyond Italy–expressed as an adjective or by country name–to another Italian state or a town other than Venice within the Venetian state). Foreign visitors are grouped together with their traveling companions. When a traveling companion is a family member or a working person (such as a domestic servant, or ‘domestico’), they are mostly recorded without a name and with a number to indicate how many there were (if more than one). The places of stay are given as the name of the inn or as the name of the host (‘in casa di’: ‘in the home of’), followed by the name of the parish to indicate location within the city of Venice.</p>
+<p>Jewish foreign visitors are recorded separately, in pages that include Jewish (‘Ebrei’) in the column titles. Their records follow the same structure of information organization except that they are reported not by hosts or hoteliers but by a dedicated deputy (‘Forestieri Ebrei annotati [or partiti] riferiti dal Deputato nella scaduta settimana come siegue’: ‘Jewish foreigners noted [or departed] reported by the deputy in the past week as follows’), and no specific location is given for the places of stay (which are almost all cases of ‘in casa di’).</p>
+<p>2. Layered Description</p>
+<p>2.1 Information gathered from existing curatorial knowledge and scholarship1</p>
+<p>These are the records of the Inquisitori di Stato of the Venetian Republic currently held at the Archivio di Stato di Venezia: https://archiviodistatovenezia.it/it/</p>
+<p>Provenance: photos taken in the archive from the series ASV IS 758-81</p>
+<p>An officer noted the arrivals and departures to and from the city of Venice of foreigners passing through, as reported by the hoteliers who hosted these travelers. For Jewish travelers, a single deputy rather than the various hoteliers, was responsible for these reports.</p>
+<p>‘Foreigner’ in these records indicates anyone not from the city of Venice, ranging from visitors from other cities in the Venetian state, to visitors from cities in other Italian states or other countries.</p>
+<p>Continuity and completeness: While for earlier years these records were sporadic, in the years from 1751 to 1790, they were regularly kept and consistent in form.</p>
+<p>Written in a consistent hand: The name of the officer making these records from 1765 to 1775 was Giovanni Somazzi.</p>
+<p>2.2 Information organization and structure of the documents</p>
+<p>The basic organizing principle is temporal and by week.</p>
+<p>The date is placed in the center of the first page of the record, most frequently in the order day-month-year. Subsequent pages of the same record do not have a date in the top center.</p>
+<p>The arrivals and departures of the foreign visitors are recorded for the preceding week (‘settimana scaduta’).</p>
+<p>Each page is divided into two columns: The left column lists the records of presences/arrivals (‘Forestieri annotati riferiti da cameranti nella scaduta settimana come siegue’: ‘Foreigners noted by hoteliers in the past week as follows’) in order by day.</p>
+<p>The right column lists the records of departures (‘Forestieri partiti riferiti da cameranti nella scaduta settimana come siegue’: ‘Foreigners departed recorded by hoteliers in the past week as follows’).</p>
+<p>Within each column, entries are grouped by the day (of arrival or departure) and place of stay (‘in casa di [x] : ‘in the house of [x],’ ‘alla locanda [x]’: ‘in the Inn [x]’, followed by the name of the parish to indicate in which part of Venice the house or inn was located.</p>
+<p>The foreign visitors are listed by name and place of origin. Titles are recorded for some travelers (aristocracy, clergy, physicians, military).</p>
+<p>For some foreign visitors travel companions are noted. These travelers include family members (e.g. ‘moglie’ or ‘figlio/a’ or ‘figliolo/a’) or servants (e.g. ‘due domestici: ‘two domestic servants’, ‘quattro camerieri’: ‘four attendants’) with their number spelled out if more than one.</p>
+<p>The records for Jewish travelers follow the same structure but are recorded separately and are reported by a dedicated deputy, ‘deputato,’ not by the hoteliers, and with no additional location information beyond the name of the host (‘in casa di [x] : ‘in the house of [x]’).</p>
+<p>2.3 Visual elements in the documents</p>
+<p>At the top left corner of each page that contains one or more British names there is a circular pencil mark. The same circular pencil mark is found next to the particular line, or lines, containing records of British travelers. Therefore these circles in pencil appear as two or more per page; when the line containing the British traveler(s) is the first one, close to the top of the page, there may be only one mark.</p>
+<p>The presence of these marks was observed by the PI when working with the documents in person in the archives; cross-reference with the PI’s study of Brinsley Ford Archives in London led to the conclusion that these circular pencil marks were added in the late 1960s when Ford commissioned the archivists in Venice to produce a list of all the British visitors and their time of visit (see letter of November 9, 1965 from Zago Ferruccio to Sir Brinsley Ford and subsequent correspondence).2</p>
+<p>Column titles are separated from the records below by a continuous line drawn in the same ink as the text.</p>
+<p>Curly brackets group together foreign visitors who share the same origin (ranging from a country beyond Italy–-expressed adjectivally or by country name–-to another Italian state or a town other than Venice within the Venetian state).</p>
+<p>Signature: many of the pages are signed by Giovanni Somazzi, who was the agent in this post from 1765 till at least 1790, and signs himself as ‘Giovanni Somazzi, deputato a notar li forestieri’: ’Giovanni Somazzi deputy to the recording of foreigners.’3</p>
+<p>A curly fret motif, in the same ink as the text, is used to fill empty space at the end of a line.</p>
+<p>Double forward slashes, in the same ink as the text, occupy empty spaces on the page to ensure no more text is added after the official recording.</p>
+<p>Dashes, sometimes more similar to fret, fill the empty space within a line between the end of personal names and the indication of their places of origin.</p>
+<p>‘Siegue’: ‘follows’ is used in the columns title and also at the end of a page and the beginning of the next when the record for a single week occupies multiple pages.</p>
+<p>M.V.: this acronym (abbreviation of ‘More Veneto,’ Latin for ‘according to the Venetian custom’) follows the dates for the months of January and February to indicate that these were recorded according to the Venetian calendar in which the year begins March 1st.  When M.V. appears, this means that a year must be added to the date to make it consistent with non-Venetian calendars (for example, January or February 1766 corresponds to January or February 1767 on the standard calendar).</p>
+<p>Many abbreviations are used that were common in 18th-century handwritten Italian texts: for example, contractions (such as the case of ‘Gio’ as an abbreviation for ‘Giovanni’), sometimes including superscript (as in the case of ‘Fran.co’ for ‘Francesco’)</p>
+</div>
 
 </body>
 </html>
