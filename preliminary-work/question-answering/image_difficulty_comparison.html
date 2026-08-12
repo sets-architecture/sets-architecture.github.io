@@ -34,7 +34,7 @@
     .dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }</style>
 <script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script>
 </head><body>
-<p class="dates">Page generated: 2026-07-23<br>Data (model runs) generated: 2026-04-11</p>
+<p class="dates">Page generated: 2026-08-12<br>Data (model runs) generated: 2026-04-11</p>
 
 <h1>Per-Image Difficulty: Naive vs Guided</h1>
 <p class='note'><b>Pages:</b> 39 &nbsp;|&nbsp; <b>Models:</b> Claude, GPT, Gemini 2.5, Gemini 3.1, Claude (thinking) &nbsp;|&nbsp; <b>Runs per condition:</b> 10</p>
@@ -68,7 +68,7 @@ function buildTraces(sorted) {
   const labels = sorted.map(r => 'p' + r.page_id);
   return [
     {
-      type: 'bar', name: 'Naive (1.3)',
+      type: 'bar', name: 'Naive',
       x: labels,
       y: sorted.map(r => r.naive_pct),
       marker: {color: NAIVE_COLOR},
@@ -76,7 +76,7 @@ function buildTraces(sorted) {
       hovertemplate: 'Page %{customdata[0]}<br>Naive: %{y:.1f}%<br>Guided: %{customdata[1]:.1f}%<br>Δ: %{customdata[2]:+.1f}<extra></extra>'
     },
     {
-      type: 'bar', name: 'Guided (1.4)',
+      type: 'bar', name: 'Guided',
       x: labels,
       y: sorted.map(r => r.guided_pct),
       marker: {color: GUIDED_COLOR},
