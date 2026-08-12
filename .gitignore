@@ -1,6 +1,15 @@
 # macOS
 .DS_Store
 
+# AI coding-assistant context — local dev notes, NOT site content.
+# This repo is a public GitHub Pages site: anything tracked here is served
+# publicly (CLAUDE.md was live at /CLAUDE.md until 2026-08-12).
+CLAUDE.md
+AGENTS.md
+.claude/
+.cursor/
+.mcp.json
+
 # Jekyll
 _site/
 .jekyll-cache/

@@ -12,3 +12,20 @@ kramdown:
 
 # Optional: keep URLs clean
 permalink: pretty
+
+# Keep dev docs out of the built site. CLAUDE.md is also gitignored, but it
+# still exists locally, so a local `jekyll build` would copy it without this.
+# OPEN_ISSUES.md stays tracked (it is the shared deferred-work record) but must
+# not be served publicly.
+# NOTE: setting `exclude` REPLACES Jekyll's default list, so the defaults are
+# repeated below — dropping them would start publishing Gemfile/vendor/.
+exclude:
+  - CLAUDE.md
+  - OPEN_ISSUES.md
+  - Gemfile
+  - Gemfile.lock
+  - gemfiles
+  - vendor/
+  - node_modules/
+  - .sass-cache/
+  - .jekyll-cache/
