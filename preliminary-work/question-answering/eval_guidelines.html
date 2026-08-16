@@ -81,7 +81,8 @@
 <li>Exact match after pre-processing: <b>correct</b>.</li>
 <li>Wrong value: <b>incorrect</b>.</li>
 <li><code>illegible</code> response: <b>illegibility claim</b> &mdash; reported separately; excluded from conditional accuracy; counted as failure in combined score (see Section 2).</li>
-<li>Blank when GT is also blank (conditional case): <b>correct</b>.</li>
+<li>Blank when GT is also blank (Q21 when Q19=0): <b>excluded from the base</b> &mdash; the question was not asked, so it neither earns nor costs anything.</li>
+<li>Non-blank when GT is blank (Q21 when Q19=0): <b>incorrect</b>.</li>
 </ul>
 
 <h3>3.2 Integer questions (Q2, Q7, Q8, Q9, Q11, Q13, Q14, Q15, Q16, Q18, Q19)</h3>
@@ -91,7 +92,8 @@
 <ul>
 <li>Exact integer match: <b>correct</b>.</li>
 <li>Any other integer: <b>incorrect</b> (undercounts due to illegibility are scored as incorrect; the degree of error is visible in the difference from GT).</li>
-<li>Blank when GT is also blank (Q2 when Q1=N): <b>correct</b>.</li>
+<li>Blank when GT is also blank (Q2 when Q1=N): <b>excluded from the base</b>, as for Q21 above.</li>
+<li><b>A year given when GT has no date (Q2 when Q1=N): incorrect.</b> Changed 2026-08-16 &mdash; this previously returned the same excluded-from-base result as a blank, which made Q2 unscorable on the 11 no-date pages and left a fabricated year costing nothing. Asserting a year for a page that has none is a wrong answer, not a non-answer.</li>
 </ul>
 
 <h3>3.3 Paired integer questions (Q17, Q20)</h3>

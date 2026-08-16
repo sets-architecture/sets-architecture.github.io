@@ -19,8 +19,8 @@ td.catlabel { text-align: left; font-size: 0.78rem; color: #555; white-space: no
 p.note { font-size: 0.82rem; color: #555; margin: 0.3rem 0 1rem; }
 .dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }.scope { font-size: 0.85rem; color: #222; background: #f4f6f8; border-left: 3px solid #5a7ea8; padding: 0.5rem 0.8rem; margin: 0.4rem 0 0.9rem; line-height: 1.55; max-width: 900px; }</style></head><body>
 <p class="scope"><b>Condition:</b> Naive vs Guided — both conditions, scored identically<br><b>Figures shown:</b> mean accuracy across all 10 runs, naive and guided side by side</p>
-<p class="dates">Page generated: 2026-08-14<br>Data (model runs) generated: 2026-04-11<br>Scoring inputs: ground truth <code>cc2ed8f5</code>, evaluate.py <code>6a43a832</code></p>
-<!-- provenance: ckpt=2026-04-11 gt=cc2ed8f5 eval=6a43a832 gen=2026-08-14 -->
+<p class="dates">Page generated: 2026-08-16<br>Data (model runs) generated: 2026-04-11<br>Scoring inputs: ground truth <code>cc2ed8f5</code>, evaluate.py <code>845b70e9</code></p>
+<!-- provenance: ckpt=2026-04-11 gt=cc2ed8f5 eval=845b70e9 gen=2026-08-16 -->
 
 <h1>Naive vs Guided: Model Comparison</h1>
 <p class='note'>Claude (thinking) runs at t1 (temperature=1); all other models at t0. Δ = guided − naive. Green = improvement, red = regression.</p>
@@ -28,8 +28,8 @@ p.note { font-size: 0.82rem; color: #555; margin: 0.3rem 0 1rem; }
 <p class='note'>Question-weighted: every score from all 22 questions × all images × all 10 runs pooled into a single mean. Compare with the category-weighted figures further down, which run higher.</p>
 <table>
 <tr><th>Model</th><th>Naive</th><th>Guided</th><th>Δ</th></tr>
-<tr><td>Claude</td><td>56.8%</td><td>55.4%</td><td class="delta neg">-1.4%</td></tr>
-<tr><td>GPT</td><td>48.2%</td><td>51.0%</td><td class="delta pos">+2.8%</td></tr>
+<tr><td>Claude</td><td>56.6%</td><td>55.4%</td><td class="delta neg">-1.2%</td></tr>
+<tr><td>GPT</td><td>47.7%</td><td>51.0%</td><td class="delta pos">+3.2%</td></tr>
 <tr><td>Gemini 2.5</td><td>64.5%</td><td>68.3%</td><td class="delta pos">+3.8%</td></tr>
 <tr><td>Gemini 3.1</td><td>70.6%</td><td>71.7%</td><td class="delta pos">+1.2%</td></tr>
 <tr><td>Claude (thinking)</td><td>63.5%</td><td>66.8%</td><td class="delta pos">+3.3%</td></tr>
@@ -70,8 +70,8 @@ p.note { font-size: 0.82rem; color: #555; margin: 0.3rem 0 1rem; }
 <tr><td>Q17 <small>Pair</small></td><td class='qlabel'>Stay per column</td><td>31.0%</td><td>31.6%</td><td class="delta pos">+0.6%</td><td>22.3%</td><td>15.4%</td><td class="delta neg">-6.9%</td><td>60.3%</td><td>64.1%</td><td class="delta pos">+3.8%</td><td>50.0%</td><td>47.2%</td><td class="delta neg">-2.8%</td><td>34.4%</td><td>40.3%</td><td class="delta pos">+5.9%</td></tr>
 <tr><td>Q20 <small>Pair</small></td><td class='qlabel'>Brackets per column</td><td>25.6%</td><td>23.8%</td><td class="delta neg">-1.8%</td><td>52.1%</td><td>47.7%</td><td class="delta neg">-4.4%</td><td>51.0%</td><td>39.5%</td><td class="delta neg">-11.5%</td><td>72.8%</td><td>77.4%</td><td class="delta pos">+4.6%</td><td>35.6%</td><td>42.8%</td><td class="delta pos">+7.2%</td></tr>
 <tr class='section-header'><td colspan='17'>Transcription + Rule-based resolution</td></tr>
-<tr class='subheader'><td><em>Category mean</em></td><td></td><td>50.0%</td><td>50.4%</td><td class="delta pos">+0.4%</td><td>51.4%</td><td>61.0%</td><td class="delta pos">+9.6%</td><td>67.9%</td><td>71.9%</td><td class="delta pos">+4.1%</td><td>67.5%</td><td>67.9%</td><td class="delta pos">+0.4%</td><td>48.6%</td><td>50.7%</td><td class="delta pos">+2.1%</td></tr>
-<tr><td>Q2 <small>Int</small></td><td class='qlabel'>Year?</td><td>50.0%</td><td>50.4%</td><td class="delta pos">+0.4%</td><td>51.4%</td><td>61.0%</td><td class="delta pos">+9.6%</td><td>67.9%</td><td>71.9%</td><td class="delta pos">+4.1%</td><td>67.5%</td><td>67.9%</td><td class="delta pos">+0.4%</td><td>48.6%</td><td>50.7%</td><td class="delta pos">+2.1%</td></tr>
+<tr class='subheader'><td><em>Category mean</em></td><td></td><td>45.2%</td><td>50.4%</td><td class="delta pos">+5.2%</td><td>39.1%</td><td>59.1%</td><td class="delta pos">+20.0%</td><td>67.9%</td><td>71.9%</td><td class="delta pos">+4.1%</td><td>67.5%</td><td>67.9%</td><td class="delta pos">+0.4%</td><td>48.1%</td><td>50.7%</td><td class="delta pos">+2.7%</td></tr>
+<tr><td>Q2 <small>Int</small></td><td class='qlabel'>Year?</td><td>45.2%</td><td>50.4%</td><td class="delta pos">+5.2%</td><td>39.1%</td><td>59.1%</td><td class="delta pos">+20.0%</td><td>67.9%</td><td>71.9%</td><td class="delta pos">+4.1%</td><td>67.5%</td><td>67.9%</td><td class="delta pos">+0.4%</td><td>48.1%</td><td>50.7%</td><td class="delta pos">+2.7%</td></tr>
 </table>
 <h2>Summary by Question Category</h2>
 <p class='note'>Mean accuracy across all questions in each category. Δ = guided − naive.</p>
@@ -83,29 +83,29 @@ p.note { font-size: 0.82rem; color: #555; margin: 0.3rem 0 1rem; }
 <tr><td style='text-align:left;font-weight:bold;'>Counting</td><td style='text-align:left;font-size:0.78rem;color:#666;'>Q7, Q8, Q9, Q11, Q13, Q14, Q15, Q16, Q18, Q19</td><td>36.6%</td><td>34.2%</td><td class="delta neg">-2.4%</td><td>25.3%</td><td>28.2%</td><td class="delta pos">+2.8%</td><td>48.1%</td><td>52.5%</td><td class="delta pos">+4.5%</td><td>53.5%</td><td>55.6%</td><td class="delta pos">+2.1%</td><td>49.4%</td><td>52.3%</td><td class="delta pos">+2.9%</td></tr>
 <tr><td style='text-align:left;font-weight:bold;'>Transcription</td><td style='text-align:left;font-size:0.78rem;color:#666;'>Q10, Q12, Q22</td><td>75.9%</td><td>73.9%</td><td class="delta neg">-2.0%</td><td>55.2%</td><td>55.6%</td><td class="delta pos">+0.5%</td><td>74.8%</td><td>77.0%</td><td class="delta pos">+2.2%</td><td>83.7%</td><td>83.9%</td><td class="delta neutral">±0.0%</td><td>78.3%</td><td>78.3%</td><td class="delta neutral">±0.0%</td></tr>
 <tr><td style='text-align:left;font-weight:bold;'>Counting + Spatial location</td><td style='text-align:left;font-size:0.78rem;color:#666;'>Q17, Q20</td><td>28.3%</td><td>27.7%</td><td class="delta neg">-0.6%</td><td>37.2%</td><td>31.5%</td><td class="delta neg">-5.6%</td><td>55.6%</td><td>51.8%</td><td class="delta neg">-3.8%</td><td>61.4%</td><td>62.3%</td><td class="delta pos">+0.9%</td><td>35.0%</td><td>41.5%</td><td class="delta pos">+6.5%</td></tr>
-<tr><td style='text-align:left;font-weight:bold;'>Transcription + Rule-based resolution</td><td style='text-align:left;font-size:0.78rem;color:#666;'>Q2</td><td>50.0%</td><td>50.4%</td><td class="delta pos">+0.4%</td><td>51.4%</td><td>61.0%</td><td class="delta pos">+9.6%</td><td>67.9%</td><td>71.9%</td><td class="delta pos">+4.1%</td><td>67.5%</td><td>67.9%</td><td class="delta pos">+0.4%</td><td>48.6%</td><td>50.7%</td><td class="delta pos">+2.1%</td></tr>
+<tr><td style='text-align:left;font-weight:bold;'>Transcription + Rule-based resolution</td><td style='text-align:left;font-size:0.78rem;color:#666;'>Q2</td><td>45.2%</td><td>50.4%</td><td class="delta pos">+5.2%</td><td>39.1%</td><td>59.1%</td><td class="delta pos">+20.0%</td><td>67.9%</td><td>71.9%</td><td class="delta pos">+4.1%</td><td>67.5%</td><td>67.9%</td><td class="delta pos">+0.4%</td><td>48.1%</td><td>50.7%</td><td class="delta pos">+2.7%</td></tr>
 </table>
 <h2>Overall Accuracy (category-weighted)</h2>
 <p class='note'>Mean of the six category means above, so each category carries equal weight regardless of how many questions it contains — Spatial location is one question (Q5), Counting is ten. This runs higher than the question-weighted figures in the first table because the single-question categories are among the highest-scoring.</p>
 <table>
 <tr><th>Model</th><th>Naive</th><th>Guided</th><th>Δ</th></tr>
-<tr><td>Claude</td><td style='font-weight:bold;'>63.2%</td><td style='font-weight:bold;'>61.8%</td><td class="delta neg">-1.3%</td></tr>
-<tr><td>GPT</td><td style='font-weight:bold;'>57.9%</td><td style='font-weight:bold;'>61.3%</td><td class="delta pos">+3.3%</td></tr>
+<tr><td>Claude</td><td style='font-weight:bold;'>62.4%</td><td style='font-weight:bold;'>61.8%</td><td class="delta neg">-0.5%</td></tr>
+<tr><td>GPT</td><td style='font-weight:bold;'>55.9%</td><td style='font-weight:bold;'>60.9%</td><td class="delta pos">+5.0%</td></tr>
 <tr><td>Gemini 2.5</td><td style='font-weight:bold;'>70.2%</td><td style='font-weight:bold;'>74.7%</td><td class="delta pos">+4.4%</td></tr>
 <tr><td>Gemini 3.1</td><td style='font-weight:bold;'>76.9%</td><td style='font-weight:bold;'>77.6%</td><td class="delta pos">+0.7%</td></tr>
-<tr><td>Claude (thinking)</td><td style='font-weight:bold;'>66.2%</td><td style='font-weight:bold;'>69.7%</td><td class="delta pos">+3.5%</td></tr>
+<tr><td>Claude (thinking)</td><td style='font-weight:bold;'>66.1%</td><td style='font-weight:bold;'>69.7%</td><td class="delta pos">+3.6%</td></tr>
 </table>
 <h2>Notable Shifts (Guided vs Naive, shared models)</h2>
 <h3>Largest improvements</h3><table>
 <tr><th>Model</th><th>Category</th><th>Q#</th><th>Naive</th><th>Guided</th><th>Δ</th></tr>
 <tr><td>GPT</td><td class='catlabel'>Feature identification</td><td>Q1</td><td>77.4%</td><td>97.7%</td><td class="delta pos">+20.3%</td></tr>
 <tr><td>Gemini 2.5</td><td class='catlabel'>Counting</td><td>Q7</td><td>51.5%</td><td>71.6%</td><td class="delta pos">+20.0%</td></tr>
+<tr><td>GPT</td><td class='catlabel'>Transcription + Rule-based resolution</td><td>Q2</td><td>39.1%</td><td>59.1%</td><td class="delta pos">+20.0%</td></tr>
 <tr><td>Gemini 2.5</td><td class='catlabel'>Spatial location</td><td>Q5</td><td>84.4%</td><td>100.0%</td><td class="delta pos">+15.6%</td></tr>
 <tr><td>Gemini 2.5</td><td class='catlabel'>Counting</td><td>Q11</td><td>17.7%</td><td>32.0%</td><td class="delta pos">+14.3%</td></tr>
 <tr><td>Gemini 2.5</td><td class='catlabel'>Feature identification</td><td>Q4</td><td>83.1%</td><td>97.4%</td><td class="delta pos">+14.3%</td></tr>
 <tr><td>Claude</td><td class='catlabel'>Counting</td><td>Q7</td><td>55.1%</td><td>67.6%</td><td class="delta pos">+12.5%</td></tr>
 <tr><td>Gemini 3.1</td><td class='catlabel'>Counting</td><td>Q13</td><td>20.0%</td><td>31.3%</td><td class="delta pos">+11.3%</td></tr>
-<tr><td>Claude (thinking)</td><td class='catlabel'>Counting</td><td>Q19</td><td>39.5%</td><td>50.0%</td><td class="delta pos">+10.5%</td></tr>
 </table>
 <h3>Largest regressions</h3><table>
 <tr><th>Model</th><th>Category</th><th>Q#</th><th>Naive</th><th>Guided</th><th>Δ</th></tr>
