@@ -104,8 +104,56 @@ description: Naive vs Guided question answering analyses across 39 archival docu
   </li>
   <li>
     <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/count_errors_raw.html">Counting Errors per Run: Raw Responses</a></div>
+      <div class="desc">The underlying per-run integers behind the chart above &mdash; every individual run's raw answer (10 per model) for all 10 counting questions, naive and guided in separate tables. Raw responses, not accuracy.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/question-answering/guidance_revision.html">Guidance Revision: Before vs After</a></div>
       <div class="desc">Per-question comparison of original vs revised expert guidance across all 5 models.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/difficulty_comparison.html">Difficulty Analysis</a></div>
+      <div class="desc">Which questions are hardest and easiest across models, naive and guided side by side with deltas.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/brackets_comparison.html">Bracket Analysis</a></div>
+      <div class="desc">Q20 and Q22 accuracy grouped by bracket count, naive and guided side by side with deltas.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/agreement_comparison.html">Agreement Analysis</a></div>
+      <div class="desc">Cross-model agreement per question, possible ground-truth errors, and per-model outliers &mdash; naive and guided side by side.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/temperature_comparison.html">Temperature Analysis</a></div>
+      <div class="desc">t0 vs varied temperature within each condition &mdash; naive and guided in separate tables. Gemini 3.1 is t0-only and Claude (thinking) t1-only by design.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/bracket_errors_comparison.html">Bracket Errors</a></div>
+      <div class="desc">Q20 signed error per page, naive (blue) and guided (green) overlaid across five models. Shade tracks bracket count; condition and bracket count can each be filtered.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/eval_report_tbase.html">Evaluation Report (base temperature)</a></div>
+      <div class="desc">Per-question accuracy, run-to-run consistency and illegibility rates, naive and guided side by side. Each model at its base temperature &mdash; t0, except Claude (thinking) at t1.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/question-answering/q11_q12_consistency_comparison.html">Q11 / Q12 Internal Consistency</a></div>
+      <div class="desc">Does the count a model gives for Q11 match the number of values it lists in Q12? Raw per-run counts, not accuracy &mdash; naive and guided compared. Guidance roughly halved self-contradiction (1.4% &rarr; 0.6%).</div>
     </div>
   </li>
   <li>
@@ -121,131 +169,12 @@ description: Naive vs Guided question answering analyses across 39 archival docu
 <ul class="report-list">
   <li>
     <div class="report-main">
-      <div class="report-title">Evaluation Report (t0)</div>
-      <div class="desc">Full per-question accuracy table at temperature 0 across all models.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/eval_report_t0.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/eval_report_t0.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Question Breakdown</div>
-      <div class="desc">Per-question detail with accuracy and variability.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/questions.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/per_question_accuracy.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Agreement Analysis</div>
-      <div class="desc">Cross-model agreement patterns per question.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/agreement.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/agreement.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Difficulty Analysis</div>
-      <div class="desc">Which questions are hardest and easiest across models.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/difficulty.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/difficulty.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Run Chart</div>
-      <div class="desc">Accuracy across 10 runs — consistency and variability over time.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/run_chart.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/run_chart.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Temperature Analysis</div>
-      <div class="desc">Comparison of t0 vs t_varied temperature configurations.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/temperature.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/temperature.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Text Questions</div>
-      <div class="desc">Character accuracy deep dive for OCR-dependent questions.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/text_questions.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/text_questions.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Q11 / Q12 Internal Consistency</div>
-      <div class="desc">Does the number a model gives for Q11 (how many conjunctions) match the number of values it actually lists in Q12? Raw per-model, per-run counts rather than accuracy scores — 27 disagreements across 1,950 answers, and they run almost entirely one way: the count claimed exceeds the list given.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/q11_q12_consistency.html">naive</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Bracket Analysis</div>
-      <div class="desc">Curly bracket question accuracy and patterns.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/brackets.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/brackets.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Bracket Errors</div>
-      <div class="desc">Detailed error analysis for bracket-related questions.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/bracket_errors.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/bracket_errors.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Count Accuracy</div>
-      <div class="desc">How accuracy varies with the number of instances on a page — do models struggle more at the extremes?</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/count_accuracy.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/count_accuracy.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title">Image Difficulty</div>
-      <div class="desc">Per-image accuracy heatmap highlighting where models struggle and disagree.</div>
-    </div>
-    <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/image_difficulty.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/image_difficulty.html">guided</a>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
       <div class="report-title">Page Viewer</div>
       <div class="desc">Per-image view of model answers and accuracy across all questions.</div>
     </div>
     <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/page_viewer.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/page_viewer.html">guided</a>
+      <a class="pill naive"  href="/preliminary-work/question-answering/naive_page_viewer.html">naive</a>
+      <a class="pill guided" href="/preliminary-work/question-answering/guided_page_viewer.html">guided</a>
     </div>
   </li>
   <li>
@@ -254,8 +183,8 @@ description: Naive vs Guided question answering analyses across 39 archival docu
       <div class="desc">Browse model transcriptions alongside ground truth per image.</div>
     </div>
     <div class="pair">
-      <a class="pill naive"  href="/preliminary-work/question-answering/naive/transcription_viewer.html">naive</a>
-      <a class="pill guided" href="/preliminary-work/question-answering/guided/transcription_viewer.html">guided</a>
+      <a class="pill naive"  href="/preliminary-work/question-answering/naive_transcription_viewer.html">naive</a>
+      <a class="pill guided" href="/preliminary-work/question-answering/guided_transcription_viewer.html">guided</a>
     </div>
   </li>
 </ul>
@@ -265,19 +194,19 @@ description: Naive vs Guided question answering analyses across 39 archival docu
 <ul class="report-list">
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/preliminary-work/question-answering/guided/complexity.html">Image Complexity vs Accuracy</a></div>
+      <div class="report-title"><a href="/preliminary-work/question-answering/guided_complexity.html">Image Complexity vs Accuracy</a></div>
       <div class="desc">Structural complexity (text density, traveler counts, brackets) vs model accuracy. Correlations and per-page ranking.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/preliminary-work/question-answering/guided/response_distribution.html">Response Distribution (Q9, Q11)</a></div>
+      <div class="report-title"><a href="/preliminary-work/question-answering/guided_q9_q11_distribution.html">Response Distribution (Q9, Q11)</a></div>
       <div class="desc">Box plots of raw model response values per page — actual counts, not accuracy. Toggle models on/off.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
-      <div class="report-title"><a href="/preliminary-work/question-answering/guided/tokens.html">Token Usage</a></div>
+      <div class="report-title"><a href="/preliminary-work/question-answering/guided_tokens.html">Token Usage</a></div>
       <div class="desc">Comparative token usage across models — per-image averages, grand totals, and cost efficiency.</div>
     </div>
   </li>

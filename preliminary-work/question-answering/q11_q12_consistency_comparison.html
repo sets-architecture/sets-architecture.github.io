@@ -1,0 +1,95 @@
+<html><head><meta charset='utf-8'><title>Q11 / Q12 Internal Consistency: Naive vs Guided</title><style>
+body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+h2 { font-size: 1.1rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #ddd; padding-bottom: 0.25rem; }
+h3 { font-size: 0.95rem; margin: 1.5rem 0 0.4rem; color: #555; }
+table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-bottom: 1rem; }
+th, td { padding: 0.35rem 0.6rem; text-align: right; border: 1px solid #e0e0e0; }
+th { background: #f5f5f5; font-weight: 600; text-align: center; }
+td:first-child, th:first-child { text-align: left; }
+td.qlabel { text-align: left; font-size: 0.78rem; max-width: 170px; white-space: normal; }
+td.catlabel { text-align: left; font-size: 0.78rem; color: #555; white-space: normal; }
+.delta { font-size: 0.8rem; }
+.delta.pos { color: #1a7a1a; }
+.delta.neg { color: #b00; }
+.delta.neutral { color: #888; }
+.section-header { background: #eee; font-weight: 600; }
+.subheader { background: #fafafa; color: #555; font-size: 0.78rem; }
+.na { color: #bbb; }
+p.note { font-size: 0.82rem; color: #555; margin: 0.3rem 0 1rem; }
+.dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }.scope { font-size: 0.85rem; color: #222; background: #f4f6f8; border-left: 3px solid #5a7ea8; padding: 0.5rem 0.8rem; margin: 0.4rem 0 0.9rem; line-height: 1.55; max-width: 900px; }</style></head><body>
+<p class="scope"><b>Condition:</b> Naive vs Guided — both conditions, scored identically<br><b>Figures shown:</b> every individual run's raw Q11 integer and Q12 value count (10 per model per condition) &mdash; not accuracy</p>
+<p class="dates">Page generated: 2026-08-16<br>Data (model runs) generated: 2026-04-11<br>Scoring inputs: ground truth <code>cc2ed8f5</code>, evaluate.py <code>64cf02e0</code></p>
+<!-- provenance: ckpt=2026-04-11 gt=cc2ed8f5 eval=64cf02e0 gen=2026-08-16 -->
+
+<h1>Q11 count vs number of Q12 values: Naive vs Guided</h1>
+<p class='note'>Q11 asks HOW MANY instances of &ldquo;e&rdquo; as a conjunction are on the page; Q12 asks for the text after each one, as a pipe-separated list. The two answers state the same count twice, so a mismatch is a model contradicting <b>itself</b> within one response. <b>This is not an accuracy measure</b> &mdash; nothing is scored against ground truth, so the &Delta; columns compare self-contradiction RATES between the two prompt conditions, not correctness. A Q12 value count drops empty pipe segments, so a legitimately blank Q12 (when Q11 = 0) counts as 0 rather than 1. 10 runs per model per condition; t_varied is not read.</p>
+<h2>1. Self-Contradiction Rate per Model</h2>
+<p class='note'>Disagreements as a share of the answers where Q11 parsed as an integer. A NEGATIVE &Delta; means guidance reduced self-contradiction.</p>
+<table>
+<tr><th>Model</th><th>Naive</th><th>Guided</th><th>&Delta;</th><th>Naive n</th><th>Guided n</th><th>Naive count</th><th>Guided count</th></tr>
+<tr><td>Claude</td><td>2.3%</td><td>1.6%</td><td class="delta neg">-0.8%</td><td>390</td><td>386</td><td>9</td><td>6</td></tr>
+<tr><td>GPT</td><td>0.0%</td><td>0.0%</td><td class="delta neutral">&plusmn;0.0%</td><td>390</td><td>390</td><td>0</td><td>0</td></tr>
+<tr><td>Gemini 2.5</td><td>3.8%</td><td>0.5%</td><td class="delta neg">-3.3%</td><td>390</td><td>387</td><td>15</td><td>2</td></tr>
+<tr><td>Gemini 3.1</td><td>0.3%</td><td>0.8%</td><td class="delta pos">+0.5%</td><td>390</td><td>390</td><td>1</td><td>3</td></tr>
+<tr><td>Claude (thinking)</td><td>0.5%</td><td>0.3%</td><td class="delta neg">-0.3%</td><td>390</td><td>390</td><td>2</td><td>1</td></tr>
+<tr class='subheader'><td><em>All models</em></td><td style='font-weight:bold;'>1.4%</td><td style='font-weight:bold;'>0.6%</td><td class="delta neg">-0.8%</td><td>1950</td><td>1943</td><td>27</td><td>12</td></tr>
+</table>
+<h2>2. Direction of the Contradiction</h2>
+<p class='note'>Whether the count claimed in Q11 EXCEEDS the number of values actually listed in Q12, or falls short of it. On the naive page these ran almost entirely one way; this shows whether guidance changes that.</p>
+<table>
+<tr><th rowspan='2'>Model</th><th colspan='3'>Q11 &gt; #Q12</th><th colspan='3'>Q11 &lt; #Q12</th></tr><tr><th>Naive</th><th>Guided</th><th>&Delta;</th><th>Naive</th><th>Guided</th><th>&Delta;</th></tr>
+<tr><td>Claude</td><td>2.3%</td><td>1.6%</td><td class="delta neg">-0.8%</td><td>0.0%</td><td>0.0%</td><td class="delta neutral">&plusmn;0.0%</td></tr>
+<tr><td>GPT</td><td>0.0%</td><td>0.0%</td><td class="delta neutral">&plusmn;0.0%</td><td>0.0%</td><td>0.0%</td><td class="delta neutral">&plusmn;0.0%</td></tr>
+<tr><td>Gemini 2.5</td><td>3.8%</td><td>0.0%</td><td class="delta neg">-3.8%</td><td>0.0%</td><td>0.5%</td><td class="delta pos">+0.5%</td></tr>
+<tr><td>Gemini 3.1</td><td>0.0%</td><td>0.0%</td><td class="delta neutral">&plusmn;0.0%</td><td>0.3%</td><td>0.8%</td><td class="delta pos">+0.5%</td></tr>
+<tr><td>Claude (thinking)</td><td>0.5%</td><td>0.3%</td><td class="delta neg">-0.3%</td><td>0.0%</td><td>0.0%</td><td class="delta neutral">&plusmn;0.0%</td></tr>
+</table>
+<h2>3a. Every Disagreement &mdash; Naive (27)</h2>
+<table>
+<tr><th>Page</th><th>Model</th><th>Run</th><th>Q11 claimed</th><th>#Q12 listed</th><th>GT Q11</th></tr>
+<tr><td class='qlabel'>28 &middot; AVS IS 758-781 1766 02.jpg</td><td>Claude</td><td>1</td><td>7</td><td>5</td><td>2</td></tr>
+<tr><td class='qlabel'>28 &middot; AVS IS 758-781 1766 02.jpg</td><td>Claude</td><td>4</td><td>7</td><td>5</td><td>2</td></tr>
+<tr><td class='qlabel'>1 &middot; AVS IS 758-781 1767 07 01.jpg</td><td>Claude</td><td>3</td><td>8</td><td>6</td><td>6</td></tr>
+<tr><td class='qlabel'>1 &middot; AVS IS 758-781 1767 07 01.jpg</td><td>Claude</td><td>7</td><td>8</td><td>6</td><td>6</td></tr>
+<tr><td class='qlabel'>1 &middot; AVS IS 758-781 1767 07 01.jpg</td><td>Claude</td><td>10</td><td>8</td><td>6</td><td>6</td></tr>
+<tr><td class='qlabel'>1 &middot; AVS IS 758-781 1767 07 01.jpg</td><td>Claude (thinking)</td><td>9</td><td>10</td><td>6</td><td>6</td></tr>
+<tr><td class='qlabel'>22 &middot; AVS IS 758-781 1768 01 02.jpg</td><td>Gemini 3.1</td><td>10</td><td>2</td><td>3</td><td>3</td></tr>
+<tr><td class='qlabel'>27 &middot; AVS IS 758-781 1768 02 20.jpg</td><td>Claude</td><td>1</td><td>8</td><td>6</td><td>3</td></tr>
+<tr><td class='qlabel'>27 &middot; AVS IS 758-781 1768 02 20.jpg</td><td>Claude</td><td>3</td><td>8</td><td>6</td><td>3</td></tr>
+<tr><td class='qlabel'>27 &middot; AVS IS 758-781 1768 02 20.jpg</td><td>Claude</td><td>4</td><td>8</td><td>5</td><td>3</td></tr>
+<tr><td class='qlabel'>27 &middot; AVS IS 758-781 1768 02 20.jpg</td><td>Claude</td><td>5</td><td>8</td><td>6</td><td>3</td></tr>
+<tr><td class='qlabel'>27 &middot; AVS IS 758-781 1768 02 20.jpg</td><td>Claude (thinking)</td><td>2</td><td>7</td><td>6</td><td>3</td></tr>
+<tr><td class='qlabel'>13 &middot; AVS IS 758-781 1768 05 09 p2.jpg</td><td>Gemini 2.5</td><td>3</td><td>4</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>13 &middot; AVS IS 758-781 1768 05 09 p2.jpg</td><td>Gemini 2.5</td><td>4</td><td>4</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>13 &middot; AVS IS 758-781 1768 05 09 p2.jpg</td><td>Gemini 2.5</td><td>9</td><td>4</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>30 &middot; AVS IS 758-781 1769 05 p2.jpg</td><td>Gemini 2.5</td><td>1</td><td>3</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>30 &middot; AVS IS 758-781 1769 05 p2.jpg</td><td>Gemini 2.5</td><td>2</td><td>3</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>30 &middot; AVS IS 758-781 1769 05 p2.jpg</td><td>Gemini 2.5</td><td>3</td><td>3</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>30 &middot; AVS IS 758-781 1769 05 p2.jpg</td><td>Gemini 2.5</td><td>7</td><td>3</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>30 &middot; AVS IS 758-781 1769 05 p2.jpg</td><td>Gemini 2.5</td><td>8</td><td>3</td><td>2</td><td>0</td></tr>
+<tr><td class='qlabel'>34 &middot; AVS IS 758-781 1770 05 17 p1.jpg</td><td>Gemini 2.5</td><td>7</td><td>13</td><td>8</td><td>3</td></tr>
+<tr><td class='qlabel'>37 &middot; AVS IS 758-781 1770 05 28 p2.jpg</td><td>Gemini 2.5</td><td>1</td><td>53</td><td>47</td><td>8</td></tr>
+<tr><td class='qlabel'>37 &middot; AVS IS 758-781 1770 05 28 p2.jpg</td><td>Gemini 2.5</td><td>2</td><td>53</td><td>47</td><td>8</td></tr>
+<tr><td class='qlabel'>37 &middot; AVS IS 758-781 1770 05 28 p2.jpg</td><td>Gemini 2.5</td><td>5</td><td>53</td><td>47</td><td>8</td></tr>
+<tr><td class='qlabel'>37 &middot; AVS IS 758-781 1770 05 28 p2.jpg</td><td>Gemini 2.5</td><td>7</td><td>71</td><td>4</td><td>8</td></tr>
+<tr><td class='qlabel'>37 &middot; AVS IS 758-781 1770 05 28 p2.jpg</td><td>Gemini 2.5</td><td>9</td><td>71</td><td>4</td><td>8</td></tr>
+<tr><td class='qlabel'>38 &middot; AVS IS 758-781 1770 05 28 p3.jpg</td><td>Gemini 2.5</td><td>6</td><td>11</td><td>8</td><td>3</td></tr>
+</table>
+<h2>3b. Every Disagreement &mdash; Guided (12)</h2>
+<table>
+<tr><th>Page</th><th>Model</th><th>Run</th><th>Q11 claimed</th><th>#Q12 listed</th><th>GT Q11</th></tr>
+<tr><td class='qlabel'>28 &middot; AVS IS 758-781 1766 02.jpg</td><td>Claude</td><td>4</td><td>7</td><td>5</td><td>2</td></tr>
+<tr><td class='qlabel'>28 &middot; AVS IS 758-781 1766 02.jpg</td><td>Claude</td><td>6</td><td>7</td><td>5</td><td>2</td></tr>
+<tr><td class='qlabel'>28 &middot; AVS IS 758-781 1766 02.jpg</td><td>Claude</td><td>8</td><td>7</td><td>5</td><td>2</td></tr>
+<tr><td class='qlabel'>28 &middot; AVS IS 758-781 1766 02.jpg</td><td>Claude</td><td>9</td><td>7</td><td>5</td><td>2</td></tr>
+<tr><td class='qlabel'>28 &middot; AVS IS 758-781 1766 02.jpg</td><td>Claude</td><td>10</td><td>8</td><td>7</td><td>2</td></tr>
+<tr><td class='qlabel'>22 &middot; AVS IS 758-781 1768 01 02.jpg</td><td>Gemini 3.1</td><td>3</td><td>2</td><td>3</td><td>3</td></tr>
+<tr><td class='qlabel'>22 &middot; AVS IS 758-781 1768 01 02.jpg</td><td>Gemini 3.1</td><td>4</td><td>2</td><td>3</td><td>3</td></tr>
+<tr><td class='qlabel'>22 &middot; AVS IS 758-781 1768 01 02.jpg</td><td>Gemini 3.1</td><td>10</td><td>2</td><td>3</td><td>3</td></tr>
+<tr><td class='qlabel'>12 &middot; AVS IS 758-781 1768 05 08 p5.jpg</td><td>Gemini 2.5</td><td>2</td><td>7</td><td>8</td><td>7</td></tr>
+<tr><td class='qlabel'>12 &middot; AVS IS 758-781 1768 05 08 p5.jpg</td><td>Gemini 2.5</td><td>6</td><td>7</td><td>8</td><td>7</td></tr>
+<tr><td class='qlabel'>14 &middot; AVS IS 758-781 1768 05 09 p1.jpg</td><td>Claude</td><td>5</td><td>6</td><td>3</td><td>3</td></tr>
+<tr><td class='qlabel'>37 &middot; AVS IS 758-781 1770 05 28 p2.jpg</td><td>Claude (thinking)</td><td>2</td><td>6</td><td>5</td><td>8</td></tr>
+</table>
+</body></html>
