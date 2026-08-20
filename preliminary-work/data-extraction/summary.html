@@ -20,7 +20,7 @@ td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-17<br>Data (model runs) generated: 2026-07-23</p>
+<p class="dates">Page generated: 2026-08-20<br>Data (model runs) generated: 2026-07-23</p>
 <h1>Venice 39 — Data Extraction Experiment — Summary</h1>
 <p>
 3-image dataset, 5 models × 3 phases × 10 runs.
@@ -71,6 +71,41 @@ See <a href="evaluate.py#L239-L247">evaluate.py:239-247</a>.
 <tr><td>Claude Thinking</td><td>0.69</td><td>0.75</td><td>1.00</td><td>+0.07</td><td>+0.24</td><td>+0.31</td></tr>
 </tbody></table>
 <hr>
+<h3>1.1 Rows returned vs travelers matched</h3>
+
+<style>
+table.rowcount { border-collapse: collapse; font-size: 0.82rem; margin: 0.8rem 0 1.4rem; }
+table.rowcount th, table.rowcount td { border: 1px solid #ccc; padding: 4px 8px; text-align: right; vertical-align: middle; }
+table.rowcount th { background: #f0f0f0; text-align: center; font-weight: 600; }
+table.rowcount th.pg { background: #e3e9f1; }
+table.rowcount td.mdl { text-align: left; font-weight: 600; background: #fafafa; vertical-align: middle; }
+table.rowcount td.cond { text-align: center; color: #555; }
+table.rowcount .gsep { border-left: 2px solid #98a2ad; }
+table.rowcount .sub { display: block; color: #888; font-size: 0.72rem; font-weight: normal; margin-top: 1px; }
+table.rowcount tr.phase-b td { background: #f7fbf7; }
+table.rowcount td.exact { color: #1a7f37; }
+table.rowcount td.off { color: #a3341f; }
+</style>
+<table class="rowcount">
+<thead><tr><th rowspan="2">Model</th><th rowspan="2">Cond</th><th class="pg gsep" colspan="2">Page 28 &mdash; GT 18</th><th class="pg gsep" colspan="2">Page 36 &mdash; GT 37</th><th class="pg gsep" colspan="2">Page 39 &mdash; GT 10</th><th class="pg gsep" colspan="2">All pages &mdash; GT 65</th></tr><tr><th class="gsep">rows returned</th><th>matched</th><th class="gsep">rows returned</th><th>matched</th><th class="gsep">rows returned</th><th>matched</th><th class="gsep">rows returned</th><th>matched</th></tr></thead>
+<tbody>
+<tr class="phase-n"><td class="mdl" rowspan="3">Claude</td><td class="cond">N</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>13.7<span class="sub">4.3 unmatched</span></td><td class="gsep off">34&ndash;35<span class="sub">median 35 &middot; -2 vs GT</span></td><td>18.1<span class="sub">16.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>7.1<span class="sub">2.9 unmatched</span></td><td class="gsep off">62&ndash;63<span class="sub">median 63 &middot; -2 vs GT</span></td><td>38.9<span class="sub">24 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">19<span class="sub">median 19 &middot; +1 vs GT</span></td><td>14.6<span class="sub">4.4 unmatched</span></td><td class="gsep off">34&ndash;35<span class="sub">median 34 &middot; -3 vs GT</span></td><td>16.7<span class="sub">17.5 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>7.9<span class="sub">2.1 unmatched</span></td><td class="gsep off">63&ndash;64<span class="sub">median 63 &middot; -2 vs GT</span></td><td>39.2<span class="sub">24 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>16<span class="sub">2 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>63<span class="sub">2 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">GPT</td><td class="cond">N</td><td class="gsep exact">16&ndash;23<span class="sub">median 18 &middot; +0 vs GT</span></td><td>6.3<span class="sub">12.3 unmatched</span></td><td class="gsep off">26&ndash;34<span class="sub">median 33 &middot; -4 vs GT</span></td><td>7<span class="sub">25.2 unmatched</span></td><td class="gsep exact">9&ndash;10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>0.7<span class="sub">9.2 unmatched</span></td><td class="gsep off">58&ndash;67<span class="sub">median 60.5 &middot; -4 vs GT</span></td><td>14<span class="sub">46.7 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">24&ndash;29<span class="sub">median 25 &middot; +7 vs GT</span></td><td>7.1<span class="sub">18 unmatched</span></td><td class="gsep off">31&ndash;34<span class="sub">median 32.5 &middot; -4 vs GT</span></td><td>7.6<span class="sub">24.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>2<span class="sub">8 unmatched</span></td><td class="gsep off">66&ndash;70<span class="sub">median 67 &middot; +2 vs GT</span></td><td>16.7<span class="sub">50.8 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>17<span class="sub">1 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>64<span class="sub">1 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">Gemini 2.5</td><td class="cond">N</td><td class="gsep off">19&ndash;20<span class="sub">median 20 &middot; +2 vs GT</span></td><td>13.1<span class="sub">6.5 unmatched</span></td><td class="gsep off">24&ndash;36<span class="sub">median 32 &middot; -5 vs GT</span></td><td>13.9<span class="sub">16.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>5.5<span class="sub">4.5 unmatched</span></td><td class="gsep off">54&ndash;66<span class="sub">median 61 &middot; -4 vs GT</span></td><td>32.5<span class="sub">27.8 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">20&ndash;21<span class="sub">median 20.5 &middot; +2 vs GT</span></td><td>13.5<span class="sub">7 unmatched</span></td><td class="gsep off">35&ndash;37<span class="sub">median 36 &middot; -1 vs GT</span></td><td>20.2<span class="sub">15.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>5.7<span class="sub">4.3 unmatched</span></td><td class="gsep off">66&ndash;68<span class="sub">median 66 &middot; +1 vs GT</span></td><td>39.4<span class="sub">27.1 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>18<span class="sub">0.1 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65&ndash;66<span class="sub">median 65 &middot; +0 vs GT</span></td><td>65<span class="sub">0.1 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">Gemini 3.1</td><td class="cond">N</td><td class="gsep off">19<span class="sub">median 19 &middot; +1 vs GT</span></td><td>16.6<span class="sub">2.4 unmatched</span></td><td class="gsep off">34<span class="sub">median 34 &middot; -3 vs GT</span></td><td>26.4<span class="sub">7.6 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep off">63<span class="sub">median 63 &middot; -2 vs GT</span></td><td>53<span class="sub">10 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">19<span class="sub">median 19 &middot; +1 vs GT</span></td><td>17<span class="sub">2 unmatched</span></td><td class="gsep off">36<span class="sub">median 36 &middot; -1 vs GT</span></td><td>27.2<span class="sub">8.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>9.6<span class="sub">0.4 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>53.8<span class="sub">11.2 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>17.1<span class="sub">1.1 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65&ndash;66<span class="sub">median 65 &middot; +0 vs GT</span></td><td>64.1<span class="sub">1.1 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">Claude Thinking</td><td class="cond">N</td><td class="gsep exact">17&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>12<span class="sub">6 unmatched</span></td><td class="gsep off">30&ndash;35<span class="sub">median 34 &middot; -3 vs GT</span></td><td>17.1<span class="sub">16.3 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>6.8<span class="sub">3.2 unmatched</span></td><td class="gsep off">58&ndash;63<span class="sub">median 62 &middot; -3 vs GT</span></td><td>35.9<span class="sub">25.5 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep exact">18&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>13<span class="sub">5.1 unmatched</span></td><td class="gsep off">34&ndash;36<span class="sub">median 35 &middot; -2 vs GT</span></td><td>20<span class="sub">14.7 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>6.7<span class="sub">3.3 unmatched</span></td><td class="gsep off">62&ndash;64<span class="sub">median 63 &middot; -2 vs GT</span></td><td>39.7<span class="sub">23.1 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>17.3<span class="sub">0.7 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>64.3<span class="sub">0.7 unmatched</span></td></tr>
+</tbody></table>
+<p style="font-size:0.8rem;color:#666;margin-top:-0.8rem"><b>rows returned</b> is the raw count of per-traveler rows the model produced, before any scoring &mdash; range across the 10 runs, with the median and its distance from the ground-truth count. <b>matched</b> is the mean number of those rows that paired with a real GT traveler, and <b>unmatched</b> the remainder. A model can return the right number of rows and match few of them.</p>
 <h2>2. Per-field accuracy by model × phase</h2>
 <p>
 Computed only on rows that matched a GT traveler (so a model that misses half the travelers does not get a free pass on the half it never produced — those are captured by F1 in section 1).
@@ -172,5 +207,30 @@ Split by phase to mirror section 2. Each cell is the <strong>mean F1</strong> ac
 <li><strong>No ground-truth contamination</strong>: collection scripts never read files from <code>gt/</code>. The GT enters the pipeline only at evaluation. Format coincidence (e.g. <code>q.m</code>) comes from the prompt&#x27;s expert-guidance section, not from the GT.</li>
 <li><strong>Image normalization</strong>: all images are auto-oriented (EXIF rotation baked into pixels, tag stripped) before sending. 18 of the 39 venice-39-guided images had <code>orientation=6</code> EXIF tags; we verified all current providers auto-orient as of 2026-05-06, but normalization is kept as defensive infrastructure.</li>
 </ul>
+<hr>
+<h2>6. Prompt provenance of the scored checkpoints</h2>
+<p>
+The expert guidance was revised once, on 2026-06-24. The earlier version was a condensed rewrite of the scholar&#x27;s text (4,708 chars, preserved as <a href="Claude-modifiedguidance.md">Claude-modifiedguidance.md</a>); the current <code>EXPERT_GUIDANCE</code> constant is the scholar&#x27;s wording verbatim, aligned with venice-39-guided for cross-experiment comparison (8,259 chars). Which text produced which checkpoints:
+</p>
+<table>
+<thead><tr><th>Phase</th><th>Runs</th><th>Collected</th><th>Guidance</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>10 × 5 models</td><td>2026-06-24 17:16–18:10</td><td>current (verbatim)</td></tr>
+<tr><td>B</td><td>10 × 5 models</td><td>2026-06-24 17:16–18:10; gemini31 re-run 2026-07-23</td><td>current (verbatim)</td></tr>
+<tr><td>N</td><td>10 × 5 models</td><td>2026-05-07 07:27–12:10</td><td>none — naive condition has no guidance</td></tr>
+</tbody></table>
+<p>
+Phase N predates the revision and was deliberately not re-run: the naive prompt contains no expert guidance, so the revision does not apply to it. This is also why <a href="archive_adapted_EG/">archive_adapted_EG/</a> — the superseded run under the condensed guidance, collected 2026-05-06/07 — holds only <code>checkpoints_phase_a</code> and <code>checkpoints_phase_b</code>.
+</p>
+<p>
+Two caveats on the strength of this record:
+</p>
+<ul>
+<li><strong>It is inferred, not recorded.</strong> Checkpoints are bare traveler lists with no prompt field, and this repo&#x27;s git history begins 2026-07-14, after both collections. The evidence is (a) file mtimes, with the archive&#x27;s summary files stamped 17:15 on 2026-06-24 and the first realigned checkpoint at 17:16, and (b) the fact that only <code>collect_responses.py</code> defines <code>EXPERT_GUIDANCE</code> — the gemini31 and claude-thinking collectors import <code>build_prompt</code> from it, so no model can have used different text.</li>
+<li><strong>Phase N&#x27;s field rules are unverified.</strong> Phase N was collected under whatever <code>NAIVE_FIELD_RULES</code> said on 2026-05-07. If the June realignment touched the field-rules blocks and not only the guidance, N would differ from A/B on the field spec. The <code>TODO(next collection)</code> note in <a href="collect_responses.py">collect_responses.py</a> implies the field rules have been stable since collection, but this cannot be confirmed from git.</li>
+</ul>
+<p>
+Runs collected from 2026-08-19 onward record this themselves: <code>record_provenance</code> writes <code>checkpoints_phase_*/prompt_provenance.json</code> with per-component SHA-256 hashes of the guidance, field rules, assembled scaffold, and (Phase B) transcription corpus, plus the git commit and model id — and <code>fingerprint_summary</code> prints the same identity into <code>phase_*.log</code>. Runs skipped on resume are intentionally left unstamped rather than credited to the current prompt. The 150 checkpoints scored above have no sidecar; this section is their record.
+</p>
 </body>
 </html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Name Matching and Field Conflation</title>
+<style>
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.55; }
+h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+h2 { font-size: 1.1rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+h3 { font-size: 1.0rem; margin-top: 1.5rem; }
+hr { border: none; border-top: 1px solid #ccc; margin: 1.5rem 0; }
+table { border-collapse: collapse; font-size: 0.85rem; margin: 0.8rem 0 1.5rem; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
+a { color: #1858a7; }
+.back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
+.dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }</style>
+</head>
+<body>
+<p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
+<p class="dates">Page generated: 2026-08-20<br>Data (model runs) generated: 2026-07-23</p>
+<h1>Name matching and field conflation</h1>
+<p>
+How a traveler name is scored, why two different similarity measures give different answers, and where models put the right value in the wrong field. Every figure on this page is computed from the run checkpoints and the ground-truth CSVs by <code>build_scoring_doc.py</code>; none of it is typed by hand.
+</p>
+<hr>
+<h2>1. What the name score is, and what it is not</h2>
+<p>
+The name is the <strong>matching key</strong>, not a scored field. It never appears in <code>SCORED_FIELDS</code>, so its accuracy contributes to no published figure directly. It enters the results in exactly one way:
+</p>
+<p>
+1. A similarity is computed for each candidate (model row, GT row) pair.
+<br>
+2. Pairs below <strong>0.7</strong> are rejected; the rest are eligible to match.
+<br>
+3. Rows are paired, and then <strong>the similarity value is discarded</strong>.
+<br>
+4. Matched rows are counted: <code>precision = matched / rows produced</code>, <code>recall = matched / GT travelers</code>, <code>F1 = 2PR/(P+R)</code>.
+</p>
+<p>
+So a pair at 0.71 and a pair at 1.00 are indistinguishable in every published number, and a pair at 0.69 is counted twice against the model — once as a false positive and once as a missed traveler.
+</p>
+<h2>2. The two similarity measures</h2>
+<p>
+<strong>Published</strong> (<code>evaluate.name_similarity</code>) — the larger of two candidates:
+</p>
+<ul>
+<li><code>difflib.SequenceMatcher.ratio()</code>, which is Ratcliff-Obershelp: <code>2·M / T</code>, where <code>T</code> is the combined length of both strings and <code>M</code> counts characters matched by taking the longest contiguous block and recursing either side of it. It is <strong>not</strong> an edit distance: characters stranded across an anchor block cannot be matched.</li>
+<li>token-set overlap, <code>|A∩B| / max(|A|,|B|)</code>, requiring whole identical tokens.</li>
+</ul>
+<p>
+<strong>CER-based</strong> (<code>analyze_name_precision.sim</code>) — <code>1 − CER</code>, where <code>CER = levenshtein(gt, model) / len(gt)</code>, a true minimum edit distance normalized by the reference length. This is the measure already used for the eight scored fields, via <code>evaluate.char_accuracy</code>.
+</p>
+<p>
+They agree on plain substitutions and diverge on length: the combined-length denominator absorbs appended text, the reference-length denominator does not.
+</p>
+<h2>3. Worked cases</h2>
+<p>
+<code>name sim</code> columns are computed on the untouched strings. <code>title score</code> and <code>origin score</code> are the scorer&#x27;s own per-field results for the same row, so a row can show a correct title <em>and</em> a failed name match caused by that same title.
+</p>
+<h3>Title conflated into the name, and duplicated in its own field</h3>
+<p>
+Page 39 — GT traveler <strong>Baissen</strong>. GPT reports <code>title</code> correctly as <em>Barone</em> and also prefixes it to the name. The title is not wrong — it is in two places at once, and the copy in the name field is what breaks the match.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Baissen</strong></td><td><strong>Barone</strong></td><td><strong>Sassonia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT A</td><td>7</td><td>Il Barone Bassa</td><td>Barone</td><td>Sassonia</td><td>0.364</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Barone</td><td>Sassonia</td><td>0.320</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il barone Bassa di</td><td>Il barone</td><td>Sassonia</td><td>0.320</td><td>0.000</td><td>0.50</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Il Barone</td><td>Sassonia</td><td>0.320</td><td>0.000</td><td>0.50</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Baissen</td><td>Il Barone</td><td>Sassonia</td><td>1.000</td><td>1.000</td><td>0.50</td><td>1.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Baissen</td><td>Barone</td><td>Sassonia</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Place of origin conflated into the name, and duplicated in its own field</h3>
+<p>
+Page 28 — GT traveler <strong>Israel Bassan</strong>. The same shape as above with <code>place_of_origin</code>. GPT fills the origin field correctly and appends it to the name.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Israel Bassan</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Verona</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT N</td><td>6</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td>0.154</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT A</td><td>2</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td>0.154</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 2.5 N</td><td>6</td><td>Israel qm Baisan</td><td><em>(blank)</em></td><td>Viena</td><td>0.828</td><td>0.692</td><td>1.00</td><td>0.50</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Israel</td><td><em>(blank)</em></td><td>Verona</td><td>0.632</td><td>0.462</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude Thinking A</td><td>1</td><td>Israel Citti Bajsan</td><td><em>(blank)</em></td><td>Verona</td><td>0.750</td><td>0.462</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude Thinking A</td><td>1</td><td>Israel Osti Bajsan</td><td><em>(blank)</em></td><td>Verona</td><td>0.774</td><td>0.538</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude Thinking A</td><td>1</td><td>Israel q.m Basan</td><td><em>(blank)</em></td><td>Verona</td><td>0.857</td><td>0.692</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Title conflated into the name, GT name is the bare surname</h3>
+<p>
+Page 36 — GT traveler <strong>Tornielli</strong>. GT records only the surname. Every model prefixes the title, so the name string is mostly title.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Tornielli</strong></td><td><strong>Barone</strong></td><td><strong>Milano</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Claude A</td><td>7</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>6</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT A</td><td>5</td><td>Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.609</td><td>0.111</td><td>1.00</td><td>0.50</td></tr>
+<tr><td>Claude N</td><td>4</td><td>Barone Donzelli</td><td>Barone</td><td>Milano</td><td>0.500</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>Ambasciatore di Milano</td><td>0.538</td><td>0.000</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.538</td><td>0.000</td><td>1.00</td><td>0.50</td></tr>
+<tr><td>Claude A</td><td>2</td><td>Barone Donnielli</td><td>Barone</td><td>Milano</td><td>0.560</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 A</td><td>2</td><td>Barone Tornielli</td><td>S.r</td><td>Milano</td><td>0.720</td><td>0.222</td><td>0.17</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Tornielli</td><td>Il Barone</td><td>Milano</td><td>1.000</td><td>1.000</td><td>0.50</td><td>1.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Tornielli</td><td>Barone</td><td>Milano</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Three travelers in one row</h3>
+<p>
+Page 36 — GT traveler <strong>Francesco Mazuchelli</strong>. The document writes the three brothers on one line and GT expands them to three rows. A model that transcribes the line faithfully produces one row.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Francesco Mazuchelli</strong></td><td><strong>Conte</strong></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Conte Francesco Alberti</td><td>Conte</td><td>Savoia</td><td>0.605</td><td>0.350</td><td>1.00</td><td>0.29</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Conte Francesco di ... Marchetti</td><td>Conte</td><td>S. ... / Grecia</td><td>0.667</td><td>0.350</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 3.1 A</td><td>4</td><td>Francesco Filippo Mazzuchelli</td><td>Conte</td><td>Brescia</td><td>0.816</td><td>0.550</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 A</td><td>4</td><td>Francesco Filippo Mazzuchelli</td><td>Signor Conte</td><td>Brescia</td><td>0.816</td><td>0.550</td><td>0.00</td><td>1.00</td></tr>
+<tr><td>GPT A</td><td>4</td><td>Gio. Francesco Marchetti</td><td><em>(blank)</em></td><td>S. Marino</td><td>0.744</td><td>0.600</td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Gemini 2.5 A</td><td>3</td><td>Francesco Mariscotti</td><td>Conte</td><td>Bologna</td><td>0.650</td><td>0.650</td><td>1.00</td><td>0.29</td></tr>
+<tr><td>Claude Thinking N</td><td>2</td><td>Francesco Filippo Marchelli</td><td>Conte</td><td>Brescia</td><td>0.766</td><td>0.500</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 A</td><td>2</td><td>Francesco Filippo Mazzuchelli</td><td>Co:</td><td>Brescia</td><td>0.816</td><td>0.550</td><td>0.40</td><td>1.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude Thinking B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Control: a long name absorbs the same number of errors</h3>
+<p>
+Page 39 — GT traveler <strong>Giovanni Battista Maffoni</strong>. Nothing is conflated here. It is included to show what the same character error rate does to a long reference.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Giovanni Battista Maffoni</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT N</td><td>8</td><td>Giovanni Bati Massoni di</td><td><em>(blank)</em></td><td>Brescia</td><td>0.776</td><td>0.640</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 2.5 N</td><td>4</td><td>Giovanni Bata Mafanili</td><td><em>(blank)</em></td><td>Brescia</td><td>0.809</td><td>0.680</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 2.5 A</td><td>3</td><td>Giovanni Bata Mafanili</td><td><em>(blank)</em></td><td>di Brescia</td><td>0.809</td><td>0.680</td><td>1.00</td><td>0.57</td></tr>
+<tr><td>GPT N</td><td>2</td><td>Giovanni Batti Massoni di</td><td><em>(blank)</em></td><td>Brescia</td><td>0.800</td><td>0.680</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>10</td><td>Giovanni Batta Maffoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.936</td><td>0.880</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Giovanni Batta Massoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.851</td><td>0.800</td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Several travelers in one row</h3>
+<p>
+The register writes family groups on a single line (<code>f.lli</code> = <em>fratelli</em>, brothers) and the ground truth expands them to one row per named traveler, which is what the prompt asks for. A model that transcribes the line as written produces one row where GT has two or three, so it is charged one false positive plus a missed traveler for each name it did in fact read.
+</p>
+<table>
+<thead><tr><th>Page</th><th>Model</th><th>Cond</th><th>Runs</th><th>the single <code>name</code> produced</th><th><code>title</code></th><th><code>place_of_origin</code></th><th>GT travelers in that one row</th></tr></thead>
+<tbody>
+<tr><td>36</td><td>Gemini 3.1</td><td>N</td><td>10</td><td>Francesco Filippo e Federico f.lli Mazzuchelli</td><td>Li Co:</td><td>Brescia</td><td>3 — Francesco Mazuchelli; Filippo Mazuchelli; Federico Mazuchelli</td></tr>
+<tr><td>36</td><td>Gemini 2.5</td><td>N</td><td>3</td><td>Giuseppe Palmarini, Girolamo Bouillino e Antonio Zivati</td><td><em>(blank)</em></td><td>di Genova</td><td>2 — Giuseppe Palmarino; Girolamo Borellino</td></tr>
+</tbody></table>
+<h3>The definite article halves a short title score</h3>
+<p>
+Not conflation, but the same arithmetic. <code>title</code> is scored by character accuracy against a short reference, so writing the article the document uses costs half the score:
+</p>
+<table>
+<thead><tr><th>GT <code>title</code></th><th>model <code>title</code></th><th>characters wrong</th><th>reference length</th><th>title score</th></tr></thead>
+<tbody>
+<tr><td>Barone</td><td>Il Barone</td><td>3</td><td>6</td><td>0.50</td></tr>
+<tr><td>Conte</td><td>Signor Conte</td><td>7</td><td>5</td><td>0.00</td></tr>
+</tbody></table>
+<h2>4. Reference length decides how much error is survivable</h2>
+<p>
+CER divides by the length of the GT name, so the same number of wrong characters produces opposite verdicts depending on how long the name is:
+</p>
+<table>
+<thead><tr><th>GT name</th><th>model reading</th><th>characters wrong</th><th>reference length</th><th>CER sim</th><th>verdict</th></tr></thead>
+<tbody>
+<tr><td>Baissen</td><td>Bassa</td><td>3</td><td>7</td><td>0.571</td><td><strong>rejected</strong></td></tr>
+<tr><td>Giovanni Battista Maffoni</td><td>Giovanni Battesta Maffoni</td><td>1</td><td>25</td><td>0.960</td><td>matched</td></tr>
+</tbody></table>
+<p>
+The shortest names on a page are the easiest to read and the hardest to match.
+</p>
+<h2>5. Rows returned, before any scoring</h2>
+<p>
+How many per-traveler rows each model actually returned for a page, as the lowest–highest range across its 10 runs, with the median and its distance from the ground-truth count beneath. <strong>Matching is ignored here</strong>: a model returning 20 rows for an 18-row page is reported as 20 even if only 10 of those rows correspond to a real traveler. This separates over- and under-generation from reading accuracy — a model can return exactly the right number of rows and still have read none of them correctly.
+</p>
+
+
+<style>
+table.rowcount { border-collapse: collapse; font-size: 0.82rem; margin: 0.8rem 0 1.4rem; }
+table.rowcount th, table.rowcount td { border: 1px solid #ccc; padding: 4px 8px; text-align: right; vertical-align: middle; }
+table.rowcount th { background: #f0f0f0; text-align: center; font-weight: 600; }
+table.rowcount th.pg { background: #e3e9f1; }
+table.rowcount td.mdl { text-align: left; font-weight: 600; background: #fafafa; vertical-align: middle; }
+table.rowcount td.cond { text-align: center; color: #555; }
+table.rowcount .gsep { border-left: 2px solid #98a2ad; }
+table.rowcount .sub { display: block; color: #888; font-size: 0.72rem; font-weight: normal; margin-top: 1px; }
+table.rowcount tr.phase-b td { background: #f7fbf7; }
+table.rowcount td.exact { color: #1a7f37; }
+table.rowcount td.off { color: #a3341f; }
+</style>
+<table class="rowcount">
+<thead><tr><th rowspan="2">Model</th><th rowspan="2">Cond</th><th class="pg gsep" colspan="2">Page 28 &mdash; GT 18</th><th class="pg gsep" colspan="2">Page 36 &mdash; GT 37</th><th class="pg gsep" colspan="2">Page 39 &mdash; GT 10</th><th class="pg gsep" colspan="2">All pages &mdash; GT 65</th></tr><tr><th class="gsep">rows returned</th><th>matched</th><th class="gsep">rows returned</th><th>matched</th><th class="gsep">rows returned</th><th>matched</th><th class="gsep">rows returned</th><th>matched</th></tr></thead>
+<tbody>
+<tr class="phase-n"><td class="mdl" rowspan="3">Claude</td><td class="cond">N</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>13.7<span class="sub">4.3 unmatched</span></td><td class="gsep off">34&ndash;35<span class="sub">median 35 &middot; -2 vs GT</span></td><td>18.1<span class="sub">16.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>7.1<span class="sub">2.9 unmatched</span></td><td class="gsep off">62&ndash;63<span class="sub">median 63 &middot; -2 vs GT</span></td><td>38.9<span class="sub">24 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">19<span class="sub">median 19 &middot; +1 vs GT</span></td><td>14.6<span class="sub">4.4 unmatched</span></td><td class="gsep off">34&ndash;35<span class="sub">median 34 &middot; -3 vs GT</span></td><td>16.7<span class="sub">17.5 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>7.9<span class="sub">2.1 unmatched</span></td><td class="gsep off">63&ndash;64<span class="sub">median 63 &middot; -2 vs GT</span></td><td>39.2<span class="sub">24 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>16<span class="sub">2 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>63<span class="sub">2 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">GPT</td><td class="cond">N</td><td class="gsep exact">16&ndash;23<span class="sub">median 18 &middot; +0 vs GT</span></td><td>6.3<span class="sub">12.3 unmatched</span></td><td class="gsep off">26&ndash;34<span class="sub">median 33 &middot; -4 vs GT</span></td><td>7<span class="sub">25.2 unmatched</span></td><td class="gsep exact">9&ndash;10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>0.7<span class="sub">9.2 unmatched</span></td><td class="gsep off">58&ndash;67<span class="sub">median 60.5 &middot; -4 vs GT</span></td><td>14<span class="sub">46.7 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">24&ndash;29<span class="sub">median 25 &middot; +7 vs GT</span></td><td>7.1<span class="sub">18 unmatched</span></td><td class="gsep off">31&ndash;34<span class="sub">median 32.5 &middot; -4 vs GT</span></td><td>7.6<span class="sub">24.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>2<span class="sub">8 unmatched</span></td><td class="gsep off">66&ndash;70<span class="sub">median 67 &middot; +2 vs GT</span></td><td>16.7<span class="sub">50.8 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>17<span class="sub">1 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>64<span class="sub">1 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">Gemini 2.5</td><td class="cond">N</td><td class="gsep off">19&ndash;20<span class="sub">median 20 &middot; +2 vs GT</span></td><td>13.1<span class="sub">6.5 unmatched</span></td><td class="gsep off">24&ndash;36<span class="sub">median 32 &middot; -5 vs GT</span></td><td>13.9<span class="sub">16.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>5.5<span class="sub">4.5 unmatched</span></td><td class="gsep off">54&ndash;66<span class="sub">median 61 &middot; -4 vs GT</span></td><td>32.5<span class="sub">27.8 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">20&ndash;21<span class="sub">median 20.5 &middot; +2 vs GT</span></td><td>13.5<span class="sub">7 unmatched</span></td><td class="gsep off">35&ndash;37<span class="sub">median 36 &middot; -1 vs GT</span></td><td>20.2<span class="sub">15.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>5.7<span class="sub">4.3 unmatched</span></td><td class="gsep off">66&ndash;68<span class="sub">median 66 &middot; +1 vs GT</span></td><td>39.4<span class="sub">27.1 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>18<span class="sub">0.1 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65&ndash;66<span class="sub">median 65 &middot; +0 vs GT</span></td><td>65<span class="sub">0.1 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">Gemini 3.1</td><td class="cond">N</td><td class="gsep off">19<span class="sub">median 19 &middot; +1 vs GT</span></td><td>16.6<span class="sub">2.4 unmatched</span></td><td class="gsep off">34<span class="sub">median 34 &middot; -3 vs GT</span></td><td>26.4<span class="sub">7.6 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep off">63<span class="sub">median 63 &middot; -2 vs GT</span></td><td>53<span class="sub">10 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep off">19<span class="sub">median 19 &middot; +1 vs GT</span></td><td>17<span class="sub">2 unmatched</span></td><td class="gsep off">36<span class="sub">median 36 &middot; -1 vs GT</span></td><td>27.2<span class="sub">8.8 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>9.6<span class="sub">0.4 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>53.8<span class="sub">11.2 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>17.1<span class="sub">1.1 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65&ndash;66<span class="sub">median 65 &middot; +0 vs GT</span></td><td>64.1<span class="sub">1.1 unmatched</span></td></tr>
+<tr class="phase-n"><td class="mdl" rowspan="3">Claude Thinking</td><td class="cond">N</td><td class="gsep exact">17&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>12<span class="sub">6 unmatched</span></td><td class="gsep off">30&ndash;35<span class="sub">median 34 &middot; -3 vs GT</span></td><td>17.1<span class="sub">16.3 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>6.8<span class="sub">3.2 unmatched</span></td><td class="gsep off">58&ndash;63<span class="sub">median 62 &middot; -3 vs GT</span></td><td>35.9<span class="sub">25.5 unmatched</span></td></tr>
+<tr class="phase-a"><td class="cond">A</td><td class="gsep exact">18&ndash;19<span class="sub">median 18 &middot; +0 vs GT</span></td><td>13<span class="sub">5.1 unmatched</span></td><td class="gsep off">34&ndash;36<span class="sub">median 35 &middot; -2 vs GT</span></td><td>20<span class="sub">14.7 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>6.7<span class="sub">3.3 unmatched</span></td><td class="gsep off">62&ndash;64<span class="sub">median 63 &middot; -2 vs GT</span></td><td>39.7<span class="sub">23.1 unmatched</span></td></tr>
+<tr class="phase-b"><td class="cond">B</td><td class="gsep exact">18<span class="sub">median 18 &middot; +0 vs GT</span></td><td>17.3<span class="sub">0.7 unmatched</span></td><td class="gsep exact">37<span class="sub">median 37 &middot; +0 vs GT</span></td><td>37<span class="sub">0 unmatched</span></td><td class="gsep exact">10<span class="sub">median 10 &middot; +0 vs GT</span></td><td>10<span class="sub">0 unmatched</span></td><td class="gsep exact">65<span class="sub">median 65 &middot; +0 vs GT</span></td><td>64.3<span class="sub">0.7 unmatched</span></td></tr>
+</tbody></table>
+<p style="font-size:0.8rem;color:#666;margin-top:-0.8rem"><b>rows returned</b> is the raw count of per-traveler rows the model produced, before any scoring &mdash; range across the 10 runs, with the median and its distance from the ground-truth count. <b>matched</b> is the mean number of those rows that paired with a real GT traveler, and <b>unmatched</b> the remainder. A model can return the right number of rows and match few of them.</p>
+<h2>6. How often the right value lands in the wrong field</h2>
+<p>
+Counted over <strong>all</strong> rows a model produced, matched or not — a matched-only count cannot see the rows the conflation destroyed, which are the ones that matter. <em>also correct in its own field</em> = the model filled that field correctly as well, so it duplicated the value rather than misfiling it. <em>row lost</em> = the name match failed, costing a false positive and a missed traveler.
+</p>
+<table>
+<thead><tr><th>Model</th><th>Cond</th><th>Rows</th><th>Title in name</th><th>Origin in name</th><th>value also correct in its own field</th><th>row still matched</th><th>row lost</th></tr></thead>
+<tbody>
+<tr><td>Claude</td><td>N</td><td>629</td><td>30 (4.8%)</td><td>0 (0.0%)</td><td>20 of 30</td><td>2</td><td><strong>28</strong></td></tr>
+<tr><td>Claude</td><td>A</td><td>632</td><td>21 (3.3%)</td><td>0 (0.0%)</td><td>11 of 21</td><td>0</td><td><strong>21</strong></td></tr>
+<tr><td>GPT</td><td>N</td><td>607</td><td>42 (6.9%)</td><td>49 (8.1%)</td><td>83 of 91</td><td>40</td><td><strong>51</strong></td></tr>
+<tr><td>GPT</td><td>A</td><td>675</td><td>24 (3.6%)</td><td>13 (1.9%)</td><td>35 of 37</td><td>11</td><td><strong>26</strong></td></tr>
+<tr><td>GPT</td><td>B</td><td>650</td><td>10 (1.5%)</td><td>0 (0.0%)</td><td>5 of 10</td><td>0</td><td><strong>10</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>N</td><td>630</td><td>4 (0.6%)</td><td>0 (0.0%)</td><td>0 of 4</td><td>0</td><td><strong>4</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>A</td><td>650</td><td>6 (0.9%)</td><td>0 (0.0%)</td><td>0 of 6</td><td>0</td><td><strong>6</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>B</td><td>652</td><td>9 (1.4%)</td><td>0 (0.0%)</td><td>9 of 9</td><td>0</td><td><strong>9</strong></td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>614</td><td>20 (3.3%)</td><td>0 (0.0%)</td><td>12 of 20</td><td>1</td><td><strong>19</strong></td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>628</td><td>12 (1.9%)</td><td>0 (0.0%)</td><td>2 of 12</td><td>0</td><td><strong>12</strong></td></tr>
+<tr><td>Claude Thinking</td><td>B</td><td>650</td><td>1 (0.2%)</td><td>0 (0.0%)</td><td>0 of 1</td><td>0</td><td><strong>1</strong></td></tr>
+</tbody></table>
+<p>
+Rows where the value is duplicated rather than misfiled are the important ones: the model read the document correctly and the loss is entirely an artifact of where it wrote the value.
+</p>
+<hr>
+<p>
+Generated by <code>build_scoring_doc.py</code> from the phase N/A/B checkpoints. See <a href="eval_guidelines.html">eval_guidelines.html</a> for the full scoring rules.
+</p>
+</body>
+</html>

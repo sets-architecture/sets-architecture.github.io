@@ -26,6 +26,7 @@ table { border-collapse: collapse; font-size: 0.82rem; margin: 0.3rem 0 1.3rem; 
 th, td { border: 1px solid #ccc; padding: 3px 6px; text-align: left; vertical-align: top; }
 th { background: #efefef; font-weight: 600; white-space: nowrap; }
 td.idx { width: 2rem; text-align: right; color: #777; font-variant-numeric: tabular-nums; }
+
 td.gt { background: #f4f8ff; }
 td.ok { background: #e7f7e0; }
 td.partial { background: #fff4cf; }
@@ -38,6 +39,7 @@ td.weakname { background: #ffe0b2; }
 td.miss { color: #aaa; font-style: italic; }
 td.extra { background: #fff8e1; }
 td .score { color: #888; font-size: 0.7rem; margin-left: 4px; }
+
 tr.extra-divider td { background: #f0f0f0; font-weight: 600; font-size: 0.75rem; color: #555; text-align: center; padding: 4px; }
 
 .empty { color: #aaa; font-style: italic; font-size: 0.78rem; padding: 1rem; text-align: center; }
@@ -45,7 +47,7 @@ tr.extra-divider td { background: #f0f0f0; font-weight: 600; font-size: 0.75rem;
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-17<br>Data (model runs) generated: 2026-07-23</p>
+<p class="dates">Page generated: 2026-08-19<br>Data (model runs) generated: 2026-07-23</p>
 <h1>Page 28 — Interactive Comparison</h1>
 <p class="meta">AVS IS 758-781 1766 02.jpg &middot; GT: 18 travelers &middot; Best run per (model, phase) chosen by F1.</p>
 
@@ -83,15 +85,15 @@ tr.extra-divider td { background: #f0f0f0; font-weight: 600; font-size: 0.75rem;
   <button id="phase-b-only">Phase B only</button>
   <span style="color:#666; font-size:0.78rem;">
     <b>Legend &mdash; scored fields:</b>
-    <span style="background:#e7f7e0;padding:0 4px;">match (char acc ≥ 0.999)</span> &nbsp;
-    <span style="background:#fff4cf;padding:0 4px;">partial (0.7–0.999)</span> &nbsp;
+    <span style="background:#e7f7e0;padding:0 4px;">match (char acc &ge; 0.999)</span> &nbsp;
+    <span style="background:#fff4cf;padding:0 4px;">partial (0.7&ndash;0.999)</span> &nbsp;
     <span style="background:#fde6e2;padding:0 4px;">poor (&lt; 0.7)</span> &nbsp;
     <span style="background:#fff;padding:0 4px;border:1px solid #ccc;">unscorable &mdash; GT blank, nothing to grade against</span>
     <br>
     <b>Name column</b> (the row-matching key, not a scored field):
-    <span style="background:#e7f7e0;padding:0 4px;">exact (≥ 0.999)</span> &nbsp;
-    <span style="background:#fff4cf;padding:0 4px;">close (0.85–0.999)</span> &nbsp;
-    <span style="background:#ffe0b2;padding:0 4px;">weak (0.70–0.85) &mdash; row still counted as matched for F1</span>.
+    <span style="background:#e7f7e0;padding:0 4px;">exact (&ge; 0.999)</span> &nbsp;
+    <span style="background:#fff4cf;padding:0 4px;">close (0.85&ndash;0.999)</span> &nbsp;
+    <span style="background:#ffe0b2;padding:0 4px;">weak (0.70&ndash;0.85) &mdash; row still counted as matched for F1</span>.
     A name below 0.70 is not matched at all; that row appears under
     <span style="background:#fff8e1;padding:0 4px;">unmatched extra row</span> instead.
   </span>
