@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Evaluation Method — rationale and comparison</title>
+<style>
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.55; }
+h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+h2 { font-size: 1.1rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+h3 { font-size: 1.0rem; margin-top: 1.5rem; }
+hr { border: none; border-top: 1px solid #ccc; margin: 1.5rem 0; }
+table { border-collapse: collapse; font-size: 0.85rem; margin: 0.8rem 0 1.5rem; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
+a { color: #1858a7; }
+.back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
+.dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }</style>
+</head>
+<body>
+<p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
+<p class="dates">Page generated: 2026-08-20<br>Data (model runs) generated: 2026-07-23</p>
+<h1>The evaluation method</h1>
+<p>
+What it measures, why it is built this way, and the same model runs scored four ways so the differences can be inspected rather than taken on trust. Every figure on this page is computed by <code>build_eval_method.py</code> from the run checkpoints and the ground-truth CSVs.
+</p>
+<hr>
+<h2>1. What we are asking of the sources</h2>
+<p>
+The Venice 39 material is a weekly register of foreign visitors: each page lists arrivals in the left column and departures in the right, one line per named traveler, with title, dates, lodging and place of origin. Two different historical questions are being put to it, and this experiment is the second half of a two-part study that separates them.
+</p>
+<p>
+1. <strong>How many people are recorded here?</strong> A count of unique named travelers per page. This is the question the question-answering half of the study asks directly, and it is answerable without reading a single name correctly.
+<br>
+2. <strong>Who were they?</strong> The names as written, transcribed faithfully enough to identify individuals, link them across records and search for them.
+</p>
+<p>
+These are different capabilities and a model can have one without the other. An evaluation that returns a single number cannot tell you which you have. That is the whole design constraint.
+</p>
+<h2>2. What the method does</h2>
+<p>
+<strong>Step 1 — count.</strong> Count the distinct named travelers the model reports on a page and compare with the ground-truth count for that page. Duplicated rows collapse to one traveler, because the question is how many people are recorded, not how many rows were emitted. No name matching is involved; a model that invents every name still counts correctly if it reports the right number of people.
+</p>
+<p>
+<strong>Step 2 — align.</strong> Pair each model row with the ground-truth traveler it is closest to, order-blind, using character similarity on the name. Before comparing, added titles, articles and places of origin are removed from the model&#x27;s name field, and the best available reading wins — so <code>Il Barone Bassa</code> is compared as <code>Bassa</code> and <code>Israel Baysan di Verona</code> as <code>Israel Baysan</code>. The unreduced name is always among the candidates, so a reduction can only reveal a name that was buried, never lower a score.
+</p>
+<p>
+<strong>Step 3 — measure transcription.</strong> Over the aligned pairs, report character error rate on the name itself: <code>CER = levenshtein(gt, model) / len(gt)</code>, micro-averaged, plus the share of names reproduced exactly. The alignment used for this measure has <strong>no similarity floor</strong>, so a badly read name stays in the pool instead of being dropped for being badly read.
+</p>
+<p>
+<strong>Step 4 — characterise what is left over.</strong> Rows with no ground-truth counterpart are classified rather than lumped together: a traveler listed twice, two travelers merged into one row, a fragment of a name, a real traveler misread past recognition, or an invention with no counterpart on the page.
+</p>
+<p>
+Detection precision and recall are still reported, at a 0.70 similarity threshold, but they are one output among several rather than the headline.
+</p>
+<h2>3. The same runs, scored four ways</h2>
+<table>
+<thead><tr><th>Method</th><th>gate</th><th>alignment</th><th>name reductions</th></tr></thead>
+<tbody>
+<tr><td><strong>M1 published</strong></td><td>Ratcliff-Obershelp ratio ≥ 0.70</td><td>greedy, order-blind</td><td>none</td></tr>
+<tr><td><strong>M2 CER gate</strong></td><td>1 − CER ≥ 0.70</td><td>greedy, order-blind</td><td>none</td></tr>
+<tr><td><strong>M3 order-fixed</strong></td><td>1 − CER ≥ 0.70</td><td>Needleman-Wunsch, order-preserving</td><td>none</td></tr>
+<tr><td><strong>M4 proposed</strong></td><td>1 − CER ≥ 0.70</td><td>greedy, order-blind</td><td>titles, articles, origins</td></tr>
+</tbody></table>
+<p>
+F1 under each, pooled across the three pages and 10 runs:
+</p>
+<table>
+<thead><tr><th>Model</th><th>Cond</th><th>M1 published</th><th>M2 CER gate</th><th>M3 order-fixed</th><th>M4 proposed</th></tr></thead>
+<tbody>
+<tr><td>Claude</td><td>N</td><td>0.715</td><td>0.608</td><td>0.585</td><td>0.647</td></tr>
+<tr><td>Claude</td><td>A</td><td>0.741</td><td>0.612</td><td>0.596</td><td>0.646</td></tr>
+<tr><td>Claude</td><td>B</td><td>1.000</td><td>0.969</td><td>0.969</td><td>0.969</td></tr>
+<tr><td>GPT</td><td>N</td><td>0.304</td><td>0.156</td><td>0.154</td><td>0.350</td></tr>
+<tr><td>GPT</td><td>A</td><td>0.373</td><td>0.231</td><td>0.231</td><td>0.297</td></tr>
+<tr><td>GPT</td><td>B</td><td>0.985</td><td>0.985</td><td>0.985</td><td>1.000</td></tr>
+<tr><td>Gemini 2.5</td><td>N</td><td>0.615</td><td>0.519</td><td>0.453</td><td>0.536</td></tr>
+<tr><td>Gemini 2.5</td><td>A</td><td>0.694</td><td>0.595</td><td>0.595</td><td>0.607</td></tr>
+<tr><td>Gemini 2.5</td><td>B</td><td>0.999</td><td>0.999</td><td>0.999</td><td>0.999</td></tr>
+<tr><td>Gemini 3.1</td><td>N</td><td>0.884</td><td>0.828</td><td>0.828</td><td>0.834</td></tr>
+<tr><td>Gemini 3.1</td><td>A</td><td>0.911</td><td>0.828</td><td>0.823</td><td>0.840</td></tr>
+<tr><td>Gemini 3.1</td><td>B</td><td>0.985</td><td>0.985</td><td>0.985</td><td>0.998</td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>0.685</td><td>0.568</td><td>0.552</td><td>0.593</td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>0.754</td><td>0.621</td><td>0.604</td><td>0.631</td></tr>
+<tr><td>Claude Thinking</td><td>B</td><td>0.998</td><td>0.989</td><td>0.989</td><td>0.991</td></tr>
+<tr><td><strong>All</strong></td><td></td><td><strong>0.777</strong></td><td><strong>0.701</strong></td><td><strong>0.691</strong></td><td><strong>0.730</strong></td></tr>
+</tbody></table>
+<p>
+Reading across a row shows how much of a model&#x27;s score is an artefact of the instrument. What no column shows is whether the model could read the names — all four are counts of rows that cleared a bar.
+</p>
+<h2>4. What the proposed method reports instead</h2>
+<p>
+Counting and transcription, per page, so the counts are whole numbers against a whole-number ground truth:
+</p>
+<h3>Page 28 — 18 unique named travelers</h3>
+<table>
+<thead><tr><th>Model</th><th>naive: found</th><th>CER</th><th>exact</th><th>guided: found</th><th>CER</th><th>exact</th><th>+transcription: found</th><th>CER</th><th>exact</th></tr></thead>
+<tbody>
+<tr><td>Claude</td><td>17</td><td>0.24</td><td>28%</td><td>18</td><td>0.15</td><td>33%</td><td>18</td><td>0.07</td><td>88%</td></tr>
+<tr><td>GPT</td><td>16–23</td><td>0.39</td><td>2%</td><td>22–26</td><td>0.42</td><td>1%</td><td>18</td><td>0.04</td><td>89%</td></tr>
+<tr><td>Gemini 2.5</td><td>19</td><td>0.15</td><td>34%</td><td>20</td><td>0.15</td><td>39%</td><td>18</td><td>0.00</td><td>100%</td></tr>
+<tr><td>Gemini 3.1</td><td>18</td><td>0.10</td><td>44%</td><td>18</td><td>0.07</td><td>56%</td><td>18</td><td>0.00</td><td>100%</td></tr>
+<tr><td>Claude Thinking</td><td>17–19</td><td>0.22</td><td>15%</td><td>18</td><td>0.21</td><td>21%</td><td>18</td><td>0.03</td><td>94%</td></tr>
+</tbody></table>
+<h3>Page 36 — 37 unique named travelers</h3>
+<table>
+<thead><tr><th>Model</th><th>naive: found</th><th>CER</th><th>exact</th><th>guided: found</th><th>CER</th><th>exact</th><th>+transcription: found</th><th>CER</th><th>exact</th></tr></thead>
+<tbody>
+<tr><td>Claude</td><td>34–35</td><td>0.30</td><td>11%</td><td>34–35</td><td>0.34</td><td>12%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+<tr><td>GPT</td><td>26–34</td><td>0.42</td><td>3%</td><td>30–34</td><td>0.42</td><td>5%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+<tr><td>Gemini 2.5</td><td>24–36</td><td>0.53</td><td>6%</td><td>35–37</td><td>0.34</td><td>5%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+<tr><td>Gemini 3.1</td><td>34</td><td>0.26</td><td>26%</td><td>36</td><td>0.20</td><td>22%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+<tr><td>Claude Thinking</td><td>30–35</td><td>0.32</td><td>12%</td><td>34–36</td><td>0.29</td><td>10%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+</tbody></table>
+<h3>Page 39 — 10 unique named travelers</h3>
+<table>
+<thead><tr><th>Model</th><th>naive: found</th><th>CER</th><th>exact</th><th>guided: found</th><th>CER</th><th>exact</th><th>+transcription: found</th><th>CER</th><th>exact</th></tr></thead>
+<tbody>
+<tr><td>Claude</td><td>10</td><td>0.21</td><td>22%</td><td>10</td><td>0.20</td><td>20%</td><td>10</td><td>0.01</td><td>90%</td></tr>
+<tr><td>GPT</td><td>9–10</td><td>0.48</td><td>0%</td><td>10</td><td>0.47</td><td>0%</td><td>10</td><td>0.00</td><td>100%</td></tr>
+<tr><td>Gemini 2.5</td><td>10</td><td>0.35</td><td>3%</td><td>10</td><td>0.31</td><td>10%</td><td>10</td><td>0.00</td><td>100%</td></tr>
+<tr><td>Gemini 3.1</td><td>10</td><td>0.12</td><td>50%</td><td>10</td><td>0.14</td><td>43%</td><td>10</td><td>0.00</td><td>100%</td></tr>
+<tr><td>Claude Thinking</td><td>10</td><td>0.23</td><td>16%</td><td>10</td><td>0.23</td><td>17%</td><td>10</td><td>0.00</td><td>98%</td></tr>
+</tbody></table>
+<p>
+Plus the composition of the surplus — rows left over once every ground-truth traveler has its closest candidate:
+</p>
+<table>
+<thead><tr><th>Model</th><th>Cond</th><th>surplus rows</th><th>composition</th></tr></thead>
+<tbody>
+<tr><td>Claude</td><td>A</td><td>10</td><td>double-listed 10</td></tr>
+<tr><td>GPT</td><td>N</td><td>12</td><td>fabricated 10, double-listed 1, bad read 1</td></tr>
+<tr><td>GPT</td><td>A</td><td>71</td><td>fabricated 69, bad read 2</td></tr>
+<tr><td>Gemini 2.5</td><td>N</td><td>16</td><td>double-listed 6, fabricated 6, fragment 4</td></tr>
+<tr><td>Gemini 2.5</td><td>A</td><td>25</td><td>fabricated 20, double-listed 5</td></tr>
+<tr><td>Gemini 2.5</td><td>B</td><td>1</td><td>double-listed 1</td></tr>
+<tr><td>Gemini 3.1</td><td>N</td><td>10</td><td>bad read 6, double-listed 4</td></tr>
+<tr><td>Gemini 3.1</td><td>A</td><td>10</td><td>double-listed 10</td></tr>
+<tr><td>Gemini 3.1</td><td>B</td><td>2</td><td>double-listed 2</td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>1</td><td>bad read 1</td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>1</td><td>double-listed 1</td></tr>
+</tbody></table>
+<h2>5. Why this rather than the alternatives</h2>
+<p>
+<strong>A single F1 answers neither question.</strong> F1 counts rows that cleared a similarity bar. GPT in the naive condition scores 0.304 under the published method, which reads as a failure to find the travelers. It is not: on page 39 it reports 9–10 unique named travelers against a ground truth of 10, the same count Gemini 3.1 reports, and then misreads them at 0.48 character error against Gemini 3.1&#x27;s 0.12. The models are equally good at the first question and very unequal at the second. One number cannot say that.
+</p>
+<p>
+<strong>Ratcliff-Obershelp is not an edit distance (M1 → M2).</strong> <code>difflib</code>&#x27;s ratio anchors on the longest matching block and recurses either side, so characters stranded across the anchor cannot be matched, and the result is not interpretable outside the script that computed it. CER is the field standard for transcription, is a true minimum edit distance, and composes: a page&#x27;s CER is the CER of its concatenated text. The cost of switching is visible in the M1 → M2 column and is large, which is precisely why it should not be left to an incidental choice of library function.
+</p>
+<p>
+<strong>But CER must not be the gate (M2 → M4).</strong> Reference-length normalization makes CER asymmetric: appending content to a name is penalised as heavily as getting it wrong, so a model that writes the traveler&#x27;s origin or title into the name field is recorded as having found nobody. The reductions in M4 remove exactly that, and nothing else — the unreduced reading is always retained, so the change can only recover a name, never inflate one.
+</p>
+<p>
+<strong>Order-preserving alignment costs more than it returns (M3).</strong> Requiring the model&#x27;s row order to follow the ground truth&#x27;s forfeits matches when a model reads across the two columns instead of finishing the left one first, or groups a family together. Both are legitimate readings of a page the prompt never asked to be traversed in a particular order. Order is worth measuring; it is not worth charging to detection.
+</p>
+<p>
+<strong>The transcription measure must not be conditioned on the match.</strong> Reporting CER only over rows that cleared the threshold measures the names a model read well, by construction. Scoring over the complete unthresholded assignment keeps the failures in the denominator: GPT&#x27;s naive character error is 0.42 measured this way, against 0.16 when computed only over rows that passed the gate.
+</p>
+<h2>6. What this method does not do</h2>
+<ul>
+<li>The alignment used for the transcription measure is bookkeeping, not a claim of identity. Pairing a model&#x27;s row with a ground-truth traveler at 0.30 similarity does not assert they are the same person; it places the row where its character error can be counted. Detection is answered by the counts and the thresholded precision, never by the size of the assignment.</li>
+<li>CER is a corpus statistic. Over hundreds of names per cell it is stable; on a single short name it is very noisy, which is why no per-name threshold should be read as a confident judgment about that name.</li>
+<li>It measures names. The other eight fields are scored separately and their normalization rules are still under review.</li>
+<li>Nothing here evaluates whether a traveler was correctly placed in the arrival or the departure column.</li>
+</ul>
+<hr>
+<p>
+Generated by <code>build_eval_method.py</code>. Scoring rules: <a href="eval_guidelines.html">eval_guidelines.html</a>. Worked cases of the name measure: <a href="scoring_name_match.html">scoring_name_match.html</a>.
+</p>
+</body>
+</html>
