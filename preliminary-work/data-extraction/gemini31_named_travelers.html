@@ -68,9 +68,9 @@
   <td class="gt">18</td>
   <td class="miss">17.0</td>
   <td class="miss">17.5 <small style="color:#888;">(16&ndash;19)</small></td>
-  <td class="exact">19.0</td>
-  <td class="exact">19.0</td>
-  <td class="exact">18.2</td>
+  <td class="miss">19.0</td>
+  <td class="miss">19.0</td>
+  <td class="exact">18.2 <small style="color:#888;">(18&ndash;19)</small></td>
 </tr>
 <tr>
   <td><b>Page 36</b><br><small style="color:#888;font-weight:normal;">May 28, 1770 (densest)</small></td>
@@ -79,15 +79,15 @@
   <td class="bigmiss">28.0</td>
   <td class="bigmiss">28.5 <small style="color:#888;">(28&ndash;29)</small></td>
   <td class="miss">34.0</td>
-  <td class="exact">36.0</td>
+  <td class="miss">36.0</td>
   <td class="exact">37.0</td>
 </tr>
 <tr>
   <td><b>Page 39</b><br><small style="color:#888;font-weight:normal;">Aug 20, 1770</small></td>
   <td class="gt">10</td>
   <td class="gt">10</td>
-  <td>9.0</td>
-  <td>9.0</td>
+  <td class="miss">9.0</td>
+  <td class="miss">9.0</td>
   <td class="exact">10.0</td>
   <td class="exact">10.0</td>
   <td class="exact">10.0</td>
@@ -96,10 +96,16 @@
 </table>
 
 <div class="legend">
-  <span class="ok">matches a GT</span>
-  <span class="miss">undercounts by 1&ndash;3</span>
-  <span class="bigmiss">undercounts by &ge; 5</span>
+  <span class="ok">matches its own ground truth</span>
+  <span class="miss">off by 1&ndash;3, in either direction</span>
+  <span class="bigmiss">off by &ge; 5</span>
 </div>
+<p class="note">
+  Each column is coloured against the ground truth for <em>its own</em> task: the Q&amp;A columns against Q&amp;A mentions, the
+  data-extraction columns against DE unique rows. This matters on page 28, where the two ground truths differ &mdash; the 19.0 that
+  Gemini 3.1 emits in phases N and A equals the Q&amp;A mention count but <em>over</em>counts the DE schema by one row, so it is
+  marked as a miss. Section 3 explains why.
+</p>
 
 <hr>
 
@@ -108,21 +114,30 @@
 <p>
   <b>The same model produces two systematically different counts depending on output shape.</b>
   On page 36, asked directly, Gemini 3.1 says <b>28</b> travelers are named. Asked to extract them, it emits a list of <b>36</b> traveler
-  records &mdash; off by one against the data-extraction GT of 37, but closing nearly the entire eight-traveler shortfall the direct count shows.
-  Structured emission isn't perfect (we'll see a duplication error on page 28 below), but it's <em>dramatically</em> closer than counting in a vacuum.
+  records &mdash; off by one against the data-extraction GT of 37, but closing all but one of the nine-traveler shortfall the direct count
+  shows. Structured emission isn't perfect (we'll see a duplication error on page 28 below), but it's <em>dramatically</em> closer than
+  counting in a vacuum.
 </p>
 
 <p>
   This isolates <b>task framing</b> as the variable. Enumerating forces the model to "look" once per row; a direct count appears to be
-  pulled from a small-number prior rather than from an exhaustive scan. The gap widens with page size &mdash; page 39 (10 GT) is off by 1,
-  page 28 (19 GT) by 1.5&ndash;2, page 36 (36 GT) by 7&ndash;8.
+  pulled from a small-number prior rather than from an exhaustive scan. The gap widens with page size &mdash; page 39 (10 mentions) is
+  off by 1, page 28 (19 mentions) by 1.5&ndash;2, page 36 (37 mentions) by 8.5&ndash;9. The direct count never exceeds 29 on any run of
+  any page, while the page-36 enumeration reaches 37.
 </p>
 
 <p>
   <b>Guidance helps a little; transcription helps a lot.</b> Adding expert domain guidance nudges the Q&amp;A count up by half a traveler on
   pages 28 and 36 (17.0&nbsp;&rarr;&nbsp;17.5 and 28.0&nbsp;&rarr;&nbsp;28.5), and in the data-extraction setting it closes the page-36 gap
-  by two records (34&nbsp;&rarr;&nbsp;36). But it doesn't change the model's <em>strategy</em> &mdash; the direct count still undershoots,
-  and the page-28 duplication persists across every data-extraction phase.
+  from three records to one (34&nbsp;&rarr;&nbsp;36). But it doesn't change the model's <em>strategy</em>: the direct count still undershoots
+  by the same margin, and the page-28 duplication described below is present in every run of both phases N and A.
+</p>
+
+<p>
+  <b>Supplying the transcription changes the outcome on all three pages at once.</b> Page 36 goes to an exact 37.0 with a mean F1 of
+  1.000; page 39 stays exact; and page 28 falls from 19.0 to <b>18.2</b>, because 8 of the 10 phase-B runs collapse the duplicate row
+  the other phases always emit. Phase B is the only condition whose mean row count lands within 0.2 of the DE ground truth on all three
+  pages &mdash; exactly on 36 and 39, and on 28 in eight runs out of ten.
 </p>
 
 <hr>
@@ -145,21 +160,73 @@
   </li>
 </ul>
 
-<h3>The extra Gemini 3.1 record on page 28 is not faithful &mdash; it is a duplication error</h3>
+<h3>The extra record in phases N and A is not faithful &mdash; it is a duplication error</h3>
 <p>
-  Gemini 3.1 emits 19 records on page 28 in every phase. That number happens to equal the Q&amp;A mention count, but the model isn't
-  answering the Q&amp;A question &mdash; it's filling out the data-extraction schema, which asks for one row per traveler. Inspecting the
-  output (see <a href="field_results_page_28.html">Per-field results &mdash; Page 28</a>) confirms: row 1 is "Mandolin Todros" with the
-  arrival date, and the 19th row is a second "Mandolin Todros" instead of being collapsed into row 1's <code>departure_date</code> field.
-  That is the duplication the schema explicitly forbids; it shows up as a 1-row precision dent against the DE GT and produces the F1 = 0.97
-  plateau we noted in <a href="summary.html">summary.html</a> section 2.
+  In phases N and A, Gemini 3.1 emits 19 records on page 28 in all 10 runs. That number happens to equal the Q&amp;A mention count, but the
+  model isn't answering the Q&amp;A question &mdash; it's filling out the data-extraction schema, which asks for one row per traveler.
+  Inspecting the output (see <a href="field_results_page_28.html">Per-field results &mdash; Page 28</a>) confirms it: in phase A, <b>row 1</b>
+  is "Mandolin Todros" carrying only the arrival date, and <b>row 16</b> is a second "Mandolin Todros" carrying only the departure date,
+  instead of the two being collapsed into one row with both fields filled. That is the duplication the schema explicitly forbids. It costs a
+  one-row precision dent against the DE GT and holds page-28 F1 at <b>0.973</b> in both phases.
+</p>
+<p>
+  Phase N produces the same structural error but does not recognise the repeated name: its extra row reads <i>Mandolin Vodevs</i> (6 runs) or
+  <i>Mandolin Vodos</i> (4 runs) rather than a second clean copy, so the model there is not knowingly listing one person twice &mdash; it has
+  read the second occurrence as a different person.
+</p>
+
+<h3>The transcription resolves it in 8 of 10 runs</h3>
+<p>
+  In phase B the same row comes back merged: row 1 is "Mandolin Todros" with <em>both</em> <code>arrival_date</code> and
+  <code>departure_date</code> populated, and no second Todros row appears. Two of the ten runs still emit the duplicate, which is exactly
+  what the 18.2 mean records (eight runs at 18, two at 19). Page-28 F1 rises from 0.973 to <b>0.995</b>. So the duplication is not a fixed
+  property of the model's schema-filling &mdash; it is a reading failure, and it goes away once the model no longer has to recover the
+  second mention from the image.
+</p>
+
+<h3>The same row shows the same ordering in its dates</h3>
+<p>
+  This page is about how many travelers are found, but the Todros row happens to make the N&nbsp;&rarr;&nbsp;A&nbsp;&rarr;&nbsp;B
+  progression visible in a second field. Page 28 is headed <i>20 February 1768 <b>M.V.</b></i> &mdash; <i>more veneto</i>, the Venetian
+  calendar whose year began on 1 March, so February 1768&nbsp;M.V. is February <b>1769</b> in standard reckoning. The ground truth records
+  the converted year: Mandolin Todros arrives <code>February 9 1769</code> and departs <code>February 13 1769</code>. Across all 10 runs,
+  every date value Gemini 3.1 writes on a Todros row:
+</p>
+<table>
+<thead><tr><th>Phase</th><th>What it writes</th><th>Year</th></tr></thead>
+<tbody>
+<tr><td><b>Naive (N)</b></td><td style="text-align:left"><code>12 Feb</code> (20), <code>9 Feb</code> (10)</td>
+    <td class="bigmiss">no year at all</td></tr>
+<tr><td><b>Guided (A)</b></td><td style="text-align:left"><code>February 13 1768</code> (14), <code>February 09 1768</code> (7),<br>
+    <code>February 12 1769</code> (4), <code>February 09 1769</code> (3), <code>February 13 1769</code> (2)</td>
+    <td class="miss">1768 in 21 of 30, 1769 in 9</td></tr>
+<tr><td><b>Guided + transcription (B)</b></td><td style="text-align:left"><code>February 12 1769</code> (20), <code>February 09 1769</code> (10)</td>
+    <td class="exact">1769 in all 30</td></tr>
+</tbody>
+</table>
+<p>
+  Three different failures, in the same order as the row counts. Naive ignores the requested <code>Month DD YYYY</code> format and supplies
+  no year, so there is nothing to be right or wrong about. Guided adopts the format and then copies the year off the page as written,
+  leaving the <i>more veneto</i> conversion undone in seven runs out of ten &mdash; and inconsistently, since the other three convert it.
+  With the transcription, every value carries the converted year.
+</p>
+<p class="note">
+  One caveat against reading this as "transcription fixes dates": it fixes the <em>year</em>, not the whole field. Phase B writes
+  <code>February 12</code> for a departure the ground truth records as the 13th, so the day is off by one in the runs that merge the row.
+  Phase A gets that day right more often than B does. The year convention is what moves cleanly across the three framings; the
+  day-level reading does not.
 </p>
 
 <p class="note">
   Data sources: Q&amp;A answers from <code>venice-39-guided</code> / <code>venice-39-naive</code> checkpoints
-  (file <code>eval_gemini31_t0_run01.json</code> &ndash; <code>run10.json</code>);
-  data-extraction <code>n_model</code> from <code>venice-39-data-extraction/scores_phase_{n,a,b}/score_gemini31_phase{n,a,b}_run*.json</code>.
-  All numbers are means across 10 runs at temperature 0; ranges noted in parentheses where runs disagreed.
+  (files <code>eval_gemini31_t0_run01.json</code> &ndash; <code>run10.json</code>, Q13), and Q&amp;A mention totals from
+  <code>named_travelers_total</code> in <code>venice-39-guided/ground_truth.md</code>;
+  data-extraction <code>n_model</code>, <code>f1</code> and the unmatched-row names from
+  <code>venice-39-data-extraction/scores_phase_{n,a,b}/score_gemini31_phase{n,a,b}_run*.json</code>, with row positions read from the
+  corresponding <code>checkpoints_phase_*</code> files.
+  All numbers are means across 10 runs at temperature 0; ranges are given in parentheses where runs disagreed.
+  This page is hand-authored &mdash; it has no generator, so it does not update when the scorer changes. Every figure above was
+  re-verified against the current scores on 2026-08-21.
 </p>
 
 </body>
