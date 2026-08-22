@@ -50,7 +50,7 @@ description: Structured data extraction across 3 representative pages and 3 prom
   (page 28, an <i>Ebrei</i> page), 37 travelers (page 36, the densest), and 10 travelers (page 39).
   Each (model, page) combination is run under three phases — <b>naive</b> (questions only),
   <b>guided</b> (with expert-authored domain knowledge), and <b>guided + transcription</b>
-  (guidance plus a pre-computed transcription) — for 10 runs each. Scoring is F1 against ground truth.
+  (guidance plus a pre-computed transcription) — for 10 runs each. Scoring reports two separate numbers: <b>F1</b> for whether the right travelers were found, and <b>name CER</b> — character error rate, micro-averaged — for how faithfully their names were read. A model can find every traveler and misread all of them, so neither number substitutes for the other.
 </p>
 
 <!-- ============================================================ -->
@@ -83,6 +83,35 @@ description: Structured data extraction across 3 representative pages and 3 prom
 </ul>
 
 <!-- ============================================================ -->
+<h2>Method &amp; Scoring <span class="legend">how the evaluation works and why</span></h2>
+<ul class="report-list">
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/data-extraction/eval_method.html">The Evaluation Method</a></div>
+      <div class="desc">What the method measures and why it is built this way, with the same runs scored four ways so the alternatives can be inspected rather than taken on trust. Covers the two questions kept separate throughout: how many travelers were found, and how faithfully their names were read.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/data-extraction/name_measures.html">Name Similarity Measures Compared</a></div>
+      <div class="desc">Every distinct ground-truth/model name pair scored by five candidate measures — Ratcliff-Obershelp, CER, normalized edit distance, token F1 and Jaro-Winkler — including near-misses and rejects, with a length-sensitivity table. The evidence behind using Ratcliff to decide identity and CER to measure transcription.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/data-extraction/scoring_name_match.html">Name Matching &amp; Field Conflation</a></div>
+      <div class="desc">Worked cases from the run data: what the name score is and is not, and where a model puts the right value in the wrong field — a title or place of origin written into the name, correct in its own column and breaking the match from the other.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/data-extraction/field_variations.html">Field Value Variations</a></div>
+      <div class="desc">Every distinct model value against the ground-truth value it was scored against, for name, title, place of stay and place of origin, grouped by why the two differ. The adjudication record for which variants are accepted as equivalent.</div>
+    </div>
+  </li>
+</ul>
+
+<!-- ============================================================ -->
 <h2>Overall Results</h2>
 <ul class="report-list">
   <li>
@@ -100,7 +129,7 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/scores_summary.csv">Raw Scores (CSV)</a></div>
-      <div class="desc">Underlying per-image, per-run precision, recall, F1, and per-field accuracy for every (model, phase, run, page) combination.</div>
+      <div class="desc">Underlying per-image, per-run precision, recall, F1, name CER, and per-field accuracy for every (model, phase, run, page) combination.</div>
     </div>
   </li>
 </ul>
