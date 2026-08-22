@@ -20,7 +20,7 @@ td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-22<br>Data (model runs) generated: 2026-07-23<br>Scoring inputs: ground truth <code>87535c64</code>, evaluate.py <code>43780bce</code>, rules <code>575192c4</code></p>
+<p class="dates">Page generated: 2026-08-22<br>Data (model runs) generated: 2026-07-23<br>Scoring inputs: ground truth <code>87535c64</code>, evaluate.py <code>43780bce</code>, rules <code>90624dc6</code></p>
 <h1>The evaluation method</h1>
 <p>
 What it measures, why it is built this way, and the same model runs scored four ways so the differences can be inspected rather than taken on trust. Every figure on this page is computed by <code>build_eval_method.py</code> from the run checkpoints and the ground-truth CSVs.
@@ -72,7 +72,7 @@ F1 under each, pooled across the three pages and 10 runs:
 <tr><td>Claude</td><td>N</td><td>0.790</td><td>0.715</td><td>0.647</td><td>0.585</td></tr>
 <tr><td>Claude</td><td>A</td><td>0.802</td><td>0.741</td><td>0.646</td><td>0.596</td></tr>
 <tr><td>Claude</td><td>B</td><td>1.000</td><td>1.000</td><td>0.969</td><td>0.969</td></tr>
-<tr><td>GPT</td><td>N</td><td>0.479</td><td>0.304</td><td>0.345</td><td>0.154</td></tr>
+<tr><td>GPT</td><td>N</td><td>0.479</td><td>0.304</td><td>0.350</td><td>0.154</td></tr>
 <tr><td>GPT</td><td>A</td><td>0.423</td><td>0.373</td><td>0.297</td><td>0.231</td></tr>
 <tr><td>GPT</td><td>B</td><td>1.000</td><td>0.985</td><td>1.000</td><td>0.985</td></tr>
 <tr><td>Gemini 2.5</td><td>N</td><td>0.632</td><td>0.615</td><td>0.536</td><td>0.453</td></tr>
@@ -81,7 +81,7 @@ F1 under each, pooled across the three pages and 10 runs:
 <tr><td>Gemini 3.1</td><td>N</td><td>0.891</td><td>0.884</td><td>0.834</td><td>0.828</td></tr>
 <tr><td>Gemini 3.1</td><td>A</td><td>0.917</td><td>0.911</td><td>0.840</td><td>0.823</td></tr>
 <tr><td>Gemini 3.1</td><td>B</td><td>0.998</td><td>0.985</td><td>0.998</td><td>0.985</td></tr>
-<tr><td>Claude Thinking</td><td>N</td><td>0.728</td><td>0.685</td><td>0.592</td><td>0.552</td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>0.728</td><td>0.685</td><td>0.593</td><td>0.552</td></tr>
 <tr><td>Claude Thinking</td><td>A</td><td>0.772</td><td>0.754</td><td>0.631</td><td>0.604</td></tr>
 <tr><td>Claude Thinking</td><td>B</td><td>1.000</td><td>0.998</td><td>0.991</td><td>0.989</td></tr>
 <tr><td><strong>All</strong></td><td></td><td><strong>0.810</strong></td><td>0.777</td><td>0.730</td><td>0.691</td></tr>
@@ -111,7 +111,7 @@ Counting and transcription, per page, so the counts are whole numbers against a 
 <tr><td>GPT</td><td>26–34</td><td>0.42</td><td>3%</td><td>30–34</td><td>0.42</td><td>5%</td><td>37</td><td>0.00</td><td>97%</td></tr>
 <tr><td>Gemini 2.5</td><td>24–36</td><td>0.55</td><td>6%</td><td>35–37</td><td>0.34</td><td>5%</td><td>37</td><td>0.00</td><td>97%</td></tr>
 <tr><td>Gemini 3.1</td><td>34</td><td>0.26</td><td>26%</td><td>36</td><td>0.20</td><td>22%</td><td>37</td><td>0.00</td><td>97%</td></tr>
-<tr><td>Claude Thinking</td><td>30–35</td><td>0.32</td><td>11%</td><td>34–36</td><td>0.29</td><td>10%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+<tr><td>Claude Thinking</td><td>30–35</td><td>0.32</td><td>12%</td><td>34–36</td><td>0.29</td><td>10%</td><td>37</td><td>0.00</td><td>97%</td></tr>
 </tbody></table>
 <h3>Page 39 — 10 unique named travelers</h3>
 <table>
