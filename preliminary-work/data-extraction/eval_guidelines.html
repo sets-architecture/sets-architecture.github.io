@@ -20,7 +20,7 @@ td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-21<br>Source updated: 2026-08-21<br>Scoring inputs: ground truth <code>87535c64</code>, evaluate.py <code>19dedec2</code>, rules <code>575192c4</code></p>
+<p class="dates">Page generated: 2026-08-22<br>Source updated: 2026-08-22<br>Scoring inputs: ground truth <code>87535c64</code>, evaluate.py <code>43780bce</code>, rules <code>575192c4</code></p>
 <h1>Evaluation Guidelines — Data Extraction</h1>
 <p>
 This document defines how model responses are scored against ground truth in the
@@ -85,11 +85,11 @@ Each model row is greedily paired with at most one GT row by <strong>name simila
 <li>Names are normalized: curly apostrophe straightened, lowercased, whitespace</li>
 </ul>
 <p>
-  collapsed, punctuation stripped. A <code>?</code> (illegible-glyph marker) is kept and
+  collapsed, punctuation stripped. A <code>?</code> (illegible-glyph marker) is a
 <br>
-  compared <strong>literally</strong> — it is not a wildcard, so a model that reads a real
+  <strong>wildcard</strong>: it matches any single character at no cost. See &quot;Reading what the
 <br>
-  letter where the verifier could not read one is charged for the difference. The quondam abbreviation variants
+  verifier could not&quot; below. The quondam abbreviation variants
 <br>
   (<code>q.m</code> / <code>q.m.</code> / <code>qm</code> / <code>q</code> / <code>q(uonda)m</code> / <code>q(uondam)</code> / <code>quondam</code>) are first
 <br>
@@ -136,11 +136,102 @@ The two are not independent. Tightening the gate raises F1&#x27;s selectivity an
 <br>
 reverse. So CER must always be read against the gate it was computed under.
 </p>
+<p>
+<strong>Reading what the verifier could not.</strong> A <code>?</code> in the ground truth is the verifier
+<br>
+saying &quot;I cannot read this glyph&quot; — one <code>?</code> per unreadable character, the same
+<br>
+convention the collection prompt gave the models. It is scored as a <strong>wildcard</strong>,
+<br>
+in the gate and in name CER alike: a model that reads a letter where the verifier
+<br>
+could not may be reading the hand better than the verifier did, and the answer key
+<br>
+has no standing to call it wrong. Three GT names carry one — <code>Francesco Kin?gsech</code>,
+<br>
+<code>Niccolò ?lelingen</code>, <code>Federico ?gorosd</code>.
+</p>
+<p>
+Three qualifications:
+</p>
 <ul>
-<li>No arrival/departure tiebreak. It existed for GT rows sharing a name; none of</li>
+<li><strong>Ground-truth side only.</strong> Models also emit <code>?</code> as an uncertainty hedge on names</li>
 </ul>
 <p>
-  the three pages has one, and it changed the pairing in 0 of 450 images.
+  the register records in full (<code>Pavel (?)</code>, <code>Regina (Vedova?)</code>). That is a model
+<br>
+  declining to read, not a verifier declining to read, and it is compared literally.
+<br>
+  A symmetric rule would let a model buy characters back by hedging.
+</p>
+<ul>
+<li><strong>Exactly one character, never zero.</strong> <code>?</code> asserts a glyph is present. A model</li>
+</ul>
+<p>
+  that reads no glyph at all — <code>Kingsech</code> against <code>Kin?gsech</code> — is disagreeing
+<br>
+  about how many characters are there rather than out-reading the verifier, and
+<br>
+  still pays for the deletion.
+</p>
+<ul>
+<li><strong>It moves detection as well as transcription.</strong> Where a model copied the <code>?</code>,</li>
+</ul>
+<p>
+  or read a letter and still landed close, the pair already cleared 0.70 and only
+<br>
+  its CER changes. But a model that attempted the glyph and was otherwise imperfect
+<br>
+  could fall <em>below</em> the gate on the strength of that one character, and the
+<br>
+  traveler then counted as missed. Under the wildcard, 24 image-scorings recover a
+<br>
+  match — <code>Niccolò ?lelingen</code> 11, <code>Federico ?gorosd</code> 9, <code>Francesco Kin?gsech</code> 4 —
+<br>
+  raising F1 in 21 of 150 runs and lowering it in none. The effect is monotone by
+<br>
+  construction: resolving <code>?</code> can only raise a similarity, so no pairing is broken.
+</p>
+<p>
+  Those gains are concentrated in phase N, where models had no guidance telling
+<br>
+  them to mark an unreadable glyph and so attempted a reading instead. Five of the
+<br>
+  15 published (model, phase) cells move, by +0.0015 to +0.0158 F1.
+</p>
+<p>
+  Recovered matches also raise CER in 19 runs, because a row that was below the
+<br>
+  gate was there for being badly read, and it now joins the pool it was excluded
+<br>
+  from. Every CER increase is a run that gained a match; no existing pair scored
+<br>
+  worse. This is the gate/CER coupling described above, and the reason the two
+<br>
+  numbers must be read together.
+</p>
+<p>
+This was compared literally until 2026-08-22. <code>analyze_name_precision.py</code> had
+<br>
+implemented the wildcard from the start, so the CER in the scoring-method page and
+<br>
+the CER in <code>scores_summary.csv</code> disagreed on these three names. Both now read the
+<br>
+semantics from <code>evaluate.resolve_illegible</code>.
+</p>
+<ul>
+<li>No arrival/departure tiebreak. It existed only to choose between **two GT rows</li>
+</ul>
+<p>
+  bearing the same name**; no name repeats in any of the three GT files, so it
+<br>
+  changed the pairing in none of the 450 image scorings (3 pages × 150 runs). This
+<br>
+  is not a claim about the dates: the task is one row per unique traveler carrying
+<br>
+  both dates when the source records both, so page 28&#x27;s <code>Mandolin Todros</code> arrives
+<br>
+  9 February and departs 13 February in a single row.
 </p>
 <p>
 <code>name</code> is used <strong>only</strong> as the matching key — it is not itself scored as a field.
@@ -222,7 +313,13 @@ Applied to every text field (title, dates, and — as the first layer — places
 <br>
    are <strong>not</strong> stripped.
 <br>
-4. Strip a trailing <code>?</code> from <strong>GT</strong> tokens (illegible marker).
+4. Strip a trailing <code>?</code> from <strong>GT</strong> tokens (illegible marker) before the
+<br>
+   equivalence lookup, so a marked token still finds its dictionary entry. This is
+<br>
+   a lookup aid, not the name wildcard of §2 — it applies to the non-name text
+<br>
+   fields and removes the marker rather than matching through it.
 <br>
 5. Apply the single-token equivalences for that field from
 <br>
