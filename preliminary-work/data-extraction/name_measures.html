@@ -3,6 +3,9 @@
 body{font-family:system-ui,-apple-system,sans-serif;max-width:1700px;margin:1.5rem auto;padding:0 1rem;color:#222;line-height:1.45}
 h1{font-size:1.35rem}h2{font-size:1.05rem;margin-top:2rem;border-bottom:1px solid #ccc;padding-bottom:3px}
 p.meta{font-size:.85rem;color:#555;margin:.2rem 0 1rem}.back{font-size:.82rem;margin-bottom:1rem}
+.decision{border:1px solid #cfd8e3;background:#f4f7fb;border-left:4px solid #1858a7;
+ border-radius:3px;padding:.6rem .9rem;margin:1rem 0 1.5rem;font-size:.85rem;line-height:1.5}
+.decision p{margin:.4rem 0}
 .back a{color:#1a5fa8;text-decoration:none}
 .toolbar{position:sticky;top:0;z-index:5;background:#f6f6f6;border:1px solid #ddd;border-radius:6px;padding:.6rem .9rem;margin-bottom:1.2rem;font-size:.82rem}
 table.vt{border-collapse:collapse;font-size:.8rem;margin:.2rem 0 1.2rem}
@@ -39,20 +42,98 @@ td.extra { background: #fff8e1; }
 td .score { color: #888; font-size: 0.7rem; margin-left: 4px; }
 .dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }</style></head><body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-21<br>Data (model runs) generated: 2026-07-23</p>
+<p class="dates">Page generated: 2026-08-21<br>Data (model runs) generated: 2026-07-23<br>Scoring inputs: ground truth <code>87535c64</code>, evaluate.py <code>19dedec2</code>, rules <code>575192c4</code></p>
 <h1>Name similarity measures compared</h1>
 <p class="meta">Every distinct (GT name, model name) pair, scored by each candidate.
 All measures run on the same reduced name — §1 reductions already applied — so the
-measure is the only variable. Green &ge; 0.999, yellow &ge; 0.70, red below the gate.
+measure is the only variable. Green &ge; 0.999, yellow &ge; 0.7, red below the gate.
 Nothing here changes a score.</p>
+
+<div class="decision">
+  <p><b>This page is the evidence behind a decision that is now closed.</b>
+  It was built to choose the <i>matching gate</i> — the measure that decides which
+  ground-truth traveler a model row is about. Five candidates were scored over all
+  1737 distinct name pairs in the corpus.</p>
+  <p><b>Adopted: <code>ratcliff</code> at a threshold of 0.7.</b> It is what
+  <code>evaluate.name_similarity</code> computes and what
+  <code>evaluate.match_rows</code> thresholds today. <code>cer</code> was
+  <em>also</em> kept, but for a different job — it is the transcription measure,
+  reported as name CER, and it is never used to gate. <code>ned_max</code>,
+  <code>token_f1</code> and <code>jaro_wink</code> were rejected and are used
+  nowhere in the scorer; they remain here only so the comparison can still be
+  checked.</p>
+  <p>The choice was not cosmetic: <b>1112 of the 1737 pairs are
+  contested</b> — between one and four of the five measures accept them, so the
+  measure alone decides the outcome. The reasoning is in
+  <a href="eval_method.html">The Evaluation Method</a> (&ldquo;the gate and the
+  transcription measure do different jobs&rdquo;) and the decision is recorded as
+  settled in <a href="eval_guidelines.html">Evaluation Guidelines</a> &sect;2.</p>
+</div>
+
+<h2>What the five measures are</h2>
+<table class="vt"><thead><tr><th class="s">measure</th><th class="s">definition</th>
+<th class="s">behaviour that decided it</th><th class="s">status</th></tr></thead><tbody>
+<tr><td class="norm">ratcliff</td>
+    <td class="s">The larger of a Ratcliff-Obershelp ratio (<code>2M/T</code>, matched
+      characters over combined length, taking the longest common block and recursing
+      either side) and exact token-set overlap
+      <code>|A&cap;B| / max(|A|,|B|)</code>.</td>
+    <td class="s">Symmetric and length-stable, and the token arm rescues reordered
+      names. Not an edit distance: characters stranded across an anchor block cannot
+      match.</td>
+    <td class="s"><b>ADOPTED as the gate</b></td></tr>
+<tr><td class="norm">cer</td>
+    <td class="s"><code>1 &minus; levenshtein(gt, model) / len(gt)</code>. A true
+      minimum edit distance, normalized by the <em>reference</em> length.</td>
+    <td class="s">Asymmetric on purpose: appended text is punished as hard as wrong
+      text, and a short name gets almost no tolerance. Right for measuring a
+      transcription, wrong for deciding identity.</td>
+    <td class="s"><b>kept — transcription measure only</b></td></tr>
+<tr><td class="norm">ned_max</td>
+    <td class="s"><code>1 &minus; levenshtein / max(len)</code>. The same edit
+      distance, normalized by the longer of the two strings.</td>
+    <td class="s">Symmetric, bounded and length-stable — the principled fix for
+      CER's asymmetry, but it does not buy a different answer often enough to
+      justify changing the gate. It reaches the same accept/reject verdict as
+      <code>ratcliff</code> on <b>1518 of 1737 pairs (87%)</b>, and where the two
+      differ neither is systematically the better call: real misreadings in this
+      register are mostly equal-length substitutions, where Ratcliff-Obershelp and
+      edit distance coincide.</td>
+    <td class="s">rejected</td></tr>
+<tr><td class="norm">token_f1</td>
+    <td class="s">Harmonic mean of token precision and recall, tokens paired greedily
+      and counted as matched at <code>ned_max &ge; 0.80</code>.</td>
+    <td class="s">The record-linkage default, and unusable here: a token either
+      clears its internal 0.80 bar or contributes <em>nothing</em>, so one wrong
+      character in a short name collapses the whole score. See
+      <code>milbank</code>/<code>mxlbxnk</code> in the table below — every other
+      measure gives 0.71, <code>token_f1</code> gives <b>0.00</b>.</td>
+    <td class="s">rejected</td></tr>
+<tr><td class="norm">jaro_wink</td>
+    <td class="s">Jaro-Winkler: Jaro similarity with a bonus for a shared prefix of
+      up to four characters.</td>
+    <td class="s">The only genuine alternative, and rejected because its prefix
+      weighting cannot be tuned. Given names repeat across travelers in this
+      register, so a shared prefix carries little information: it rescues a real
+      traveler (<code>tomaso wolseleye</code>/<code>tomaso wodehouse</code>, 0.88)
+      and admits an apparent stranger (<code>giuseppe magaluzzi</code>/<code>giuseppe
+      braganze</code>, 0.90) by the same mechanism — and the stranger scores
+      <em>higher</em> than the genuine match, so no threshold separates them.</td>
+    <td class="s">rejected</td></tr>
+</tbody></table>
 
 <h2>Length sensitivity</h2>
 <p class="meta">The same number of character errors on GT names of different lengths.
 A measure whose score moves with length cannot be gated by one threshold without
-treating short names more harshly than long ones.</p>
-<table class="vt"><thead><tr><th class="s">GT name</th><th class="s">length</th>
-<th class="s">errors</th>
-<th class="s">ratcliff</th><th class="s">cer</th><th class="s">ned_max</th><th class="s">token_f1</th><th class="s">jaro_wink</th></tr></thead><tbody><tr><td class='norm'>erle</td><td class='num' data-v='4'>4</td><td class='num' data-v='1'>1</td><td class='num partial'>0.75</td><td class='num partial'>0.75</td><td class='num partial'>0.75</td><td class='num bad'>0.00</td><td class='num partial'>0.85</td></tr><tr><td class='norm'>milbank</td><td class='num' data-v='7'>7</td><td class='num' data-v='1'>1</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.91</td></tr><tr><td class='norm'>milbank</td><td class='num' data-v='7'>7</td><td class='num' data-v='2'>2</td><td class='num partial'>0.71</td><td class='num partial'>0.71</td><td class='num partial'>0.71</td><td class='num bad'>0.00</td><td class='num partial'>0.83</td></tr><tr><td class='norm'>israel bassan</td><td class='num' data-v='13'>13</td><td class='num' data-v='1'>1</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.95</td></tr><tr><td class='norm'>israel bassan</td><td class='num' data-v='13'>13</td><td class='num' data-v='2'>2</td><td class='num partial'>0.85</td><td class='num partial'>0.85</td><td class='num partial'>0.85</td><td class='num bad'>0.50</td><td class='num partial'>0.91</td></tr><tr><td class='norm'>israel bassan</td><td class='num' data-v='13'>13</td><td class='num' data-v='3'>3</td><td class='num partial'>0.77</td><td class='num partial'>0.77</td><td class='num partial'>0.77</td><td class='num bad'>0.42</td><td class='num partial'>0.86</td></tr><tr><td class='norm'>girolamo bereton</td><td class='num' data-v='16'>16</td><td class='num' data-v='1'>1</td><td class='num partial'>0.94</td><td class='num partial'>0.94</td><td class='num partial'>0.94</td><td class='num partial'>0.94</td><td class='num partial'>0.96</td></tr><tr><td class='norm'>girolamo bereton</td><td class='num' data-v='16'>16</td><td class='num' data-v='2'>2</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num bad'>0.50</td><td class='num partial'>0.92</td></tr><tr><td class='norm'>girolamo bereton</td><td class='num' data-v='16'>16</td><td class='num' data-v='3'>3</td><td class='num partial'>0.81</td><td class='num partial'>0.81</td><td class='num partial'>0.81</td><td class='num bad'>0.50</td><td class='num partial'>0.82</td></tr><tr><td class='norm'>iosef simon volemburg</td><td class='num' data-v='21'>21</td><td class='num' data-v='1'>1</td><td class='num partial'>0.95</td><td class='num partial'>0.95</td><td class='num partial'>0.95</td><td class='num partial'>0.93</td><td class='num partial'>0.88</td></tr><tr><td class='norm'>iosef simon volemburg</td><td class='num' data-v='21'>21</td><td class='num' data-v='2'>2</td><td class='num partial'>0.90</td><td class='num partial'>0.90</td><td class='num partial'>0.90</td><td class='num bad'>0.67</td><td class='num partial'>0.86</td></tr><tr><td class='norm'>iosef simon volemburg</td><td class='num' data-v='21'>21</td><td class='num' data-v='3'>3</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num bad'>0.60</td><td class='num partial'>0.83</td></tr><tr><td class='norm'>giovanni battista maffoni</td><td class='num' data-v='25'>25</td><td class='num' data-v='1'>1</td><td class='num partial'>0.96</td><td class='num partial'>0.96</td><td class='num partial'>0.96</td><td class='num partial'>0.96</td><td class='num partial'>0.85</td></tr><tr><td class='norm'>giovanni battista maffoni</td><td class='num' data-v='25'>25</td><td class='num' data-v='2'>2</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num bad'>0.67</td><td class='num partial'>0.82</td></tr><tr><td class='norm'>giovanni battista maffoni</td><td class='num' data-v='25'>25</td><td class='num' data-v='3'>3</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num bad'>0.67</td><td class='num partial'>0.82</td></tr></tbody></table>
+treating short names more harshly than long ones. <b>These readings are synthetic,
+not model output</b>: one median-length real GT name is taken from each length band
+and corrupted at fixed positions, so the error count is the only thing that varies.
+That is why a name appears on more than one row — <code>milbank</code> with 1 error
+and again with 2 is the same reference name against two different damaged readings,
+shown in the <i>corrupted reading</i> column.</p>
+<table class="vt"><thead><tr><th class="s">GT name</th><th class="s">corrupted reading</th>
+<th class="s">length</th><th class="s">errors</th>
+<th class="s">ratcliff</th><th class="s">cer</th><th class="s">ned_max</th><th class="s">token_f1</th><th class="s">jaro_wink</th></tr></thead><tbody><tr><td class='norm'>erle</td><td class='norm'>exle</td><td class='num' data-v='4'>4</td><td class='num' data-v='1'>1</td><td class='num partial'>0.75</td><td class='num partial'>0.75</td><td class='num partial'>0.75</td><td class='num bad'>0.00</td><td class='num partial'>0.85</td></tr><tr><td class='norm'>milbank</td><td class='norm'>mxlbank</td><td class='num' data-v='7'>7</td><td class='num' data-v='1'>1</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.91</td></tr><tr><td class='norm'>milbank</td><td class='norm'>mxlbxnk</td><td class='num' data-v='7'>7</td><td class='num' data-v='2'>2</td><td class='num partial'>0.71</td><td class='num partial'>0.71</td><td class='num partial'>0.71</td><td class='num bad'>0.00</td><td class='num partial'>0.83</td></tr><tr><td class='norm'>israel bassan</td><td class='norm'>ixrael bassan</td><td class='num' data-v='13'>13</td><td class='num' data-v='1'>1</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.95</td></tr><tr><td class='norm'>israel bassan</td><td class='norm'>ixraxl bassan</td><td class='num' data-v='13'>13</td><td class='num' data-v='2'>2</td><td class='num partial'>0.85</td><td class='num partial'>0.85</td><td class='num partial'>0.85</td><td class='num bad'>0.50</td><td class='num partial'>0.91</td></tr><tr><td class='norm'>israel bassan</td><td class='norm'>ixraxl xassan</td><td class='num' data-v='13'>13</td><td class='num' data-v='3'>3</td><td class='num partial'>0.77</td><td class='num partial'>0.77</td><td class='num partial'>0.77</td><td class='num bad'>0.42</td><td class='num partial'>0.86</td></tr><tr><td class='norm'>girolamo bereton</td><td class='norm'>gxrolamo bereton</td><td class='num' data-v='16'>16</td><td class='num' data-v='1'>1</td><td class='num partial'>0.94</td><td class='num partial'>0.94</td><td class='num partial'>0.94</td><td class='num partial'>0.94</td><td class='num partial'>0.96</td></tr><tr><td class='norm'>girolamo bereton</td><td class='norm'>gxroxamo bereton</td><td class='num' data-v='16'>16</td><td class='num' data-v='2'>2</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num bad'>0.50</td><td class='num partial'>0.92</td></tr><tr><td class='norm'>girolamo bereton</td><td class='norm'>gxroxamx bereton</td><td class='num' data-v='16'>16</td><td class='num' data-v='3'>3</td><td class='num partial'>0.81</td><td class='num partial'>0.81</td><td class='num partial'>0.81</td><td class='num bad'>0.50</td><td class='num partial'>0.82</td></tr><tr><td class='norm'>iosef simon volemburg</td><td class='norm'>ixsef simon volemburg</td><td class='num' data-v='21'>21</td><td class='num' data-v='1'>1</td><td class='num partial'>0.95</td><td class='num partial'>0.95</td><td class='num partial'>0.95</td><td class='num partial'>0.93</td><td class='num partial'>0.88</td></tr><tr><td class='norm'>iosef simon volemburg</td><td class='norm'>ixsex simon volemburg</td><td class='num' data-v='21'>21</td><td class='num' data-v='2'>2</td><td class='num partial'>0.90</td><td class='num partial'>0.90</td><td class='num partial'>0.90</td><td class='num bad'>0.67</td><td class='num partial'>0.86</td></tr><tr><td class='norm'>iosef simon volemburg</td><td class='norm'>ixsex sxmon volemburg</td><td class='num' data-v='21'>21</td><td class='num' data-v='3'>3</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num partial'>0.86</td><td class='num bad'>0.60</td><td class='num partial'>0.83</td></tr><tr><td class='norm'>giovanni battista maffoni</td><td class='norm'>gxovanni battista maffoni</td><td class='num' data-v='25'>25</td><td class='num' data-v='1'>1</td><td class='num partial'>0.96</td><td class='num partial'>0.96</td><td class='num partial'>0.96</td><td class='num partial'>0.96</td><td class='num partial'>0.85</td></tr><tr><td class='norm'>giovanni battista maffoni</td><td class='norm'>gxovxnni battista maffoni</td><td class='num' data-v='25'>25</td><td class='num' data-v='2'>2</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num partial'>0.92</td><td class='num bad'>0.67</td><td class='num partial'>0.82</td></tr><tr><td class='norm'>giovanni battista maffoni</td><td class='norm'>gxovxnnx battista maffoni</td><td class='num' data-v='25'>25</td><td class='num' data-v='3'>3</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num partial'>0.88</td><td class='num bad'>0.67</td><td class='num partial'>0.82</td></tr></tbody></table>
 
 <h2>Every pair</h2>
 <div class="toolbar">

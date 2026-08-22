@@ -27,12 +27,26 @@
   .legend .ok:before     { background: #146c2e; border-color: #146c2e; }
   .legend .miss:before   { background: #8a3f00; border-color: #8a3f00; }
   .legend .bigmiss:before{ background: #b91c1c; border-color: #b91c1c; }
+  .dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }
 </style>
 </head>
 <body>
 <p class="back"><a href="/preliminary-work/data-extraction/">&larr; Data Extraction</a></p>
 
 <h1>Gemini 3.1 — Named Travelers Across Task Framings</h1>
+<!--
+  This block is TYPED, not generated: the page has no generator, so nothing
+  updates it when the scorer moves. The fingerprints are the ones its figures
+  were checked against. check_freshness.py compares them to the live scoring
+  inputs and reports RE-VERIFY when they diverge — at which point a person has to
+  re-read the numbers and update this block by hand along with them.
+-->
+<p class="dates">
+  Figures verified: 2026-08-21<br>
+  Data (model runs) generated: 2026-07-23<br>
+  Scoring inputs at verification: ground truth <code>87535c64</code>,
+  evaluate.py <code>19dedec2</code>, rules <code>575192c4</code>
+</p>
 <p>
   Same model, same three page images, three task framings. The numbers below are mean counts across 10 t&nbsp;=&nbsp;0 runs.
   This isolates a behaviour that's easy to miss when only one experiment is in view: Gemini 3.1's recall of <em>who is on the page</em>
