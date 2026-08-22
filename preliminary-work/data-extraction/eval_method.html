@@ -58,38 +58,38 @@ Detection precision and recall are still reported, at a 0.70 similarity threshol
 <table>
 <thead><tr><th>Method</th><th>gate</th><th>alignment</th><th>name reductions</th></tr></thead>
 <tbody>
-<tr><td><strong>M1 published</strong></td><td>Ratcliff-Obershelp ratio ≥ 0.70</td><td>greedy, order-blind</td><td>none</td></tr>
-<tr><td><strong>M2 CER gate</strong></td><td>1 − CER ≥ 0.70</td><td>greedy, order-blind</td><td>none</td></tr>
-<tr><td><strong>M3 order-fixed</strong></td><td>1 − CER ≥ 0.70</td><td>Needleman-Wunsch, order-preserving</td><td>none</td></tr>
-<tr><td><strong>M4 proposed</strong></td><td>1 − CER ≥ 0.70</td><td>greedy, order-blind</td><td>titles, articles, origins</td></tr>
+<tr><td><strong>adopted</strong></td><td>Ratcliff-Obershelp ratio ≥ 0.70</td><td>greedy, order-blind</td><td>titles, articles, origins</td></tr>
+<tr><td>original</td><td>Ratcliff-Obershelp ratio ≥ 0.70</td><td>greedy, order-blind</td><td>none — pinned at <code>14e2ef6</code></td></tr>
+<tr><td>cer gate</td><td>1 − CER ≥ 0.70</td><td>greedy, order-blind</td><td>titles, articles, origins</td></tr>
+<tr><td>order-preserving</td><td>1 − CER ≥ 0.70</td><td>Needleman-Wunsch</td><td>none</td></tr>
 </tbody></table>
 <p>
 F1 under each, pooled across the three pages and 10 runs:
 </p>
 <table>
-<thead><tr><th>Model</th><th>Cond</th><th>M1 published</th><th>M2 CER gate</th><th>M3 order-fixed</th><th>M4 proposed</th></tr></thead>
+<thead><tr><th>Model</th><th>Cond</th><th><strong>adopted</strong></th><th>original</th><th>cer gate</th><th>order-preserving</th></tr></thead>
 <tbody>
-<tr><td>Claude</td><td>N</td><td>0.779</td><td>0.608</td><td>0.585</td><td>0.647</td></tr>
-<tr><td>Claude</td><td>A</td><td>0.802</td><td>0.612</td><td>0.596</td><td>0.646</td></tr>
-<tr><td>Claude</td><td>B</td><td>1.000</td><td>0.969</td><td>0.969</td><td>0.969</td></tr>
-<tr><td>GPT</td><td>N</td><td>0.479</td><td>0.156</td><td>0.154</td><td>0.345</td></tr>
-<tr><td>GPT</td><td>A</td><td>0.421</td><td>0.231</td><td>0.231</td><td>0.297</td></tr>
-<tr><td>GPT</td><td>B</td><td>1.000</td><td>0.985</td><td>0.985</td><td>1.000</td></tr>
-<tr><td>Gemini 2.5</td><td>N</td><td>0.626</td><td>0.519</td><td>0.453</td><td>0.536</td></tr>
-<tr><td>Gemini 2.5</td><td>A</td><td>0.706</td><td>0.595</td><td>0.595</td><td>0.607</td></tr>
+<tr><td>Claude</td><td>N</td><td>0.779</td><td>0.715</td><td>0.647</td><td>0.585</td></tr>
+<tr><td>Claude</td><td>A</td><td>0.802</td><td>0.741</td><td>0.646</td><td>0.596</td></tr>
+<tr><td>Claude</td><td>B</td><td>1.000</td><td>1.000</td><td>0.969</td><td>0.969</td></tr>
+<tr><td>GPT</td><td>N</td><td>0.479</td><td>0.304</td><td>0.345</td><td>0.154</td></tr>
+<tr><td>GPT</td><td>A</td><td>0.421</td><td>0.373</td><td>0.297</td><td>0.231</td></tr>
+<tr><td>GPT</td><td>B</td><td>1.000</td><td>0.985</td><td>1.000</td><td>0.985</td></tr>
+<tr><td>Gemini 2.5</td><td>N</td><td>0.626</td><td>0.615</td><td>0.536</td><td>0.453</td></tr>
+<tr><td>Gemini 2.5</td><td>A</td><td>0.706</td><td>0.694</td><td>0.607</td><td>0.595</td></tr>
 <tr><td>Gemini 2.5</td><td>B</td><td>0.999</td><td>0.999</td><td>0.999</td><td>0.999</td></tr>
-<tr><td>Gemini 3.1</td><td>N</td><td>0.891</td><td>0.828</td><td>0.828</td><td>0.834</td></tr>
-<tr><td>Gemini 3.1</td><td>A</td><td>0.917</td><td>0.828</td><td>0.823</td><td>0.840</td></tr>
-<tr><td>Gemini 3.1</td><td>B</td><td>0.998</td><td>0.985</td><td>0.985</td><td>0.998</td></tr>
-<tr><td>Claude Thinking</td><td>N</td><td>0.712</td><td>0.568</td><td>0.552</td><td>0.592</td></tr>
-<tr><td>Claude Thinking</td><td>A</td><td>0.768</td><td>0.621</td><td>0.604</td><td>0.631</td></tr>
-<tr><td>Claude Thinking</td><td>B</td><td>1.000</td><td>0.989</td><td>0.989</td><td>0.991</td></tr>
-<tr><td><strong>All</strong></td><td></td><td><strong>0.807</strong></td><td><strong>0.701</strong></td><td><strong>0.691</strong></td><td><strong>0.730</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>N</td><td>0.891</td><td>0.884</td><td>0.834</td><td>0.828</td></tr>
+<tr><td>Gemini 3.1</td><td>A</td><td>0.917</td><td>0.911</td><td>0.840</td><td>0.823</td></tr>
+<tr><td>Gemini 3.1</td><td>B</td><td>0.998</td><td>0.985</td><td>0.998</td><td>0.985</td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>0.712</td><td>0.685</td><td>0.592</td><td>0.552</td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>0.768</td><td>0.754</td><td>0.631</td><td>0.604</td></tr>
+<tr><td>Claude Thinking</td><td>B</td><td>1.000</td><td>0.998</td><td>0.991</td><td>0.989</td></tr>
+<tr><td><strong>All</strong></td><td></td><td><strong>0.807</strong></td><td>0.777</td><td>0.730</td><td>0.691</td></tr>
 </tbody></table>
 <p>
 Reading across a row shows how much of a model&#x27;s score is an artefact of the instrument. What no column shows is whether the model could read the names — all four are counts of rows that cleared a bar.
 </p>
-<h2>4. What the proposed method reports instead</h2>
+<h2>4. What the adopted method reports</h2>
 <p>
 Counting and transcription, per page, so the counts are whole numbers against a whole-number ground truth:
 </p>
@@ -143,19 +143,22 @@ Plus the composition of the surplus — rows left over once every ground-truth t
 </tbody></table>
 <h2>5. Why this rather than the alternatives</h2>
 <p>
-<strong>A single F1 answers neither question.</strong> F1 counts rows that cleared a similarity bar. GPT in the naive condition scores 0.479 under the published method, which reads as a failure to find the travelers. It is not: on page 39 it reports 9–10 unique named travelers against a ground truth of 10, the same count Gemini 3.1 reports, and then misreads them at 0.48 character error against Gemini 3.1&#x27;s 0.12. The models are equally good at the first question and very unequal at the second. One number cannot say that.
+<strong>A single number answers neither question.</strong> F1 counts rows that cleared a similarity bar. GPT in the naive condition scores 0.479, which reads as a failure to find the travelers. It is not: on page 39 it reports 9–10 unique named travelers against a ground truth of 10, the same count Gemini 3.1 reports, and then misreads them at 0.48 character error against Gemini 3.1&#x27;s 0.12. Equally good at the first question, very unequal at the second. So detection and transcription are reported as two numbers, F1 and name CER.
 </p>
 <p>
-<strong>Ratcliff-Obershelp is not an edit distance (M1 → M2).</strong> <code>difflib</code>&#x27;s ratio anchors on the longest matching block and recurses either side, so characters stranded across the anchor cannot be matched, and the result is not interpretable outside the script that computed it. CER is the field standard for transcription, is a true minimum edit distance, and composes: a page&#x27;s CER is the CER of its concatenated text. The cost of switching is visible in the M1 → M2 column and is large, which is precisely why it should not be left to an incidental choice of library function.
+<strong>The gate and the transcription measure do different jobs, so they are different measures.</strong> The gate decides <em>which traveler a row is about</em>; it is thresholded and then discarded, so a pair at 0.71 and one at 1.00 are identical to F1. Transcription asks <em>how faithfully the name was read</em>, and wants a graded, interpretable, composable number. Ratcliff-Obershelp serves the first and CER the second. Trying to make one measure do both is what produced the original design, where the name&#x27;s reading accuracy appeared in no published figure at all.
 </p>
 <p>
-<strong>But CER must not be the gate (M2 → M4).</strong> Reference-length normalization makes CER asymmetric: appending content to a name is penalised as heavily as getting it wrong, so a model that writes the traveler&#x27;s origin or title into the name field is recorded as having found nobody. The reductions in M4 remove exactly that, and nothing else — the unreduced reading is always retained, so the change can only recover a name, never inflate one.
+<strong>CER is the right instrument for transcription and the wrong one for identity.</strong> Its reference-length denominator is a virtue when measuring error per reference character and a defect when deciding identity: appended content is penalised as heavily as wrong content, so a model that writes the traveler&#x27;s origin or title into the name field is recorded as having found nobody. The <code>cer gate</code> column shows the cost. On this corpus the choice is also less consequential than it looks — Ratcliff-Obershelp, CER and edit distance normalized by the longer string agree to two decimals on equal-length substitutions, which is what most misreadings here are; they disagree on 77 occurrences out of 9,586. Ratcliff was kept because it is already in place and nothing in the evidence justified moving the gate.
 </p>
 <p>
-<strong>Order-preserving alignment costs more than it returns (M3).</strong> Requiring the model&#x27;s row order to follow the ground truth&#x27;s forfeits matches when a model reads across the two columns instead of finishing the left one first, or groups a family together. Both are legitimate readings of a page the prompt never asked to be traversed in a particular order. Order is worth measuring; it is not worth charging to detection.
+<strong>The name reductions are what the <code>adopted</code> column adds over <code>original</code>.</strong> Titles, articles and appended places of origin are removed from the model&#x27;s name before comparing, and the best reading wins — so a reduction can only reveal a name that was buried, never lower a score. That matters because the ground truth itself contains <code>Ernesto di Bargh</code> and <code>De Flamarin</code>, where the connective is part of the name, and <code>Salamon Cormos</code>, whose recorded origin is Cormos. An unconditional strip would damage all three.
 </p>
 <p>
-<strong>The transcription measure must not be conditioned on the match.</strong> Reporting CER only over rows that cleared the threshold measures the names a model read well, by construction. Scoring over the complete unthresholded assignment keeps the failures in the denominator: GPT&#x27;s naive character error is 0.42 measured this way, against 0.16 when computed only over rows that passed the gate.
+<strong>Order-preserving alignment costs more than it returns.</strong> Requiring the model&#x27;s row order to follow the ground truth&#x27;s forfeits matches when a model reads across the two columns instead of finishing the left one first, or groups a family together. Both are legitimate readings of a page the prompt never asked to be traversed in a particular order, and the cost falls almost entirely on one model, which would read as an extraction difference rather than a traversal choice.
+</p>
+<p>
+<strong>The transcription measure is not conditioned on the gate.</strong> Reporting CER only over rows that cleared the threshold would measure the names a model read well, by construction. The gate is set permissively so that marginal readings stay in the pool; the two numbers must therefore be read together, since tightening the gate would raise F1&#x27;s selectivity and flatter CER at the same time. GPT&#x27;s naive character error is 0.42 measured this way.
 </p>
 <h2>6. What this method does not do</h2>
 <ul>

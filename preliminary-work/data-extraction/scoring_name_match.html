@@ -44,107 +44,101 @@ So a pair at 0.71 and a pair at 1.00 are indistinguishable in every published nu
 </p>
 <h2>2. The two similarity measures</h2>
 <p>
-<strong>Published</strong> (<code>evaluate.name_similarity</code>) — the larger of two candidates:
+Both run on the <strong>reduced</strong> readings of the model name, not the raw string. <code>evaluate.name_variants</code> generates every reading the EQUIVALENCES.md §1 rules allow — the untouched name, the name with a leading article and title removed, the name with an appended place of origin removed — and the best-scoring one wins. The unreduced form is always among the candidates, so a reduction can reveal a name that was buried but never lower a score. The <code>§1 removed</code> column in the tables below reports which reduction won.
+</p>
+<p>
+<strong>Gate</strong> (<code>evaluate.name_match</code>, applying <code>name_similarity</code> to each reading) — the larger of two candidates:
 </p>
 <ul>
 <li><code>difflib.SequenceMatcher.ratio()</code>, which is Ratcliff-Obershelp: <code>2·M / T</code>, where <code>T</code> is the combined length of both strings and <code>M</code> counts characters matched by taking the longest contiguous block and recursing either side of it. It is <strong>not</strong> an edit distance: characters stranded across an anchor block cannot be matched.</li>
 <li>token-set overlap, <code>|A∩B| / max(|A|,|B|)</code>, requiring whole identical tokens.</li>
 </ul>
 <p>
-<strong>CER-based</strong> (<code>analyze_name_precision.sim</code>) — <code>1 − CER</code>, where <code>CER = levenshtein(gt, model) / len(gt)</code>, a true minimum edit distance normalized by the reference length. This is the measure already used for the eight scored fields, via <code>evaluate.char_accuracy</code>.
+<strong>CER-based</strong> (<code>analyze_name_precision.pair_sim</code>) — <code>1 − CER</code>, where <code>CER = levenshtein(gt, model) / len(gt)</code>, a true minimum edit distance normalized by the reference length. This is the measure already used for the eight scored fields, via <code>evaluate.char_accuracy</code>.
 </p>
 <p>
 They agree on plain substitutions and diverge on length: the combined-length denominator absorbs appended text, the reference-length denominator does not.
 </p>
 <h2>3. Worked cases</h2>
 <p>
-<code>name sim</code> columns are computed on the untouched strings. <code>title score</code> and <code>origin score</code> are the scorer&#x27;s own per-field results for the same row, so a row can show a correct title <em>and</em> a failed name match caused by that same title.
+<strong><code>gate, no §1</code></strong> is the similarity on the untouched string — what this page reported before the §1 rules were wired into the scorer. <strong><code>gate</code></strong> is what <code>evaluate.match_rows</code> actually applies. The difference between the two columns is the rules doing their job. <code>title score</code> and <code>origin score</code> are the scorer&#x27;s own per-field results for the same row.
 </p>
-<h3>Title conflated into the name, and duplicated in its own field</h3>
 <p>
-Page 39 — GT traveler <strong>Baissen</strong>. GPT reports <code>title</code> correctly as <em>Barone</em> and also prefixes it to the name. The title is not wrong — it is in two places at once, and the copy in the name field is what breaks the match.
+Conflation no longer costs a match by itself: wherever <code>§1 removed</code> is non-empty, the added title, article or origin was taken off before the comparison, and what is left is the reading of the name. Two things the reduction does <strong>not</strong> fix are visible below — a short name misread is still rejected on its own merits, and a higher gate score lets some genuinely wrong readings clear 0.7 that previously fell short.
+</p>
+<h3>Conflation removed, and the row is still lost — to the reading, not the title</h3>
+<p>
+Page 39 — GT traveler <strong>Baissen</strong>. GPT reports <code>title</code> correctly as <em>Barone</em> and also prefixes it to the name. §1 takes the title back off, so the comparison is <code>Bassa</code> against <code>Baissen</code>: three wrong characters in a seven-character name. The row is rejected on the reading alone. This case used to be presented as conflation breaking the match; the title was never the reason it would fail today.
 </p>
 <table>
-<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, no §1</th><th><strong>gate</strong></th><th>name CER</th><th>§1 removed</th><th>title score</th><th>origin score</th></tr></thead>
 <tbody>
-<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Baissen</strong></td><td><strong>Barone</strong></td><td><strong>Sassonia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>GPT A</td><td>7</td><td>Il Barone Bassa</td><td>Barone</td><td>Sassonia</td><td>0.364</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Barone</td><td>Sassonia</td><td>0.320</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>GPT N</td><td>3</td><td>Il barone Bassa di</td><td>Il barone</td><td>Sassonia</td><td>0.320</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Il Barone</td><td>Sassonia</td><td>0.320</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 N</td><td>10</td><td>Baissen</td><td>Il Barone</td><td>Sassonia</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude B</td><td>10</td><td>Baissen</td><td>Barone</td><td>Sassonia</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Baissen</strong></td><td><strong>Barone</strong></td><td><strong>Sassonia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT A</td><td>7</td><td>Il Barone Bassa</td><td>Barone</td><td>Sassonia</td><td>0.364</td><td><strong>0.667</strong></td><td>0.571</td><td>title/article: il barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Barone</td><td>Sassonia</td><td>0.320</td><td><strong>0.667</strong></td><td>0.571</td><td>title/article: il barone; origin: di</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il barone Bassa di</td><td>Il barone</td><td>Sassonia</td><td>0.320</td><td><strong>0.667</strong></td><td>0.571</td><td>title/article: il barone; origin: di</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Il Barone</td><td>Sassonia</td><td>0.320</td><td><strong>0.667</strong></td><td>0.571</td><td>title/article: il barone; origin: di</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Baissen</td><td>Il Barone</td><td>Sassonia</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Baissen</td><td>Barone</td><td>Sassonia</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
 </tbody></table>
-<h3>Place of origin conflated into the name, and duplicated in its own field</h3>
+<h3>Place of origin conflated into the name, and now absorbed</h3>
 <p>
-Page 28 — GT traveler <strong>Israel Bassan</strong>. The same shape as above with <code>place_of_origin</code>. GPT fills the origin field correctly and appends it to the name.
+Page 28 — GT traveler <strong>Israel Bassan</strong>. GPT fills <code>place_of_origin</code> correctly and also appends it to the name. The raw string falls below threshold; with the appended origin removed the same row matches. Nothing about the model&#x27;s reading changed — only whether the scorer could see it.
 </p>
 <table>
-<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, no §1</th><th><strong>gate</strong></th><th>name CER</th><th>§1 removed</th><th>title score</th><th>origin score</th></tr></thead>
 <tbody>
-<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Israel Bassan</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Verona</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>GPT N</td><td>6</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td>0.154</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>GPT A</td><td>2</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td>0.154</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 2.5 N</td><td>6</td><td>Israel qm Baisan</td><td><em>(blank)</em></td><td>Viena</td><td>0.828</td><td>0.692</td><td>1.00</td><td>0.50</td></tr>
-<tr><td>GPT N</td><td>1</td><td>Israel</td><td><em>(blank)</em></td><td>Verona</td><td>0.632</td><td>0.462</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude Thinking A</td><td>1</td><td>Israel Citti Bajsan</td><td><em>(blank)</em></td><td>Verona</td><td>0.750</td><td>0.462</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude Thinking A</td><td>1</td><td>Israel Osti Bajsan</td><td><em>(blank)</em></td><td>Verona</td><td>0.774</td><td>0.538</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude Thinking A</td><td>1</td><td>Israel q.m Basan</td><td><em>(blank)</em></td><td>Verona</td><td>0.857</td><td>0.692</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Israel Bassan</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Verona</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT N</td><td>6</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td><strong>0.923</strong></td><td>0.923</td><td>origin: di verona</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT A</td><td>2</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td><strong>0.923</strong></td><td>0.923</td><td>origin: di verona</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Israel</td><td><em>(blank)</em></td><td>Verona</td><td>0.632</td><td><strong>0.632</strong></td><td>0.462</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
 </tbody></table>
-<h3>Title conflated into the name, GT name is the bare surname</h3>
+<h3>GT is the bare surname, so the raw string is mostly title</h3>
 <p>
-Page 36 — GT traveler <strong>Tornielli</strong>. GT records only the surname. Every model prefixes the title, so the name string is mostly title.
+Page 36 — GT traveler <strong>Tornielli</strong>. GT records only the surname, so before §1 almost every row here was rejected for carrying a title the model also filed correctly. With the title removed all but the worst misreading now clear the threshold — including <code>Barone Donizelli</code>, where the surname is simply wrong. That is the cost side of the reduction: it raises every score, not only the deserving ones.
 </p>
 <table>
-<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, no §1</th><th><strong>gate</strong></th><th>name CER</th><th>§1 removed</th><th>title score</th><th>origin score</th></tr></thead>
 <tbody>
-<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Tornielli</strong></td><td><strong>Barone</strong></td><td><strong>Milano</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>Claude A</td><td>7</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude N</td><td>6</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>GPT A</td><td>5</td><td>Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.609</td><td>0.111</td><td>1.00</td><td>0.50</td></tr>
-<tr><td>Claude N</td><td>4</td><td>Barone Donzelli</td><td>Barone</td><td>Milano</td><td>0.500</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>Ambasciatore di Milano</td><td>0.538</td><td>0.000</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.538</td><td>0.000</td><td>1.00</td><td>0.50</td></tr>
-<tr><td>Claude A</td><td>2</td><td>Barone Donnielli</td><td>Barone</td><td>Milano</td><td>0.560</td><td>0.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 A</td><td>2</td><td>Barone Tornielli</td><td>S.r</td><td>Milano</td><td>0.720</td><td>0.222</td><td>0.17</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 N</td><td>10</td><td>Tornielli</td><td>Il Barone</td><td>Milano</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude B</td><td>10</td><td>Tornielli</td><td>Barone</td><td>Milano</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Tornielli</strong></td><td><strong>Barone</strong></td><td><strong>Milano</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Claude Thinking N</td><td>1</td><td>Barone Bonnietti</td><td>Barone</td><td>di Milano</td><td>0.400</td><td><strong>0.556</strong></td><td>0.556</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude A</td><td>7</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td><strong>0.778</strong></td><td>0.667</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>6</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td><strong>0.778</strong></td><td>0.667</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT A</td><td>5</td><td>Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.609</td><td><strong>0.875</strong></td><td>0.778</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>4</td><td>Barone Donzelli</td><td>Barone</td><td>Milano</td><td>0.500</td><td><strong>0.706</strong></td><td>0.667</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>Ambasciatore di Milano</td><td>0.538</td><td><strong>0.875</strong></td><td>0.778</td><td>title/article: il barone</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.538</td><td><strong>0.875</strong></td><td>0.778</td><td>title/article: il barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude A</td><td>2</td><td>Barone Donnielli</td><td>Barone</td><td>Milano</td><td>0.560</td><td><strong>0.778</strong></td><td>0.778</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Tornielli</td><td>Il Barone</td><td>Milano</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Tornielli</td><td>Barone</td><td>Milano</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
 </tbody></table>
 <h3>Three travelers in one row</h3>
 <p>
-Page 36 — GT traveler <strong>Francesco Mazuchelli</strong>. The document writes the three brothers on one line and GT expands them to three rows. A model that transcribes the line faithfully produces one row.
+Page 36 — GT traveler <strong>Francesco Mazuchelli</strong>. The document writes the three brothers on one line and GT expands them to three rows. A model that transcribes the line faithfully produces one row. §1 does not help here, and it hurts once: stripping <em>Conte</em> lifts <code>Conte Francesco Alberti</code> over the threshold, matching a traveler it is not.
 </p>
 <table>
-<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, no §1</th><th><strong>gate</strong></th><th>name CER</th><th>§1 removed</th><th>title score</th><th>origin score</th></tr></thead>
 <tbody>
-<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Francesco Mazuchelli</strong></td><td><strong>Conte</strong></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>GPT N</td><td>1</td><td>Conte Francesco Alberti</td><td>Conte</td><td>Savoia</td><td>0.605</td><td>0.350</td><td>1.00</td><td>0.29</td></tr>
-<tr><td>GPT N</td><td>1</td><td>Conte Francesco di ... Marchetti</td><td>Conte</td><td>S. ... / Grecia</td><td>0.667</td><td>0.350</td><td>1.00</td><td>0.00</td></tr>
-<tr><td>Gemini 3.1 A</td><td>4</td><td>Francesco Filippo Mazzuchelli</td><td>Conte</td><td>Brescia</td><td>0.816</td><td>0.550</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 A</td><td>4</td><td>Francesco Filippo Mazzuchelli</td><td>Signor Conte</td><td>Brescia</td><td>0.816</td><td>0.550</td><td>0.00</td><td>1.00</td></tr>
-<tr><td>GPT A</td><td>4</td><td>Gio. Francesco Marchetti</td><td><em>(blank)</em></td><td>S. Marino</td><td>0.744</td><td>0.600</td><td>0.00</td><td>0.00</td></tr>
-<tr><td>Gemini 2.5 A</td><td>3</td><td>Francesco Mariscotti</td><td>Conte</td><td>Bologna</td><td>0.650</td><td>0.650</td><td>1.00</td><td>0.29</td></tr>
-<tr><td>Claude Thinking N</td><td>2</td><td>Francesco Filippo Marchelli</td><td>Conte</td><td>Brescia</td><td>0.766</td><td>0.500</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 A</td><td>2</td><td>Francesco Filippo Mazzuchelli</td><td>Co:</td><td>Brescia</td><td>0.816</td><td>0.550</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude Thinking B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td>1.000</td><td>1.00</td><td>1.00</td></tr>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Francesco Mazuchelli</strong></td><td><strong>Conte</strong></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Conte Francesco Alberti</td><td>Conte</td><td>Savoia</td><td>0.605</td><td><strong>0.703</strong></td><td>0.650</td><td>title/article: conte</td><td>1.00</td><td>0.29</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Conte Francesco di ... Marchetti</td><td>Conte</td><td>S. ... / Grecia</td><td>0.667</td><td><strong>0.762</strong></td><td>0.650</td><td>title/article: conte</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 2.5 A</td><td>3</td><td>Francesco Mariscotti</td><td>Conte</td><td>Bologna</td><td>0.650</td><td><strong>0.650</strong></td><td>0.650</td><td><em>(blank)</em></td><td>1.00</td><td>0.29</td></tr>
+<tr><td>Claude Thinking N</td><td>1</td><td>Archiciato Malucelli</td><td><em>(blank)</em></td><td>Leccia</td><td>0.650</td><td><strong>0.650</strong></td><td>0.550</td><td><em>(blank)</em></td><td>0.00</td><td>0.57</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude Thinking B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td><strong>1.000</strong></td><td>1.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
 </tbody></table>
 <h3>Control: a long name absorbs the same number of errors</h3>
 <p>
-Page 39 — GT traveler <strong>Giovanni Battista Maffoni</strong>. Nothing is conflated here. It is included to show what the same character error rate does to a long reference.
+Page 39 — GT traveler <strong>Giovanni Battista Maffoni</strong>. Nothing is conflated here, so <code>§1 removed</code> is empty throughout and the two gate columns agree. Included to show what the same character error rate does to a long reference.
 </p>
 <table>
-<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>name sim (published)</th><th>name sim (CER)</th><th>title score</th><th>origin score</th></tr></thead>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, no §1</th><th><strong>gate</strong></th><th>name CER</th><th>§1 removed</th><th>title score</th><th>origin score</th></tr></thead>
 <tbody>
-<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Giovanni Battista Maffoni</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td>GPT N</td><td>8</td><td>Giovanni Bati Massoni di</td><td><em>(blank)</em></td><td>Brescia</td><td>0.776</td><td>0.640</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 2.5 N</td><td>4</td><td>Giovanni Bata Mafanili</td><td><em>(blank)</em></td><td>Brescia</td><td>0.809</td><td>0.680</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 2.5 A</td><td>3</td><td>Giovanni Bata Mafanili</td><td><em>(blank)</em></td><td>di Brescia</td><td>0.809</td><td>0.680</td><td>1.00</td><td>0.57</td></tr>
-<tr><td>GPT N</td><td>2</td><td>Giovanni Batti Massoni di</td><td><em>(blank)</em></td><td>Brescia</td><td>0.800</td><td>0.680</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Claude N</td><td>10</td><td>Giovanni Batta Maffoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.936</td><td>0.880</td><td>1.00</td><td>1.00</td></tr>
-<tr><td>Gemini 3.1 N</td><td>10</td><td>Giovanni Batta Massoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.851</td><td>0.800</td><td>1.00</td><td>1.00</td></tr>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Giovanni Battista Maffoni</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Claude N</td><td>10</td><td>Giovanni Batta Maffoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.936</td><td><strong>0.936</strong></td><td>0.880</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Giovanni Batta Massoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.851</td><td><strong>0.851</strong></td><td>0.800</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
 </tbody></table>
 <h3>Several travelers in one row</h3>
 <p>
@@ -170,11 +164,14 @@ Not conflation, but the same arithmetic. <code>title</code> is scored by charact
 <p>
 CER divides by the length of the GT name, so the same number of wrong characters produces opposite verdicts depending on how long the name is:
 </p>
+<p>
+The verdict column is the <strong>gate&#x27;s</strong>, not CER&#x27;s. An earlier version of this table compared <code>1 − CER</code> against the gate&#x27;s 0.70 threshold, which is the wrong measure for that cutoff — the gate is Ratcliff-Obershelp. Both are shown so the divergence is visible.
+</p>
 <table>
-<thead><tr><th>GT name</th><th>model reading</th><th>characters wrong</th><th>reference length</th><th>CER sim</th><th>verdict</th></tr></thead>
+<thead><tr><th>GT name</th><th>model reading</th><th>characters wrong</th><th>reference length</th><th>CER</th><th>gate</th><th>verdict</th></tr></thead>
 <tbody>
-<tr><td>Baissen</td><td>Bassa</td><td>3</td><td>7</td><td>0.571</td><td><strong>rejected</strong></td></tr>
-<tr><td>Giovanni Battista Maffoni</td><td>Giovanni Battesta Maffoni</td><td>1</td><td>25</td><td>0.960</td><td>matched</td></tr>
+<tr><td>Baissen</td><td>Bassa</td><td>3</td><td>7</td><td>0.571</td><td>0.667</td><td><strong>rejected</strong></td></tr>
+<tr><td>Giovanni Battista Maffoni</td><td>Giovanni Battesta Maffoni</td><td>1</td><td>25</td><td>0.960</td><td>0.960</td><td>matched</td></tr>
 </tbody></table>
 <p>
 The shortest names on a page are the easiest to read and the hardest to match.
@@ -221,25 +218,28 @@ table.rowcount td.cer { font-variant-numeric: tabular-nums; }
 <p style="font-size:0.8rem;color:#666;margin-top:-0.8rem"><b>rows returned</b> is the raw count of per-traveler rows the model produced, before any scoring &mdash; range across the 10 runs, with the median and its distance from the ground-truth count. <b>matched</b> is the mean number of those rows that paired with a real GT traveler, and <b>unmatched</b> the remainder. <b>name CER</b> is the character error rate of the traveler names on the matched rows, micro-averaged as total edits over total reference length so it composes across pages. Detection and transcription are separate questions, reported separately: a model can return the right number of rows, match all of them, and still have misread the names.</p>
 <h2>6. How often the right value lands in the wrong field</h2>
 <p>
-Counted over <strong>all</strong> rows a model produced, matched or not — a matched-only count cannot see the rows the conflation destroyed, which are the ones that matter. <em>also correct in its own field</em> = the model filled that field correctly as well, so it duplicated the value rather than misfiling it. <em>row lost</em> = the name match failed, costing a false positive and a missed traveler.
+Counted over <strong>all</strong> rows a model produced, matched or not, and over the scorer&#x27;s own pairing (<code>evaluate.match_rows</code>) rather than a separate one. <em>also correct in its own field</em> = the model filled that field correctly as well, so it duplicated the value rather than misfiling it. <em>row lost</em> = the name match failed, costing a false positive and a missed traveler.
+</p>
+<p>
+Read <em>row lost</em> as a residue, not as the cost of conflation: §1 already removed the added title or origin before the match was attempted, so these are rows that failed on the reading of the name even after the reduction. The column stays because it is the honest denominator — a matched-only count cannot see the rows that never made it.
 </p>
 <table>
 <thead><tr><th>Model</th><th>Cond</th><th>Rows</th><th>Title in name</th><th>Origin in name</th><th>value also correct in its own field</th><th>row still matched</th><th>row lost</th></tr></thead>
 <tbody>
-<tr><td>Claude</td><td>N</td><td>629</td><td>37 (5.9%)</td><td>0 (0.0%)</td><td>27 of 37</td><td>27</td><td><strong>10</strong></td></tr>
-<tr><td>Claude</td><td>A</td><td>632</td><td>21 (3.3%)</td><td>0 (0.0%)</td><td>11 of 21</td><td>13</td><td><strong>8</strong></td></tr>
-<tr><td>GPT</td><td>N</td><td>607</td><td>61 (10.0%)</td><td>49 (8.1%)</td><td>101 of 110</td><td>78</td><td><strong>32</strong></td></tr>
-<tr><td>GPT</td><td>A</td><td>675</td><td>34 (5.0%)</td><td>13 (1.9%)</td><td>44 of 47</td><td>36</td><td><strong>11</strong></td></tr>
+<tr><td>Claude</td><td>N</td><td>629</td><td>62 (9.9%)</td><td>0 (0.0%)</td><td>49 of 62</td><td>46</td><td><strong>16</strong></td></tr>
+<tr><td>Claude</td><td>A</td><td>632</td><td>23 (3.6%)</td><td>0 (0.0%)</td><td>11 of 23</td><td>22</td><td><strong>1</strong></td></tr>
+<tr><td>GPT</td><td>N</td><td>607</td><td>61 (10.0%)</td><td>60 (9.9%)</td><td>104 of 121</td><td>100</td><td><strong>21</strong></td></tr>
+<tr><td>GPT</td><td>A</td><td>675</td><td>34 (5.0%)</td><td>15 (2.2%)</td><td>44 of 49</td><td>38</td><td><strong>11</strong></td></tr>
 <tr><td>GPT</td><td>B</td><td>650</td><td>10 (1.5%)</td><td>0 (0.0%)</td><td>5 of 10</td><td>10</td><td><strong>0</strong></td></tr>
 <tr><td>Gemini 3.1</td><td>N</td><td>630</td><td>4 (0.6%)</td><td>0 (0.0%)</td><td>0 of 4</td><td>4</td><td><strong>0</strong></td></tr>
 <tr><td>Gemini 3.1</td><td>A</td><td>650</td><td>6 (0.9%)</td><td>0 (0.0%)</td><td>0 of 6</td><td>6</td><td><strong>0</strong></td></tr>
 <tr><td>Gemini 3.1</td><td>B</td><td>652</td><td>9 (1.4%)</td><td>0 (0.0%)</td><td>9 of 9</td><td>9</td><td><strong>0</strong></td></tr>
-<tr><td>Claude Thinking</td><td>N</td><td>614</td><td>20 (3.3%)</td><td>0 (0.0%)</td><td>12 of 20</td><td>15</td><td><strong>5</strong></td></tr>
-<tr><td>Claude Thinking</td><td>A</td><td>628</td><td>12 (1.9%)</td><td>0 (0.0%)</td><td>2 of 12</td><td>6</td><td><strong>6</strong></td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>614</td><td>22 (3.6%)</td><td>0 (0.0%)</td><td>14 of 22</td><td>18</td><td><strong>4</strong></td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>628</td><td>12 (1.9%)</td><td>0 (0.0%)</td><td>2 of 12</td><td>9</td><td><strong>3</strong></td></tr>
 <tr><td>Claude Thinking</td><td>B</td><td>650</td><td>1 (0.2%)</td><td>0 (0.0%)</td><td>0 of 1</td><td>1</td><td><strong>0</strong></td></tr>
 </tbody></table>
 <p>
-Rows where the value is duplicated rather than misfiled are the important ones: the model read the document correctly and the loss is entirely an artifact of where it wrote the value.
+The <em>title in name</em> and <em>origin in name</em> counts are still worth reading on their own: they measure how often a model puts a value somewhere the schema did not ask for, which is a question about instruction-following rather than about transcription, and the §1 rules deliberately make it cost nothing.
 </p>
 <hr>
 <p>
