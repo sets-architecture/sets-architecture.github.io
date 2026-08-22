@@ -20,7 +20,7 @@ td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-20<br>Data (model runs) generated: 2026-07-23</p>
+<p class="dates">Page generated: 2026-08-21<br>Data (model runs) generated: 2026-07-23</p>
 <h1>The evaluation method</h1>
 <p>
 What it measures, why it is built this way, and the same model runs scored four ways so the differences can be inspected rather than taken on trust. Every figure on this page is computed by <code>build_eval_method.py</code> from the run checkpoints and the ground-truth CSVs.
@@ -69,22 +69,22 @@ F1 under each, pooled across the three pages and 10 runs:
 <table>
 <thead><tr><th>Model</th><th>Cond</th><th>M1 published</th><th>M2 CER gate</th><th>M3 order-fixed</th><th>M4 proposed</th></tr></thead>
 <tbody>
-<tr><td>Claude</td><td>N</td><td>0.715</td><td>0.608</td><td>0.585</td><td>0.647</td></tr>
-<tr><td>Claude</td><td>A</td><td>0.741</td><td>0.612</td><td>0.596</td><td>0.646</td></tr>
+<tr><td>Claude</td><td>N</td><td>0.779</td><td>0.608</td><td>0.585</td><td>0.647</td></tr>
+<tr><td>Claude</td><td>A</td><td>0.802</td><td>0.612</td><td>0.596</td><td>0.646</td></tr>
 <tr><td>Claude</td><td>B</td><td>1.000</td><td>0.969</td><td>0.969</td><td>0.969</td></tr>
-<tr><td>GPT</td><td>N</td><td>0.304</td><td>0.156</td><td>0.154</td><td>0.350</td></tr>
-<tr><td>GPT</td><td>A</td><td>0.373</td><td>0.231</td><td>0.231</td><td>0.297</td></tr>
-<tr><td>GPT</td><td>B</td><td>0.985</td><td>0.985</td><td>0.985</td><td>1.000</td></tr>
-<tr><td>Gemini 2.5</td><td>N</td><td>0.615</td><td>0.519</td><td>0.453</td><td>0.536</td></tr>
-<tr><td>Gemini 2.5</td><td>A</td><td>0.694</td><td>0.595</td><td>0.595</td><td>0.607</td></tr>
+<tr><td>GPT</td><td>N</td><td>0.479</td><td>0.156</td><td>0.154</td><td>0.345</td></tr>
+<tr><td>GPT</td><td>A</td><td>0.421</td><td>0.231</td><td>0.231</td><td>0.297</td></tr>
+<tr><td>GPT</td><td>B</td><td>1.000</td><td>0.985</td><td>0.985</td><td>1.000</td></tr>
+<tr><td>Gemini 2.5</td><td>N</td><td>0.626</td><td>0.519</td><td>0.453</td><td>0.536</td></tr>
+<tr><td>Gemini 2.5</td><td>A</td><td>0.706</td><td>0.595</td><td>0.595</td><td>0.607</td></tr>
 <tr><td>Gemini 2.5</td><td>B</td><td>0.999</td><td>0.999</td><td>0.999</td><td>0.999</td></tr>
-<tr><td>Gemini 3.1</td><td>N</td><td>0.884</td><td>0.828</td><td>0.828</td><td>0.834</td></tr>
-<tr><td>Gemini 3.1</td><td>A</td><td>0.911</td><td>0.828</td><td>0.823</td><td>0.840</td></tr>
-<tr><td>Gemini 3.1</td><td>B</td><td>0.985</td><td>0.985</td><td>0.985</td><td>0.998</td></tr>
-<tr><td>Claude Thinking</td><td>N</td><td>0.685</td><td>0.568</td><td>0.552</td><td>0.593</td></tr>
-<tr><td>Claude Thinking</td><td>A</td><td>0.754</td><td>0.621</td><td>0.604</td><td>0.631</td></tr>
-<tr><td>Claude Thinking</td><td>B</td><td>0.998</td><td>0.989</td><td>0.989</td><td>0.991</td></tr>
-<tr><td><strong>All</strong></td><td></td><td><strong>0.777</strong></td><td><strong>0.701</strong></td><td><strong>0.691</strong></td><td><strong>0.730</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>N</td><td>0.891</td><td>0.828</td><td>0.828</td><td>0.834</td></tr>
+<tr><td>Gemini 3.1</td><td>A</td><td>0.917</td><td>0.828</td><td>0.823</td><td>0.840</td></tr>
+<tr><td>Gemini 3.1</td><td>B</td><td>0.998</td><td>0.985</td><td>0.985</td><td>0.998</td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>0.712</td><td>0.568</td><td>0.552</td><td>0.592</td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>0.768</td><td>0.621</td><td>0.604</td><td>0.631</td></tr>
+<tr><td>Claude Thinking</td><td>B</td><td>1.000</td><td>0.989</td><td>0.989</td><td>0.991</td></tr>
+<tr><td><strong>All</strong></td><td></td><td><strong>0.807</strong></td><td><strong>0.701</strong></td><td><strong>0.691</strong></td><td><strong>0.730</strong></td></tr>
 </tbody></table>
 <p>
 Reading across a row shows how much of a model&#x27;s score is an artefact of the instrument. What no column shows is whether the model could read the names — all four are counts of rows that cleared a bar.
@@ -109,9 +109,9 @@ Counting and transcription, per page, so the counts are whole numbers against a 
 <tbody>
 <tr><td>Claude</td><td>34–35</td><td>0.30</td><td>11%</td><td>34–35</td><td>0.34</td><td>12%</td><td>37</td><td>0.00</td><td>97%</td></tr>
 <tr><td>GPT</td><td>26–34</td><td>0.42</td><td>3%</td><td>30–34</td><td>0.42</td><td>5%</td><td>37</td><td>0.00</td><td>97%</td></tr>
-<tr><td>Gemini 2.5</td><td>24–36</td><td>0.53</td><td>6%</td><td>35–37</td><td>0.34</td><td>5%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+<tr><td>Gemini 2.5</td><td>24–36</td><td>0.55</td><td>6%</td><td>35–37</td><td>0.34</td><td>5%</td><td>37</td><td>0.00</td><td>97%</td></tr>
 <tr><td>Gemini 3.1</td><td>34</td><td>0.26</td><td>26%</td><td>36</td><td>0.20</td><td>22%</td><td>37</td><td>0.00</td><td>97%</td></tr>
-<tr><td>Claude Thinking</td><td>30–35</td><td>0.32</td><td>12%</td><td>34–36</td><td>0.29</td><td>10%</td><td>37</td><td>0.00</td><td>97%</td></tr>
+<tr><td>Claude Thinking</td><td>30–35</td><td>0.32</td><td>11%</td><td>34–36</td><td>0.29</td><td>10%</td><td>37</td><td>0.00</td><td>97%</td></tr>
 </tbody></table>
 <h3>Page 39 — 10 unique named travelers</h3>
 <table>
@@ -130,8 +130,8 @@ Plus the composition of the surplus — rows left over once every ground-truth t
 <thead><tr><th>Model</th><th>Cond</th><th>surplus rows</th><th>composition</th></tr></thead>
 <tbody>
 <tr><td>Claude</td><td>A</td><td>10</td><td>double-listed 10</td></tr>
-<tr><td>GPT</td><td>N</td><td>12</td><td>fabricated 10, double-listed 1, bad read 1</td></tr>
-<tr><td>GPT</td><td>A</td><td>71</td><td>fabricated 69, bad read 2</td></tr>
+<tr><td>GPT</td><td>N</td><td>12</td><td>fabricated 9, bad read 2, double-listed 1</td></tr>
+<tr><td>GPT</td><td>A</td><td>71</td><td>fabricated 49, bad read 22</td></tr>
 <tr><td>Gemini 2.5</td><td>N</td><td>16</td><td>double-listed 6, fabricated 6, fragment 4</td></tr>
 <tr><td>Gemini 2.5</td><td>A</td><td>25</td><td>fabricated 20, double-listed 5</td></tr>
 <tr><td>Gemini 2.5</td><td>B</td><td>1</td><td>double-listed 1</td></tr>
@@ -143,7 +143,7 @@ Plus the composition of the surplus — rows left over once every ground-truth t
 </tbody></table>
 <h2>5. Why this rather than the alternatives</h2>
 <p>
-<strong>A single F1 answers neither question.</strong> F1 counts rows that cleared a similarity bar. GPT in the naive condition scores 0.304 under the published method, which reads as a failure to find the travelers. It is not: on page 39 it reports 9–10 unique named travelers against a ground truth of 10, the same count Gemini 3.1 reports, and then misreads them at 0.48 character error against Gemini 3.1&#x27;s 0.12. The models are equally good at the first question and very unequal at the second. One number cannot say that.
+<strong>A single F1 answers neither question.</strong> F1 counts rows that cleared a similarity bar. GPT in the naive condition scores 0.479 under the published method, which reads as a failure to find the travelers. It is not: on page 39 it reports 9–10 unique named travelers against a ground truth of 10, the same count Gemini 3.1 reports, and then misreads them at 0.48 character error against Gemini 3.1&#x27;s 0.12. The models are equally good at the first question and very unequal at the second. One number cannot say that.
 </p>
 <p>
 <strong>Ratcliff-Obershelp is not an edit distance (M1 → M2).</strong> <code>difflib</code>&#x27;s ratio anchors on the longest matching block and recurses either side, so characters stranded across the anchor cannot be matched, and the result is not interpretable outside the script that computed it. CER is the field standard for transcription, is a true minimum edit distance, and composes: a page&#x27;s CER is the CER of its concatenated text. The cost of switching is visible in the M1 → M2 column and is large, which is precisely why it should not be left to an incidental choice of library function.
