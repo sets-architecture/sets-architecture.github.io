@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Data Extraction — Deep Sources
-description: Structured data extraction across 3 representative pages and 3 prompt phases.
+title: Data Extraction — Experiment Part II
+description: Structured data extraction across 3 representative pages and 3 prompt conditions.
 ---
 
 <style>
@@ -42,15 +42,15 @@ description: Structured data extraction across 3 representative pages and 3 prom
 
 <div class="dx-page">
 
-<h1>Data Extraction</h1>
-<p class="sub">3 archival document images &middot; 5 models &middot; 3 prompt phases &middot; 10 runs each</p>
+<h1>Data Extraction [Experiment Part II]</h1>
+<p class="sub">3 archival document images &middot; 5 models &middot; 3 prompt conditions &middot; 10 runs for each condition</p>
 <p class="intro">
   Structured data extraction against a 9-field schema (name, titles, dates,
-  place of stay, family, origin, etc.) on three pages chosen to span page density: 18 travelers
+  place of stay, family, origin) on three pages chosen to span content density: 18 travelers
   (page 28, an <i>Ebrei</i> page), 37 travelers (page 36, the densest), and 10 travelers (page 39).
-  Each (model, page) combination is run under three phases — <b>naive</b> (questions only),
-  <b>guided</b> (with expert-authored domain knowledge), and <b>guided + transcription</b>
-  (guidance plus a pre-computed transcription) — for 10 runs each. Scoring reports two separate numbers: <b>F1</b> for whether the right travelers were found, and <b>name CER</b> — character error rate, micro-averaged — for how faithfully their names were read. A model can find every traveler and misread all of them, so neither number substitutes for the other.
+  Each (model, page) combination is run under three conditions — <b>naive</b> (prompt only; N),
+  <b>guided</b> (with expert-authored domain knowledge; A), and <b>guided + transcription</b>
+  (guidance plus a pre-computed transcription; B) — for 10 runs each. 
 </p>
 
 <!-- ============================================================ -->
@@ -59,7 +59,7 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/pages/">Pages &mdash; Image + Transcription Viewer</a></div>
-      <div class="desc">Side-by-side viewer of the three archival pages used in the experiment, with the same transcription text the models received. Switch between pages 28, 36, and 39.</div>
+      <div class="desc">Side-by-side viewer of the three archival document images used in the experiment, with the same transcription text the models received. Press relevant button to switch between pages 28, 36, and 39.</div>
     </div>
   </li>
   <li>
@@ -71,13 +71,13 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/expert_guidance.html">Expert Guidance</a></div>
-      <div class="desc">The domain-knowledge block prepended to the system prompt for guided-condition runs — Venetian archival conventions, the M.V. calendar, named-vs-unnamed traveler rules, family vocabulary, and abbreviations.</div>
+      <div class="desc">The domain-knowledge block added to the system prompt for guided-condition runs — including explanatinons of Venetian archival conventions, the M.V. calendar, named-vs-unnamed traveler rules, family vocabulary, and abbreviations.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/gt_all_pages.html">Ground Truth — All Pages</a></div>
-      <div class="desc">The authoritative per-traveler readings for all three pages in the 9-field schema requested from the models. A single reference for reviewing model output.</div>
+      <div class="desc">The authoritative per-traveler structured output for for all three pages in the 9-field schema against which model outputs are evaluated.</div>
     </div>
   </li>
 </ul>
@@ -88,31 +88,31 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/eval_method.html">The Evaluation Method</a></div>
-      <div class="desc">What the method measures and why it is built this way, with the same runs scored four ways so the alternatives can be inspected rather than taken on trust. Covers the two questions kept separate throughout: how many travelers were found, and how faithfully their names were read.</div>
+      <div class="desc">What the method measures and how it scores model outputs in four different ways (count, align, measure transcription, and characterize what is left over), in explanation of how the method addresses the two separate questions: how many travelers were found, and how faithfully their names were read.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/name_measures.html">Name Similarity Measures Compared</a></div>
-      <div class="desc">Every distinct ground-truth/model name pair scored by five candidate measures — Ratcliff-Obershelp, CER, normalized edit distance, token F1 and Jaro-Winkler — including near-misses and rejects, with a length-sensitivity table. The evidence behind using Ratcliff to decide identity and CER to measure transcription.</div>
+      <div class="desc">Comparison of the different methods explored (Ratcliff-Obershelp, CER, normalized edit distance, token F1 and Jaro-Winkler) to provide evidence for the choice of using Ratcliff to decide identity and CER to measure transcription.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/scoring_name_match.html">Name Matching &amp; Field Conflation</a></div>
-      <div class="desc">Worked cases from the run data: what the name score is and is not, and where a model puts the right value in the wrong field — a title or place of origin written into the name, correct in its own column and breaking the match from the other.</div>
+      <div class="desc">What the name score is, and where a model puts the right value in the wrong field (a title or place of origin written into the name, which is correct in its own column and breaks the match from the other).</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/raw_vs_normalized.html">Raw vs Normalized</a></div>
-      <div class="desc">What normalization and the equivalence rules are actually worth, per page and model in each condition: the same matched rows scored twice, once on the values as recorded and once after the full rule set. Separates the rules' effect on transcription from their effect on detection, and shows it shrinking to nothing as the conditions improve.</div>
+      <div class="desc">What normalization and the equivalence rules are actually worth, per page and model in each condition.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/field_variations.html">Field Value Variations</a></div>
-      <div class="desc">Every distinct model value against the ground-truth value it was scored against, for name, title, place of stay and place of origin, grouped by why the two differ. The adjudication record for which variants are accepted as equivalent.</div>
+      <div class="desc">Raw results from each model and condition used to define both normalization rules and equivalence criteria.</div>
     </div>
   </li>
 </ul>
@@ -123,30 +123,30 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/summary.html">Summary</a></div>
-      <div class="desc">F1 by model and phase, per-field accuracy, per-image F1 variation across runs, and notes on collection caveats. Includes how F1 is calculated for this experiment.</div>
+      <div class="desc">F1 by model and condition, per-field accuracy, per-image F1 variation across runs, and notes on collection caveats. Includes how F1 is calculated for this experiment.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/gemini31_named_travelers.html">Gemini 3.1 &mdash; Named Travelers Across Task Framings</a></div>
-      <div class="desc">Same model, same three page images: direct-count (Q13 naive + guided) vs structured emission (data extraction N / A / B). Isolates the task-framing effect on counting and explains why the two ground truths differ (mentions vs unique rows).</div>
+      <div class="desc">Same model, same three page images: direct-count (Experiment Part 1 Q13 naive + guided) vs structured emission (data extraction N / A / B). Isolates the task-framing effect on counting and explains why the two ground truths differ (mentions vs unique rows).</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/scores_summary.csv">Raw Scores (CSV)</a></div>
-      <div class="desc">Underlying per-image, per-run precision, recall, F1, name CER, and per-field accuracy for every (model, phase, run, page) combination.</div>
+      <div class="desc">Underlying per-image, per-run precision, recall, F1, name CER, and per-field accuracy for every (model, condition, run, page) combination.</div>
     </div>
   </li>
 </ul>
 
 <!-- ============================================================ -->
-<h2>Per-page Analyses <span class="legend">click a pill to view that page</span></h2>
+<h2>Per-page Analyses <span class="legend">click a button to view that page</span></h2>
 <ul class="report-list">
   <li>
     <div class="report-main">
       <div class="report-title">Compare (interactive)</div>
-      <div class="desc">Toggle the best run for any (model, phase) on/off and compare per-field, row-by-row against ground truth. Cells colored green (match) / red (mismatch).</div>
+      <div class="desc">Toggle the best run for any (model, condition) on/off and compare per-field, row-by-row against ground truth. Cells colored green (match) / red (mismatch).</div>
     </div>
     <div class="pair">
       <a class="pill page" href="/preliminary-work/data-extraction/compare_page_28.html">page 28</a>
@@ -157,7 +157,7 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title">Results</div>
-      <div class="desc">Ground truth plus per-model traveler list for each phase.</div>
+      <div class="desc">Ground truth plus per-model traveler list for each condition.</div>
     </div>
     <div class="pair">
       <a class="pill page" href="/preliminary-work/data-extraction/results_page_28.html">page 28</a>
