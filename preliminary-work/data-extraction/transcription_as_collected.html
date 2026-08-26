@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Experimental Transcription Files Used for Phase B — Data Extraction</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 1000px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.6; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.1rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 2rem 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
+  a { color: #1858a7; }
+  p.note { font-size: 0.85rem; color: #555; }
+  p.intro { font-size: 0.9rem; color: #444; }
+  .back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+  table { border-collapse: collapse; font-size: 0.85rem; margin: 0.8rem 0 1.5rem; }
+  th, td { border: 1px solid #ccc; padding: 5px 9px; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; }
+  td:nth-child(1) { text-align: right; white-space: nowrap; }
+  td:nth-child(4) { max-width: 44ch; }
+  .tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 1.2rem 0 0.8rem; }
+  button.tab { font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid #bbb; background: #f7f7f7; border-radius: 4px; cursor: pointer; }
+  button.tab.active { background: #1858a7; border-color: #1858a7; color: #fff; }
+  pre { background: #fafafa; border: 1px solid #ddd; border-radius: 4px; padding: 0.8rem 1rem; overflow-x: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem; line-height: 1.5; tab-size: 8; white-space: pre; }
+  .dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }
+</style>
+</head>
+<body>
+<p class="back"><a href="/preliminary-work/data-extraction/">&larr; Data Extraction</a></p>
+<p class="dates">Page generated: 2026-08-26<br>Transcription as collected: unknown</p>
+
+<h1>Experimental transcription files used for phase B</h1>
+
+<p class="intro">
+  The page viewer shows the <b>corrected</b> transcription. This page shows the
+  transcription <b>as it stood when the phase-B responses were collected</b>, on
+  24 June 2026. The two are not the same text, and every phase-B figure in this
+  study is a measurement against the version below — not against the corrected
+  one.
+</p>
+<p class="intro">
+  The differences matter because phase B <i>is</i> the transcription condition:
+  a model that faithfully copies an erroneous transcription is scored against
+  ground truth that records the correct reading, and is marked wrong for
+  obeying its input. Where that happens it is a property of this experiment,
+  not a finding about the model.
+</p>
+
+
+<h2>Differences that change an extractable value</h2>
+<table>
+  <tr><th>page</th><th>as collected</th><th>corrected</th><th>what it affects</th></tr>
+  <tr><td>36</td><td><code>Todeschin</code></td><td><code>Todeschini</code></td><td>The host's surname, three times on the page. Every phase-B run copied the erroneous form: <b>250 occurrences of <code>Todeschin</code> and none of <code>Todeschini</code></b>, against ground truth reading <code>Todeschini</code>. Re-collected against the corrected text the result inverts exactly — 250 and none the other way.</td></tr>
+<tr><td>39</td><td>&mdash; the line is absent &mdash;</td><td><code>in Santi Apostoli</code></td><td>A parish line missing altogether, so the place of stay for the two English travellers lacked its location. <b>No phase-B run produced it</b>; re-collected against the corrected text, 128 occurrences appear.</td></tr>
+<tr><td>36</td><td><code>Legnano</code></td><td><code>Legnago</code></td><td>A place of origin: Legnago in the Veronese, not Legnano in Lombardy. <b>This one does not behave like the others.</b> Re-collected against a transcription reading <code>Legnago</code>, the models still wrote <code>Legnano</code> — 50 occurrences, none correct. So it is an error in the transcription <i>and</i> an independent substitution the models make on their own; correcting the text does not fix the output.</td></tr>
+<tr><td>28</td><td><code>Tedesco</code></td><td><code>Todesco</code></td><td>A traveller's surname. Phase B split, 40 occurrences copying the erroneous form against 110 producing the correct one, so some runs corrected it against the image.</td></tr>
+<tr><td>28</td><td><code>Argi&egrave;</code></td><td><code>Argi&agrave;</code></td><td>A traveller's given name. Neither form appears in phase-B output under this spelling, so nothing is measurably affected.</td></tr>
+<tr><td>28</td><td><code>//-d(et)to</code></td><td><code>//10 d(et)to</code></td><td>Not a spelling but a <b>date</b>: the day number was missing from the entry, leaving the arrival date of one traveller unstated in the text the models were given.</td></tr>
+</table>
+
+<p>
+  The rest of the diff does not change any extractable value. It is
+  abbreviation rendering (<code>Mons(ignor)</code> &rarr;
+  <code>Mon(signo)r</code>, <code>Cav(alier)</code> &rarr;
+  <code>Cav(alier)e</code>, <code>Mag(giore)</code> &rarr;
+  <code>Mag(gio)r</code>), diacritics (<code>A d&igrave;</code> &rarr;
+  <code>A di</code>), verb forms in the departure formula
+  (<code>allog(giaron)o</code> &rarr; <code>allog(giaro)no</code>), and on page
+  36 a large layout change in which runs of <code>&amp;nbsp;</code> were
+  replaced by tabs.
+</p>
+
+
+<h2>How the collection-time text was established</h2>
+<p>
+  This cannot be read off git alone. The transcriptions were first committed on
+  14 July 2026, three weeks <i>after</i> the phase-B collection of 24 June, so
+  at collection time the files were untracked and git holds no record of that
+  day's contents. What git does show is that the text is byte-identical from its
+  first commit through the commit preceding the corrections, and changes only
+  when the corrections land.
+</p>
+<p>Three independent checks agree that the text below is what was sent:</p>
+<ol>
+  <li><b>What the models echoed.</b> <code>Todeschin</code> 250 / 0 in the
+      phase-B checkpoints and 0 / 250 when re-collected against the corrected
+      text; <code>Santi Apostoli</code> absent in phase B, 128 occurrences on
+      re-collection.</li>
+  <li><b>Input token counts</b> for the same model and image across the two
+      collections. Page 36 falls by 568 tokens (Claude) and 560 (Gemini) — the
+      signature of the <code>&amp;nbsp;</code> runs that only the as-collected
+      version contains. Page 39 rises by 26 and 12, matching the added parish
+      line. GPT's counts move erratically and carry no weight here.</li>
+  <li><b>Ground truth alignment.</b> Each reading difference above resolves
+      toward the ground truth, which is what a correction pass would do.</li>
+</ol>
+<p class="note">
+  The honest limit: an edit made on disk between 24 June and 14 July and never
+  committed would be invisible to all three checks.
+</p>
+
+
+<h2>The transcriptions as collected</h2>
+<p class="note">
+  Emitted verbatim from <code>transcriptions_as_collected/</code>. Whitespace and
+  tabs are preserved, including the layout runs that the corrected version
+  replaces.
+</p>
+<div class="tabs">
+<button class="tab active" data-p="28" onclick="showPage(28)">Page 28</button>
+<button class="tab" data-p="36" onclick="showPage(36)">Page 36</button>
+<button class="tab" data-p="39" onclick="showPage(39)">Page 39</button>
+</div>
+<div class="panel" id="p28"><p class="note">Page 28 &mdash; 20 February 1768 M.V. — 1769. 60 lines, verbatim as sent to the models.</p><pre>20 Feb(brari)o 1768  M(ore) V(eneto) [February 1769]
+[Left column]
+Forastieri Ebrei annotati riferiti dal dep(utat)o
+nella scad(ut)a Sett(iman)a come siegue  ~~
+
+9 Feb(brari)o
+Mandolin Todros di Padova in casa di
+Salomon Levi dal Banco
+		//-d(et)to
+Leon q(uonda)m Iacob Tedesco con moglie, e cinque Fi
+gliuoli di Francford nell’Osp(izi)o de’ Poveri
+		//-d(et)to
+Elia Amnon di Livorno: in Casa del q(uonda)m Be
+niamin Ottolengo
+		//-d(et)to
+Salvador Anau di Ferrara con un Domes(tic)o
+in casa del q(uonda)m Emanuel Pesaro
+		//-d(et)to
+Abram Asdà di Cento in Casa del q(uonda)m Simon
+Todesco
+			//13 d(et)to
+Manassc Pincherle di Verona
+Iosef Simon Volemburg d’Ocheners ambe
+due in Casa del q(uonda)m Emanuel Pesaro
+			//15 d(et)to
+Israel, e David F(rate)lli Bassan di Verona: in
+Casa d’Isach Morpurgo
+			//16 d(et)to
+Iseppo Grego con moglie una figliola ed
+Un Domestico di Verona: in Casa di Benetto
+Polacco
+
+[Right column]
+Forastieri Ebrei partiti e riferiti dal Dep(utat)o nella
+Scad(ut)a Sett(iman)a come siegue ~ ~ ~
+		12 Feb(brai)o
+Aron Arcangiolo di Pesaro partito disse li 11
+Scad(u)to allogiò dal q(uonda)m Beniamin Ottolengo
+		// --d(et)to
+Argiè q(uonda)m Leon Todesco con moglie di Francford 
+p(ar)titi d(isse) li 11 scad(u)to allog(iaro)no all’Osp(izi)o de’Poveri 
+			//13 d(et)to
+David Levi Minzi di Montagnana
+Leon Grassetti di Verona ambedue partiti disse
+li 12 scad(u)to allog(iaro)no q(uonda)m Emanuel Pesaro
+// --d(et)to
+Isach Luzzato di S. [San] Vido partito disse li 12
+scad(u)to allogiò da Samuel Capriles
+// --d(et)to
+Mandolin Todros
+Regina Todros [this line and the above in curly bracket] di Padova
+Partiti disse li 12 scad(u)to allog(iaro)no in
+in Casa di Salomon Levi dal Banco
+		// 14 --d(et)to
+Salamon Cormos da Cormos partito disse li
+13 scad(u)to allogiò in Casa del q(uonda)m Emanuel 
+Pesaro
+		--d(et)to
+La Vedova Gentila di Fer(rar)a partita disse li
+12 scad(u)to allogiò all’Osp(izi)o de’Poveri
+</pre></div>
+<div class="panel" id="p36" hidden><p class="note">Page 36 &mdash; 28 May 1770. 89 lines, verbatim as sent to the models.</p><pre>
+A dì 28 Mag(gi)o 1770
+**[Left column]**
+Forastieri annotati riferiti da cameranti 
+nella scad(ut)a sett(iman)a come siegue. ~
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;A dì 20 Mag(gi)o
+Francesco, e Giuseppe F(rate)lli Radson _ Inglesi 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Giuseppe Braganze di - - -&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Vicenza 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;con un Domestico 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Alla Loc(and)a del Carro S. [San] Moisè 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//-d(et)to
+Il Canonico Pre Giovanni Heyer di Magonza 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Con un Domestico
+Il Co(nte) Francesco Kin?gsech ~ 
+Giuseppe Lisnar&amp;nbsp;&amp;nbsp;&amp;nbsp;~ ~ ~.&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;[this line and the above in curly brackets] ambedue di Baviera 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;con due Domestici
+Il Co(nte) Antonio d&#x27;Atemis&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;~ ~ 
+Giovanni Grober&amp;nbsp;&amp;nbsp;~ ~ ~&amp;nbsp;&amp;nbsp;[this line and the above in curly brackets] ambedue di Gratz 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;con due domestici
+Giuseppe Palmarino 
+Girolamo Borellino 
+Antonio Giroffi&amp;nbsp;&amp;nbsp;[this line and the two above in curly brackets] Tutti e tre 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;di Genova 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Allo Scudo di Francia S. [San] Lucca 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//21 -d(et)to
+Il Cav(alier) Erle con sua moglie 
+Il Cav(alier) Milbank 
+Mons(ignor) Preston&amp;nbsp;&amp;nbsp;[this line and the two above in curly brackets] Tutti Inglesi 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;con quattro Domestici 
+In Casa di Pietro Danna Loc(and)a 
+In S. [San] Gio(vanni) Grisostomo 
+// _d(et)to
+Li con(ti) Francesco, Filippo, e Federico F(rate)lli 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Mazuchelli 
+Pre Antonio Inverardi [this line and the two above in curly brackets] di Brescia 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;con quattro Domestici
+Monsignor Archibald Maclauclan di Scozia 
+Giuseppe Rosè. Inglese 
+Monsignor Deneri 
+Monsignor Desasi 
+L&#x27;Abbate De Flamarin [this line and the two above in curly brackets] Tutti e tre Francesi 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;con cinque Domestici
+Gioseppe Compagnucci di Roma 
+Gaetano Bais di Palermo 
+Il Marc(hese) Cagiupiati 
+Il Barone Tornielli [this line and the above in curly brackets] ambedue di Milano 
+Alli Tre Re S. [San] Lucca
+siegue
+**[Right column]**
+Forastieri partiti riferiti da cameranti 
+nella scad(ut)a Setti(man)a come siegue. ~
+Adi 19 Mag(gi)o
+Andrea Rizzato di Rovigo 
+Partito disse li 18 scad(u)to allogiò 
+in Casa di Valentin Todeschin 
+S. [San] Moisè 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//d(et)to
+Angelo Magaluzzi di --- Cividal del Friuli 
+Giuseppe Missio di Udine 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Partiti disse li 18 scad(u)to allog(giaron)o 
+Alla Ca&#x27; Feltrina Sta: [Santa] Ma: [Maria] Zobenigo 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//d(et)to
+Ernesto di Bargh di --- Hanover 
+con un domestico 
+Partiti disse 18 scad(u)to allog(giaron)o 
+Allo Scudo di Francia S. [San] Lucca 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;// 20 d(et)to
+Don Giuseppe S. [San] Martin di Napoli 
+Ernesto Ludvicho Francese 
+&amp;nbsp;con un Domestico 
+partiti disse li 19 scad(u)to allog(giaron)o 
+Allo Scudo di Francia S. [San] Lucca 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//21 d(et)to
+Girolamo Bereton di Schio 
+Partito disse li 20 scad(u)to allogiò 
+In Casa di Valentin Todeschin 
+Lo(cand)a in S. [San] Moisè 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//26 d(et)to
+Pre Antonio Speranza 
+Baldassare Tavino [this line and the above in curly brackets] ambedue di Udine 
+Niccolò Andrea Luccioni di Legnano 
+Partiti disse li 25 scad(u)to allog(iaron)o 
+in Casa di Valentin Todeschin 
+Lo(cand)a in S. [San] Moisè
+Giovanni Somazzi Dep(uta)to 
+a notar li forastieri
+
+
+
+</pre></div>
+<div class="panel" id="p39" hidden><p class="note">Page 39 &mdash; 20 August 1770. 56 lines, verbatim as sent to the models.</p><pre>AVS IS 758-781 August/20/1770
+Adi 20: Ag(os)to 1770.
+
+[Left column]
+
+Forastieri annotati riferiti da cameranti
+nella scad(ut)a sett(iman)a come siegue. ~ ~
+________________________________________
+
+Adi 13. Ag(os)to
+
+Il Mag(giore) Niccolò ?lelingen _ _ _ Svizzero
+        al servizio del Re di Prussia
+     con un Domestico
+
+Mons.(ignor) William Cotton
+Mons.(ignor) Tomaso Wodehouse [this line and the above in curly bracket] ambedue Inglesi
+con due Domestici
+In Casa di Bon Darij
+            //15: d(et)to
+
+Il Cornetta Antonio Alberti di Schio
+Alla Cortesia S(an)t&#x27;Angelo.
+            //16: d(et)to
+
+Il Barone Baissen di _ _ _ Sassonia
+Alla Regina d&#x27;Ungheria
+S(an) Paternian
+            //20: d(et)to
+
+Federico ?gorosd della _ _ Ucrania
+Ferdinando Zotta di _ _ _ Verona
+Giovanni Battista Maffoni di _ _ _ Brescia
+        Alla Loc(and)a della Verona
+        S(an) Fantin
+
+[Right column]
+
+Forastieri partiti riferiti da cameranti
+nella scad(ut)a Setti(man)a come siegue. ~
+
+Adi 11: Ag(os)to
+
+Carlo Paulovich _ _ _ _ Dalmatiao
+partito disse li 11 scad(ut)o allogiò
+Alla Cà Feltrina S(an)ta Maria
+Zobenigo.
+            //15: d(et)to
+
+Il Co(nte) Gio(vanni) Maria Scetti di _ Bergamo
+partito disse li 14 scad(ut)o allogiò
+Alla Cortesia S(an)t&#x27;Angelo.
+
+
+                Giovanni Somazzi
+                Dep(uta)to a notar li forastieri
+</pre></div>
+
+<script>
+function showPage(pid) {
+  document.querySelectorAll('.panel').forEach(function (el) {
+    el.hidden = (el.id !== 'p' + pid);
+  });
+  document.querySelectorAll('button.tab').forEach(function (b) {
+    b.classList.toggle('active', b.dataset.p === String(pid));
+  });
+}
+</script>
+</body>
+</html>
