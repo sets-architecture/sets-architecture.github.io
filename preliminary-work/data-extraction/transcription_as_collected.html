@@ -40,7 +40,7 @@
 </head>
 <body>
 <p class="back"><a href="/preliminary-work/data-extraction/">&larr; Data Extraction</a></p>
-<p class="dates">Page generated: 2026-08-27<br>Transcription as collected: unknown</p>
+<p class="dates">Page generated: 2026-08-28<br>Transcription as collected: unknown</p>
 
 <h1>Experimental transcription files used for phase B</h1>
 
@@ -113,35 +113,6 @@
 <tr><td>gemini</td><td class="mixed">26&nbsp;neither</td><td class="mixed">5&nbsp;corrected&nbsp;form &middot; 12&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
 <tr><td>gemini31</td><td class="mixed">30&nbsp;neither</td><td class="mixed">18&nbsp;corrected&nbsp;form &middot; 12&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
 <tr class="totrow"><td class="tot">all models</td><td class="tot">126&nbsp;neither<span class="sub">of 126</span></td><td class="tot">38&nbsp;corrected &middot; <b>24&nbsp;transcription</b> &middot; 52&nbsp;neither<span class="sub">of 114</span></td><td class="tot"><b>150&nbsp;transcription</b><span class="sub">of 150</span></td><td class="tot mid">&mdash;</td></tr></table>
-
-<h2>How the collection-time text was established</h2>
-<p>
-  This cannot be read off git alone. The transcriptions were first committed on
-  14 July 2026, three weeks <i>after</i> the phase-B collection of 24 June, so
-  at collection time the files were untracked and git holds no record of that
-  day's contents. What git does show is that the text is byte-identical from its
-  first commit through the commit preceding the corrections, and changes only
-  when the corrections land.
-</p>
-<p>Three independent checks agree that the text below is what was sent:</p>
-<ol>
-  <li><b>What the models echoed.</b> Every count in the table above, which is
-      generated from the checkpoints rather than typed. The as-collected reading
-      dominates condition B and is absent from N and A, and re-collecting against
-      the corrected text inverts that for every difference but one.</li>
-  <li><b>Input token counts</b> for the same model and image across the two
-      collections. Page 36 falls by 568 tokens (Claude) and 560 (Gemini) — the
-      signature of the <code>&amp;nbsp;</code> runs that only the as-collected
-      version contains. Page 39 rises by 26 and 12, matching the added parish
-      line. GPT's counts move erratically and carry no weight here.</li>
-  <li><b>Ground truth alignment.</b> Each reading difference above resolves
-      toward the ground truth, which is what a correction pass would do.</li>
-</ol>
-<p class="note">
-  The honest limit: an edit made on disk between 24 June and 14 July and never
-  committed would be invisible to all three checks.
-</p>
-
 
 <h2>The transcriptions as collected</h2>
 <p class="note">
