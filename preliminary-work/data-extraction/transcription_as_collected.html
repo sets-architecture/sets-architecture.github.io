@@ -18,6 +18,19 @@
   th { background: #f0f0f0; }
   td:nth-child(1) { text-align: right; white-space: nowrap; }
   td:nth-child(4) { max-width: 44ch; }
+  table.reg-table { width: 100%; }
+  table.reg-table td:nth-child(1) { text-align: left; white-space: normal; background: #f7f7f7; font-weight: 600; }
+  table.reg-table td:nth-child(4), table.reg-table td:nth-child(5) { max-width: none; }
+  table.reg-table td { font-size: 0.8rem; }
+  .sub { display: block; font-weight: 400; color: #666; font-size: 0.75rem; margin-top: 3px; }
+  td.ok { background: #e7f7e0; }
+  td.bad { background: #fde6e2; }
+  td.mixed { background: #fff4cf; }
+  td.mid { color: #999; }
+  td.reg { background: #fde6e2; font-weight: 600; }
+  tr.totrow td { background: #eef1f5; border-top: 2px solid #b6c2d1; font-size: 0.78rem; }
+  td.tot { font-weight: 600; }
+  .fig { display: block; margin-top: 5px; color: #444; font-size: 0.95em; }
   .tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 1.2rem 0 0.8rem; }
   button.tab { font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid #bbb; background: #f7f7f7; border-radius: 4px; cursor: pointer; }
   button.tab.active { background: #1858a7; border-color: #1858a7; color: #fff; }
@@ -32,30 +45,24 @@
 <h1>Experimental transcription files used for phase B</h1>
 
 <p class="intro">
-  The page viewer shows the <b>corrected</b> transcription. This page shows the
-  transcription <b>as it stood when the phase-B responses were collected</b>, on
-  24 June 2026. The two are not the same text, and every phase-B figure in this
-  study is a measurement against the version below — not against the corrected
-  one.
+  This page shows the transcription used in condition B. It has errors and is not identical to the correct versions seen in the page viewer.
 </p>
 <p class="intro">
-  The differences matter because phase B <i>is</i> the transcription condition:
-  a model that faithfully copies an erroneous transcription is scored against
+  A model that faithfully copies an erroneous transcription is scored against
   ground truth that records the correct reading, and is marked wrong for
-  obeying its input. Where that happens it is a property of this experiment,
-  not a finding about the model.
+  ignoring the source image and replicating errors in the transcription. Here we record where models changed and answer from condition N to A to B in responses that reflect the intentional transcription errors.
 </p>
 
 
 <h2>Differences that change an extractable value</h2>
 <table>
   <tr><th>page</th><th>as collected</th><th>corrected</th><th>what it affects</th></tr>
-  <tr><td>36</td><td><code>Todeschin</code></td><td><code>Todeschini</code></td><td>The host's surname, three times on the page. Every phase-B run copied the erroneous form: <b>250 occurrences of <code>Todeschin</code> and none of <code>Todeschini</code></b>, against ground truth reading <code>Todeschini</code>. Re-collected against the corrected text the result inverts exactly — 250 and none the other way.</td></tr>
-<tr><td>39</td><td>&mdash; the line is absent &mdash;</td><td><code>in Santi Apostoli</code></td><td>A parish line missing altogether, so the place of stay for the two English travellers lacked its location. <b>No phase-B run produced it</b>; re-collected against the corrected text, 128 occurrences appear.</td></tr>
-<tr><td>36</td><td><code>Legnano</code></td><td><code>Legnago</code></td><td>A place of origin: Legnago in the Veronese, not Legnano in Lombardy. <b>This one does not behave like the others.</b> Re-collected against a transcription reading <code>Legnago</code>, the models still wrote <code>Legnano</code> — 50 occurrences, none correct. So it is an error in the transcription <i>and</i> an independent substitution the models make on their own; correcting the text does not fix the output.</td></tr>
-<tr><td>28</td><td><code>Tedesco</code></td><td><code>Todesco</code></td><td>A traveller's surname. Phase B split, 40 occurrences copying the erroneous form against 110 producing the correct one, so some runs corrected it against the image.</td></tr>
-<tr><td>28</td><td><code>Argi&egrave;</code></td><td><code>Argi&agrave;</code></td><td>A traveller's given name. Neither form appears in phase-B output under this spelling, so nothing is measurably affected.</td></tr>
-<tr><td>28</td><td><code>//-d(et)to</code></td><td><code>//10 d(et)to</code></td><td>Not a spelling but a <b>date</b>: the day number was missing from the entry, leaving the arrival date of one traveller unstated in the text the models were given.</td></tr>
+  <tr><td>36</td><td><code>todeschin</code></td><td><code>todeschini</code></td><td>The host's surname, three times on the page. <span class="fig">In <b>B</b> the as-collected reading appears in <b>250 of 250</b> observations and the corrected one in none. N: none as-collected, 59 corrected, of 196. A: none as-collected, 85 corrected, of 211. Re-collected against the corrected text: none as-collected, 250 corrected, of 250.</span></td></tr>
+<tr><td>39</td><td>&mdash; absent &mdash;</td><td><code>santi apostoli</code></td><td>A parish line missing altogether, so the place of stay for the three travellers at that address lacked its location. <span class="fig">In <b>B</b> the as-collected reading appears in <b>141 of 150</b> observations and the corrected one in none. N: none as-collected, 34 corrected, of 102. A: none as-collected, 44 corrected, of 112. Re-collected against the corrected text: none as-collected, 128 corrected, of 150.</span></td></tr>
+<tr><td>36</td><td><code>legnano</code></td><td><code>legnago</code></td><td>Legnago in the Veronese, not Legnano in Lombardy. This is the one case where re-collecting against the corrected text does <b>not</b> fix the output: the models write the Lombard town either way, so the transcription error and an independent substitution point the same direction. <span class="fig">In <b>B</b> the as-collected reading appears in <b>50 of 50</b> observations and the corrected one in none. N: none as-collected, 27 corrected, of 28. A: none as-collected, 28 corrected, of 29. Re-collected against the corrected text: 50 as-collected, none corrected, of 50.</span></td></tr>
+<tr><td>28</td><td><code>tedesco</code></td><td><code>todesco</code></td><td>A traveller's surname. Note the models lean toward the erroneous form even with no transcription in front of them, so here the text reinforced a tendency rather than creating one. <span class="fig">In <b>B</b> the as-collected reading appears in <b>28 of 38</b> observations, the corrected one in 10. N: 18 as-collected, 4 corrected, of 33. A: 16 as-collected, 10 corrected, of 33. Re-collected against the corrected text: none as-collected, 50 corrected, of 50.</span></td></tr>
+<tr><td>28</td><td><code>argiè</code></td><td><code>argià</code></td><td>A traveller's given name. <span class="fig">In <b>B</b> the as-collected reading appears in <b>50 of 50</b> observations and the corrected one in none. N: none as-collected, none corrected, of 21. A: none as-collected, none corrected, of 26. Re-collected against the corrected text: none as-collected, 50 corrected, of 50.</span></td></tr>
+<tr><td>28</td><td><code>february 9</code></td><td><code>february 10</code></td><td>Not a spelling but a <b>date</b>: the day number was missing from the entry, so the arrival date of three travellers was unstated in the text the models were given. Without guidance the models omit the year entirely, which is why condition N carries neither reading. <span class="fig">In <b>B</b> the as-collected reading appears in <b>150 of 150</b> observations and the corrected one in none. N: none as-collected, none corrected, of 126. A: 24 as-collected, 38 corrected, of 114. Re-collected against the corrected text: none as-collected, 150 corrected, of 150.</span></td></tr>
 </table>
 
 <p>
@@ -70,6 +77,42 @@
   replaced by tabs.
 </p>
 
+<h2>What each condition produced for the affected values</h2><p class="intro">Which <i>reading</i> each model wrote &mdash; not whether it scored. <b>corrected form</b> means the value carries the reading the corrected transcription and the ground truth agree on; <b>transcription form</b> means it carries what the as-collected transcription says instead; <b>neither</b> means it carries some third thing. Tested on the token, so a value that differs from ground truth in other respects still reports which form it holds.</p><p class="note">This deliberately does not follow the score. §3 accepts <code>todeschin</code> for <code>todeschini</code>, so those answers are scored correct while still being the erroneous reading. Counted per matched traveller row rather than per run, so a value on five ground-truth rows contributes up to 50 observations per phase.</p><p class="intro">The last column marks the case this page exists to document: a model that wrote the correct reading in N or A and then followed the transcription into the error in B. <b>18</b> of 30 model-and-value combinations do that.</p><table class="reg-table"><tr><th>value</th><th>model</th><th>N</th><th>A</th><th>B</th><th>N or A &rarr; B</th></tr><tr><td rowspan="6">Host surname<span class="sub">p36 &middot; place_of_stay<br><code>todeschin</code> for <code>todeschini</code></span></td><td>claude</td><td class="mixed">50&nbsp;neither</td><td class="mixed">50&nbsp;neither</td><td class="bad">50&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>claude_thinking</td><td class="mixed">5&nbsp;corrected&nbsp;form &middot; 42&nbsp;neither</td><td class="mixed">9&nbsp;corrected&nbsp;form &middot; 37&nbsp;neither</td><td class="bad">50&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gpt</td><td class="mixed">40&nbsp;neither</td><td class="mixed">36&nbsp;neither</td><td class="bad">50&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>gemini</td><td class="mixed">14&nbsp;corrected&nbsp;form &middot; 5&nbsp;neither</td><td class="mixed">26&nbsp;corrected&nbsp;form &middot; 3&nbsp;neither</td><td class="bad">50&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gemini31</td><td class="ok">40&nbsp;corrected&nbsp;form</td><td class="ok">50&nbsp;corrected&nbsp;form</td><td class="bad">50&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr class="totrow"><td class="tot">all models</td><td class="tot">59&nbsp;corrected &middot; 137&nbsp;neither<span class="sub">of 196</span></td><td class="tot">85&nbsp;corrected &middot; 126&nbsp;neither<span class="sub">of 211</span></td><td class="tot"><b>250&nbsp;transcription</b><span class="sub">of 250</span></td><td class="tot mid">&mdash;</td></tr>
+<tr><td rowspan="6">Parish line<span class="sub">p39 &middot; place_of_stay<br><code>absent</code> for <code>santi apostoli</code></span></td><td>claude</td><td class="mixed">1&nbsp;corrected&nbsp;form &middot; 19&nbsp;neither</td><td class="mixed">20&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>claude_thinking</td><td class="mixed">3&nbsp;corrected&nbsp;form &middot; 19&nbsp;neither</td><td class="mixed">2&nbsp;corrected&nbsp;form &middot; 20&nbsp;neither</td><td class="mixed">24&nbsp;transcription&nbsp;form &middot; 6&nbsp;neither</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gpt</td><td class="mixed">10&nbsp;neither</td><td class="mixed">2&nbsp;corrected&nbsp;form &middot; 8&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gemini</td><td class="mixed">10&nbsp;corrected&nbsp;form &middot; 10&nbsp;neither</td><td class="mixed">20&nbsp;corrected&nbsp;form &middot; 10&nbsp;neither</td><td class="mixed">27&nbsp;transcription&nbsp;form &middot; 3&nbsp;neither</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gemini31</td><td class="mixed">20&nbsp;corrected&nbsp;form &middot; 10&nbsp;neither</td><td class="mixed">20&nbsp;corrected&nbsp;form &middot; 10&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr class="totrow"><td class="tot">all models</td><td class="tot">34&nbsp;corrected &middot; 68&nbsp;neither<span class="sub">of 102</span></td><td class="tot">44&nbsp;corrected &middot; 68&nbsp;neither<span class="sub">of 112</span></td><td class="tot"><b>141&nbsp;transcription</b> &middot; 9&nbsp;neither<span class="sub">of 150</span></td><td class="tot mid">&mdash;</td></tr>
+<tr><td rowspan="6">Place of origin<span class="sub">p36 &middot; place_of_origin<br><code>legnano</code> for <code>legnago</code></span></td><td>claude</td><td class="ok">10&nbsp;corrected&nbsp;form</td><td class="ok">10&nbsp;corrected&nbsp;form</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>claude_thinking</td><td class="mixed">9&nbsp;corrected&nbsp;form &middot; 1&nbsp;neither</td><td class="mixed">8&nbsp;corrected&nbsp;form &middot; 1&nbsp;neither</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gpt</td><td class="ok">7&nbsp;corrected&nbsp;form</td><td class="mid">&mdash;</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gemini</td><td class="ok">1&nbsp;corrected&nbsp;form</td><td class="mid">&mdash;</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gemini31</td><td class="mid">&mdash;</td><td class="ok">10&nbsp;corrected&nbsp;form</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr class="totrow"><td class="tot">all models</td><td class="tot">27&nbsp;corrected &middot; 1&nbsp;neither<span class="sub">of 28</span></td><td class="tot">28&nbsp;corrected &middot; 1&nbsp;neither<span class="sub">of 29</span></td><td class="tot"><b>50&nbsp;transcription</b><span class="sub">of 50</span></td><td class="tot mid">&mdash;</td></tr>
+<tr><td rowspan="6">Surname<span class="sub">p28 &middot; name<br><code>tedesco</code> for <code>todesco</code></span></td><td>claude</td><td class="mixed">3&nbsp;corrected&nbsp;form &middot; 5&nbsp;neither</td><td class="ok">10&nbsp;corrected&nbsp;form</td><td class="mid">&mdash;</td><td class="mid">&mdash;</td></tr>
+<tr><td>claude_thinking</td><td class="mixed">1&nbsp;corrected&nbsp;form &middot; 1&nbsp;transcription&nbsp;form &middot; 6&nbsp;neither</td><td class="mixed">1&nbsp;transcription&nbsp;form &middot; 7&nbsp;neither</td><td class="bad">8&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gpt</td><td class="mid">&mdash;</td><td class="mid">&mdash;</td><td class="ok">10&nbsp;corrected&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>gemini</td><td class="bad">7&nbsp;transcription&nbsp;form</td><td class="bad">5&nbsp;transcription&nbsp;form</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>gemini31</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr class="totrow"><td class="tot">all models</td><td class="tot">4&nbsp;corrected &middot; <b>18&nbsp;transcription</b> &middot; 11&nbsp;neither<span class="sub">of 33</span></td><td class="tot">10&nbsp;corrected &middot; <b>16&nbsp;transcription</b> &middot; 7&nbsp;neither<span class="sub">of 33</span></td><td class="tot">10&nbsp;corrected &middot; <b>28&nbsp;transcription</b><span class="sub">of 38</span></td><td class="tot mid">&mdash;</td></tr>
+<tr><td rowspan="6">Given name<span class="sub">p28 &middot; name<br><code>argiè</code> for <code>argià</code></span></td><td>claude</td><td class="mixed">4&nbsp;neither</td><td class="mixed">10&nbsp;neither</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>claude_thinking</td><td class="mid">&mdash;</td><td class="mixed">1&nbsp;neither</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>gpt</td><td class="mid">&mdash;</td><td class="mid">&mdash;</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>gemini</td><td class="mixed">7&nbsp;neither</td><td class="mixed">5&nbsp;neither</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>gemini31</td><td class="mixed">10&nbsp;neither</td><td class="mixed">10&nbsp;neither</td><td class="bad">10&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr class="totrow"><td class="tot">all models</td><td class="tot">21&nbsp;neither<span class="sub">of 21</span></td><td class="tot">26&nbsp;neither<span class="sub">of 26</span></td><td class="tot"><b>50&nbsp;transcription</b><span class="sub">of 50</span></td><td class="tot mid">&mdash;</td></tr>
+<tr><td rowspan="6">Arrival date<span class="sub">p28 &middot; arrival_date<br><code>february 9</code> for <code>february 10</code></span></td><td>claude</td><td class="mixed">30&nbsp;neither</td><td class="mixed">6&nbsp;corrected&nbsp;form &middot; 4&nbsp;transcription&nbsp;form &middot; 20&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>claude_thinking</td><td class="mixed">28&nbsp;neither</td><td class="mixed">20&nbsp;transcription&nbsp;form &middot; 7&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="mid">&mdash;</td></tr>
+<tr><td>gpt</td><td class="mixed">12&nbsp;neither</td><td class="mixed">9&nbsp;corrected&nbsp;form &middot; 1&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gemini</td><td class="mixed">26&nbsp;neither</td><td class="mixed">5&nbsp;corrected&nbsp;form &middot; 12&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr><td>gemini31</td><td class="mixed">30&nbsp;neither</td><td class="mixed">18&nbsp;corrected&nbsp;form &middot; 12&nbsp;neither</td><td class="bad">30&nbsp;transcription&nbsp;form</td><td class="reg">followed the transcription</td></tr>
+<tr class="totrow"><td class="tot">all models</td><td class="tot">126&nbsp;neither<span class="sub">of 126</span></td><td class="tot">38&nbsp;corrected &middot; <b>24&nbsp;transcription</b> &middot; 52&nbsp;neither<span class="sub">of 114</span></td><td class="tot"><b>150&nbsp;transcription</b><span class="sub">of 150</span></td><td class="tot mid">&mdash;</td></tr></table>
 
 <h2>How the collection-time text was established</h2>
 <p>
@@ -82,10 +125,10 @@
 </p>
 <p>Three independent checks agree that the text below is what was sent:</p>
 <ol>
-  <li><b>What the models echoed.</b> <code>Todeschin</code> 250 / 0 in the
-      phase-B checkpoints and 0 / 250 when re-collected against the corrected
-      text; <code>Santi Apostoli</code> absent in phase B, 128 occurrences on
-      re-collection.</li>
+  <li><b>What the models echoed.</b> Every count in the table above, which is
+      generated from the checkpoints rather than typed. The as-collected reading
+      dominates condition B and is absent from N and A, and re-collecting against
+      the corrected text inverts that for every difference but one.</li>
   <li><b>Input token counts</b> for the same model and image across the two
       collections. Page 36 falls by 568 tokens (Claude) and 560 (Gemini) — the
       signature of the <code>&amp;nbsp;</code> runs that only the as-collected

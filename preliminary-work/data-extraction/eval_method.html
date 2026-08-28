@@ -20,7 +20,7 @@ td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-27<br>Data (model runs) generated: 2026-07-23<br>Scoring inputs: ground truth <code>856f92bb</code>, evaluate.py <code>5c52b890</code>, rules <code>355f2e77</code></p>
+<p class="dates">Page generated: 2026-08-27<br>Data (model runs) generated: 2026-07-23<br>Scoring inputs: ground truth <code>36c390d2</code>, evaluate.py <code>5c52b890</code>, rules <code>355f2e77</code></p>
 <h1>The evaluation method</h1>
 <p>
 What it measures, why it is built this way, and the same model runs scored four ways so the differences can be inspected rather than taken on trust. Every figure on this page is computed by <code>build_eval_method.py</code> from the run checkpoints and the ground-truth CSVs.
@@ -69,9 +69,9 @@ F1 under each, pooled across the three pages and 10 runs:
 <table>
 <thead><tr><th>Model</th><th>Cond</th><th><strong>adopted</strong></th><th>original</th><th>cer gate</th><th>order-preserving</th></tr></thead>
 <tbody>
-<tr><td>Claude</td><td>N</td><td>0.790</td><td>0.715</td><td>0.647</td><td>0.585</td></tr>
+<tr><td>Claude</td><td>N</td><td>0.793</td><td>0.718</td><td>0.647</td><td>0.585</td></tr>
 <tr><td>Claude</td><td>A</td><td>0.789</td><td>0.741</td><td>0.635</td><td>0.596</td></tr>
-<tr><td>Claude</td><td>B</td><td>1.000</td><td>1.000</td><td>0.969</td><td>0.969</td></tr>
+<tr><td>Claude</td><td>B</td><td>0.985</td><td>0.985</td><td>0.969</td><td>0.969</td></tr>
 <tr><td>GPT</td><td>N</td><td>0.471</td><td>0.304</td><td>0.342</td><td>0.154</td></tr>
 <tr><td>GPT</td><td>A</td><td>0.409</td><td>0.373</td><td>0.297</td><td>0.231</td></tr>
 <tr><td>GPT</td><td>B</td><td>1.000</td><td>0.985</td><td>1.000</td><td>0.985</td></tr>
@@ -81,10 +81,10 @@ F1 under each, pooled across the three pages and 10 runs:
 <tr><td>Gemini 3.1</td><td>N</td><td>0.891</td><td>0.884</td><td>0.834</td><td>0.828</td></tr>
 <tr><td>Gemini 3.1</td><td>A</td><td>0.917</td><td>0.911</td><td>0.840</td><td>0.823</td></tr>
 <tr><td>Gemini 3.1</td><td>B</td><td>0.998</td><td>0.985</td><td>0.998</td><td>0.985</td></tr>
-<tr><td>Claude Thinking</td><td>N</td><td>0.728</td><td>0.685</td><td>0.593</td><td>0.552</td></tr>
-<tr><td>Claude Thinking</td><td>A</td><td>0.772</td><td>0.754</td><td>0.631</td><td>0.604</td></tr>
-<tr><td>Claude Thinking</td><td>B</td><td>1.000</td><td>0.998</td><td>0.991</td><td>0.989</td></tr>
-<tr><td><strong>All</strong></td><td></td><td><strong>0.808</strong></td><td>0.777</td><td>0.729</td><td>0.691</td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>0.731</td><td>0.688</td><td>0.597</td><td>0.555</td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>0.772</td><td>0.754</td><td>0.632</td><td>0.606</td></tr>
+<tr><td>Claude Thinking</td><td>B</td><td>0.997</td><td>0.995</td><td>0.991</td><td>0.989</td></tr>
+<tr><td><strong>All</strong></td><td></td><td><strong>0.807</strong></td><td>0.776</td><td>0.730</td><td>0.692</td></tr>
 </tbody></table>
 <p>
 Reading across a row shows how much of a model&#x27;s score is an artefact of the instrument. What no column shows is whether the model could read the names — all four are counts of rows that cleared a bar.
@@ -97,11 +97,11 @@ Counting and transcription, per page, so the counts are whole numbers against a 
 <table>
 <thead><tr><th>Model</th><th>naive: found</th><th>CER</th><th>exact</th><th>guided: found</th><th>CER</th><th>exact</th><th>+transcription: found</th><th>CER</th><th>exact</th></tr></thead>
 <tbody>
-<tr><td>Claude</td><td>17</td><td>0.24</td><td>28%</td><td>18</td><td>0.15</td><td>33%</td><td>18</td><td>0.07</td><td>88%</td></tr>
+<tr><td>Claude</td><td>17</td><td>0.23</td><td>28%</td><td>18</td><td>0.15</td><td>33%</td><td>18</td><td>0.07</td><td>88%</td></tr>
 <tr><td>GPT</td><td>16–23</td><td>0.39</td><td>2%</td><td>22–26</td><td>0.42</td><td>1%</td><td>18</td><td>0.04</td><td>89%</td></tr>
-<tr><td>Gemini 2.5</td><td>19</td><td>0.15</td><td>34%</td><td>20</td><td>0.15</td><td>39%</td><td>18</td><td>0.00</td><td>100%</td></tr>
-<tr><td>Gemini 3.1</td><td>18</td><td>0.10</td><td>44%</td><td>18</td><td>0.07</td><td>56%</td><td>18</td><td>0.00</td><td>100%</td></tr>
-<tr><td>Claude Thinking</td><td>17–19</td><td>0.22</td><td>15%</td><td>18</td><td>0.21</td><td>21%</td><td>18</td><td>0.03</td><td>94%</td></tr>
+<tr><td>Gemini 2.5</td><td>19</td><td>0.15</td><td>34%</td><td>20</td><td>0.15</td><td>39%</td><td>18</td><td>0.01</td><td>89%</td></tr>
+<tr><td>Gemini 3.1</td><td>18</td><td>0.10</td><td>44%</td><td>18</td><td>0.07</td><td>56%</td><td>18</td><td>0.01</td><td>89%</td></tr>
+<tr><td>Claude Thinking</td><td>17–19</td><td>0.22</td><td>15%</td><td>18</td><td>0.21</td><td>21%</td><td>18</td><td>0.03</td><td>86%</td></tr>
 </tbody></table>
 <h3>Page 36 — 37 unique named travelers</h3>
 <table>
