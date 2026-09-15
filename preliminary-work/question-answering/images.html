@@ -26,21 +26,21 @@
 <script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script>
 </head><body>
 <p class="scope"><b>Figures shown:</b> page images and complexity ratings &mdash; no model results</p>
-<p class="dates">Page generated: 2026-08-16<br>Data (model runs) generated: 2026-04-11<br>Scoring inputs: ground truth <code>cc2ed8f5</code>, evaluate.py <code>845b70e9</code></p>
-<!-- provenance: ckpt=2026-04-11 gt=cc2ed8f5 eval=845b70e9 gen=2026-08-16 -->
+<p class="dates">Page generated: 2026-09-15<br>Data (model runs) generated: 2026-04-11<br>Scoring inputs: ground truth <code>cc2ed8f5</code>, evaluate.py <code>845b70e9</code></p>
+<!-- provenance: ckpt=2026-04-11 gt=cc2ed8f5 eval=845b70e9 gen=2026-09-15 -->
 
 <h1>Image Complexity Grid</h1>
-<p class='note'>Thumbnails of all 39 pages with their complexity ratings and mean accuracy under the guided condition. (<a href='image_difficulty_comparison.html'>Per-page and per-model comparison of guided vs naive accuracy.</a>) (<a href='guided_complexity.html'>Complexity vs accuracy correlations and per-page ranking.</a>) Click a thumbnail to view the full-size image. <b>Structural</b> = sum of named travelers, unnamed travelers, con instances, e instances (from ground truth). <b>Visual</b> = connected ink components from Sauvola binarization (≥5 px). <b>Overall density</b> = mean of structural and visual after each is min-max normalized to 0–100% of the corpus range. (Pearson r vs mean accuracy: structural −0.75, visual −0.77, overall −0.81.)</p>
+<p class='note'>Thumbnails of all 39 pages with their complexity ratings and mean accuracy under the guided condition. (<a href='image_difficulty_comparison.html'>Per-page and per-model comparison of guided vs naive accuracy.</a>) (<a href='guided_complexity.html'>Complexity vs accuracy correlations and per-page ranking.</a>) Click a thumbnail to view the full-size image. <b>Structural complexity</b> = sum of named travelers, unnamed travelers, con instances, e instances (from ground truth). <b>Visual density</b> = connected ink components from Sauvola binarization (≥5 px). <b>Overall complexity and density</b> = mean of structural complexity and visual density after each is min-max normalized to 0–100% of the corpus range. (Pearson r vs mean accuracy: structural complexity −0.75, visual density −0.77, overall −0.81.)</p>
 <div class='chart-section'>
-<p class='note' style='margin-top:0;'>Accuracy (raw %), structural complexity (min-max normalized to 0–100% of the corpus range, 7–118), visual complexity (min-max normalized, 423–2,695 components), and overall density (mean of the two normalized values). Toggle traces in the legend. Note the inverse relationship: higher complexity → lower accuracy. Overall density correlates more strongly with accuracy than either component alone.</p>
+<p class='note' style='margin-top:0;'>Accuracy (raw %), structural complexity (min-max normalized to 0–100% of the corpus range, 7–118), visual density (min-max normalized, 423–2,695 components), and overall complexity and density (mean of the two normalized values). Toggle traces in the legend. Note the inverse relationship: higher complexity → lower accuracy. Overall complexity and density correlates more strongly with accuracy than either component alone.</p>
 <div id='compare-chart'></div>
 </div>
 <div class='controls'>
 <span>Sort by:</span>
 <button data-sort='page_id' class='active'>Page ID</button>
 <button data-sort='structural'>Structural complexity</button>
-<button data-sort='visual_components'>Visual complexity</button>
-<button data-sort='overall_density'>Overall density</button>
+<button data-sort='visual_components'>Visual density</button>
+<button data-sort='overall_density'>Overall complexity and density</button>
 <button data-sort='accuracy'>Mean accuracy</button>
 <span style='margin-left:auto;'>Order:</span>
 <button id='order-asc'>Ascending</button>
@@ -88,7 +88,7 @@ function render() {
           <span><b>Visual:</b> ${r.visual_components.toLocaleString()}</span>
         </div>
         <div class="row" style="margin-top:0.1rem;">
-          <span><b>Overall density:</b> ${r.overall_density.toFixed(1)}%</span>
+          <span><b>Overall:</b> ${r.overall_density.toFixed(1)}%</span>
           <span style="color:#888;">(S ${r.structural_norm.toFixed(0)}% · V ${r.visual_norm.toFixed(0)}%)</span>
         </div>
         <div class="row" style="color:#888;">
@@ -143,7 +143,7 @@ function buildTraces(sortedRecords) {
       hovertemplate: 'Page %{x}<br>Accuracy: %{y:.1f}%<extra></extra>'
     },
     {
-      type: 'bar', name: 'Structural (norm %)',
+      type: 'bar', name: 'Structural complexity (norm %)',
       x: labels,
       y: sortedRecords.map(r => r.structural_norm),
       marker: {color: '#1f77b4'},
@@ -151,7 +151,7 @@ function buildTraces(sortedRecords) {
       hovertemplate: 'Page %{x}<br>Structural: %{y:.1f}%<br>(raw: %{customdata})<extra></extra>'
     },
     {
-      type: 'bar', name: 'Visual (norm %)',
+      type: 'bar', name: 'Visual density (norm %)',
       x: labels,
       y: sortedRecords.map(r => r.visual_norm),
       marker: {color: '#ff7f0e'},
@@ -159,11 +159,11 @@ function buildTraces(sortedRecords) {
       hovertemplate: 'Page %{x}<br>Visual: %{y:.1f}%<br>(raw: %{customdata:,} components)<extra></extra>'
     },
     {
-      type: 'bar', name: 'Overall density (norm %)',
+      type: 'bar', name: 'Overall complexity and density (norm %)',
       x: labels,
       y: sortedRecords.map(r => r.overall_density),
       marker: {color: '#7c4dbb'},
-      hovertemplate: 'Page %{x}<br>Overall density: %{y:.1f}%<extra></extra>'
+      hovertemplate: 'Page %{x}<br>Overall: %{y:.1f}%<extra></extra>'
     }
   ];
 }
