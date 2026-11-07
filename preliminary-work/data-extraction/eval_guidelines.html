@@ -20,54 +20,24 @@ td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-27<br>Source updated: 2026-08-22<br>Scoring inputs: ground truth <code>36c390d2</code>, evaluate.py <code>5c52b890</code>, rules <code>355f2e77</code></p>
+<p class="dates">Page generated: 2026-11-07<br>Source updated: 2026-11-07<br>Scoring inputs: ground truth <code>36c390d2</code>, evaluate.py <code>5c52b890</code>, rules <code>f073df0f</code></p>
 <h1>Evaluation Guidelines — Data Extraction</h1>
 <p>
-This document defines how model responses are scored against ground truth in the
-<br>
-Venice 39 <strong>data-extraction</strong> experiment (per-traveler tabular extraction). It is
-<br>
-<strong>not</strong> shown to models during collection — it records the answer-key logic
-<br>
-applied afterward. The implementation is <a href="evaluate.py">evaluate.py</a>.
+Evaluation for Part II: data-extraction (per-traveler tabular extraction) is a <em>different</em> task and scoring scheme from Part I: question-answering. This document defines how model responses are scored against ground truth in Part II.
 </p>
 <p>
-<strong>The equivalence and ignore rules are not listed here.</strong> They live in
-<br>
-<a href="EQUIVALENCES.md">EQUIVALENCES.md</a>, which <code>rules.py</code> reads at run time and
-<br>
-<code>evaluate.py</code> applies — so the rules are data with one home, and adding a row
-<br>
-there changes the scoring. This page describes the <em>mechanism</em>; that file holds
-<br>
-the <em>content</em>. Where an earlier version of this page reproduced the equivalence
-<br>
-tables, it now points at them, because two copies of a rule set is how they drift.
-</p>
-<p>
-This is a <em>different</em> task and scoring scheme from the question-answering
-<br>
-experiment (venice-39-guided / -naive), which scores 22 fixed questions. The two
-<br>
-<code>eval_guidelines</code> pages do not cross-apply. The shared parts are the character-
-<br>
-accuracy method and the expand-both-sides equivalence philosophy.
+NOTE: These guidelines are not shown to models during collection.
 </p>
 <hr>
 <h2>1. Two-stage scoring</h2>
 <p>
-Each model response is a list of traveler records (9 fields each). Scoring has two
-<br>
-stages:
-</p>
-<p>
 1. <strong>Traveler identification</strong> — match model rows to ground-truth (GT) rows by
 <br>
-   name, then compute precision / recall / <strong>F1</strong>. This is the headline metric.
+   name, then compute precision / recall / <strong>F1</strong>. This name matching is critical. If we are too strict at this first name-matching stage, none of the other field values will count since they are all based on this name match step. How accurately the name was read is recorded separately from F1 as name CER.
 <br>
-2. <strong>Per-field accuracy</strong> — for each <em>matched</em> row, score each of the other
+2. <strong>Per-field accuracy</strong> — for each <em>matched</em> traveler name, we score each of the other
 <br>
-   fields. Reported separately (per field), computed only on matched rows.
+   fields as right or wrong according to a comprehensive dictionary. We built the dictionary after seeing the raw responses from the models and evaluating which of the responses would be acceptable.
 </p>
 <p>
 F1 measures <em>who</em> is on the page; per-field accuracy measures <em>what</em> the page says
@@ -77,9 +47,9 @@ about them. They are independent: a model can score F1 = 1.00 while its
 <code>place_of_stay</code> accuracy is 0.80.
 </p>
 <hr>
-<h2>2. Row matching (traveler identification)</h2>
+<h2>2. Traveler Identification</h2>
 <p>
-Each model row is greedily paired with at most one GT row by <strong>name similarity</strong>:
+Each row is greedily paired with at most one GT row by <strong>name similarity</strong>:
 </p>
 <ul>
 <li>Names are normalized: curly apostrophe straightened, lowercased, whitespace</li>
@@ -87,15 +57,13 @@ Each model row is greedily paired with at most one GT row by <strong>name simila
 <p>
   collapsed, punctuation stripped. A <code>?</code> (illegible-glyph marker) is a
 <br>
-  <strong>wildcard</strong>: it matches any single character at no cost. See &quot;Reading what the
+  <strong>wildcard</strong>: it matches any single character at no cost.  
 <br>
-  verifier could not&quot; below. The quondam abbreviation variants
+  The quondam abbreviation variants listed on the <code>name</code> row of <a href="equivalences.html">EQUIVALENCES.md</a> are first collapsed to a single
 <br>
-  (<code>q.m</code> / <code>q.m.</code> / <code>qm</code> / <code>q</code> / <code>q(uonda)m</code> / <code>q(uondam)</code> / <code>quondam</code>) are first
+  short canonical (<code>qm</code>), so e.g. <code>Leon q.m. Iacob Todesco</code> and
 <br>
-  collapsed to a single short canonical, so e.g. <code>Leon q.m. Iacob Tedesco</code> and
-<br>
-  <code>Leon qm Iacob Tedesco</code> match fully. The short canonical is length-neutral, so
+  <code>Leon qm Iacob Todesco</code> match fully. The short canonical is length-neutral, so
 <br>
   this equivalence doesn&#x27;t shift unrelated borderline matches across the threshold.
 </p>
@@ -161,8 +129,6 @@ Three qualifications:
   the register records in full (<code>Pavel (?)</code>, <code>Regina (Vedova?)</code>). That is a model
 <br>
   declining to read, not a verifier declining to read, and it is compared literally.
-<br>
-  A symmetric rule would let a model buy characters back by hedging.
 </p>
 <ul>
 <li><strong>Exactly one character, never zero.</strong> <code>?</code> asserts a glyph is present. A model</li>
@@ -170,9 +136,7 @@ Three qualifications:
 <p>
   that reads no glyph at all — <code>Kingsech</code> against <code>Kin?gsech</code> — is disagreeing
 <br>
-  about how many characters are there rather than out-reading the verifier, and
-<br>
-  still pays for the deletion.
+  about how many characters are there rather than out-reading the verifier.
 </p>
 <ul>
 <li><strong>It moves detection as well as transcription.</strong> Where a model copied the <code>?</code>,</li>
@@ -188,16 +152,7 @@ Three qualifications:
 <br>
   match — <code>Niccolò ?lelingen</code> 11, <code>Federico ?gorosd</code> 9, <code>Francesco Kin?gsech</code> 4 —
 <br>
-  raising F1 in 21 of 150 runs and lowering it in none. The effect is monotone by
-<br>
-  construction: resolving <code>?</code> can only raise a similarity, so no pairing is broken.
-</p>
-<p>
-  Those gains are concentrated in phase N, where models had no guidance telling
-<br>
-  them to mark an unreadable glyph and so attempted a reading instead. Five of the
-<br>
-  15 published (model, phase) cells move, by +0.0015 to +0.0158 F1.
+  raising F1 in 21 of 150 runs and lowering it in none of them. 
 </p>
 <p>
   Recovered matches also raise CER in 19 runs, because a row that was below the
@@ -209,32 +164,6 @@ Three qualifications:
   worse. This is the gate/CER coupling described above, and the reason the two
 <br>
   numbers must be read together.
-</p>
-<p>
-This was compared literally until 2026-08-22. <code>analyze_name_precision.py</code> had
-<br>
-implemented the wildcard from the start, so the CER in the scoring-method page and
-<br>
-the CER in <code>scores_summary.csv</code> disagreed on these three names. Both now read the
-<br>
-semantics from <code>evaluate.resolve_illegible</code>.
-</p>
-<ul>
-<li>No arrival/departure tiebreak. It existed only to choose between **two GT rows</li>
-</ul>
-<p>
-  bearing the same name**; no name repeats in any of the three GT files, so it
-<br>
-  changed the pairing in none of the 450 image scorings (3 pages × 150 runs). This
-<br>
-  is not a claim about the dates: the task is one row per unique traveler carrying
-<br>
-  both dates when the source records both, so page 28&#x27;s <code>Mandolin Todros</code> arrives
-<br>
-  9 February and departs 13 February in a single row.
-</p>
-<p>
-<code>name</code> is used <strong>only</strong> as the matching key — it is not itself scored as a field.
 </p>
 <p>
 <strong>Precision / recall / F1 (per image):</strong>
@@ -254,47 +183,40 @@ computed from the pooled rates. Failed runs are excluded.
 <hr>
 <h2>3. Per-field scoring (matched rows)</h2>
 <p>
-Each field returns a score in [0, 1], or is <em>unscorable</em> — excluded from both
+Every scored field is <strong>right or wrong</strong>: 1.0 or 0.0, with no partial credit.
 <br>
-numerator and denominator. The blank-GT rules are not uniform, so precisely:
+The blank-GT rules are the same for every field:
 </p>
 <ul>
 <li><strong>Both blank</strong> → 1.0. Correctly leaving an unrecorded field empty is credited.</li>
-<li><strong>GT blank, model supplied a value</strong> → <em>unscorable</em> for dates and places: a</li>
+<li><strong>GT blank, model supplied a value</strong> → <strong>0.0</strong>. If the register records nothing</li>
 </ul>
 <p>
-  blank there may mean the register does not record it, or that the verifier did
-<br>
-  not transcribe it, and the two cannot be told apart.
+  there, there was nothing to match.
 </p>
 <ul>
-<li><strong>GT blank, model supplied a <code>title</code></strong> → <strong>0.0, not unscorable.</strong> The register</li>
+<li><strong>GT has a value, model left it blank</strong> → 0.0.</li>
 </ul>
-<p>
-  records titles only for aristocracy, clergy, physicians and military, so a
-<br>
-  blank title is a deliberate omission and a supplied one is wrong (PI&#x27;s ruling).
-</p>
 <table>
 <thead><tr><th>Field(s)</th><th>Method</th></tr></thead>
 <tbody>
-<tr><td><code>with_spouse</code>, <code>with_siblings</code></td><td>Exact Y/N match → 1.0 / 0.0</td></tr>
-<tr><td><code>children_count</code></td><td>Exact integer match → 1.0 / 0.0</td></tr>
-<tr><td><code>title</code></td><td><strong>Character accuracy</strong> after base normalization. No courtesy-form stripping: a courtesy form the register never uses as a title (<code>Signor</code>, <code>Mister</code>) is a wrong answer, not something to normalize away.</td></tr>
-<tr><td><code>arrival_date</code>, <code>departure_date</code></td><td><strong>Character accuracy</strong> after base normalization <strong>+ day leading-zero strip</strong> (<code>February 09 1769</code> == <code>February 9 1769</code>; GT is non-padded). Genuinely different or differently-formatted dates (day-first, month abbreviations, raw Italian like <code>9bre</code>) still differ under char_accuracy — those are model deviations from the requested <code>Month D YYYY</code>, not accepted equivalents.</td></tr>
-<tr><td><code>place_of_stay</code>, <code>place_of_origin</code></td><td><strong>Character accuracy</strong> after place normalization (§5)</td></tr>
+<tr><td><code>with_spouse</code>, <code>with_siblings</code></td><td>Exact Y/N match</td></tr>
+<tr><td><code>children_count</code></td><td>Exact integer match</td></tr>
+<tr><td><code>title</code></td><td>Right or wrong after base normalization (§4). No courtesy-form stripping: a courtesy form the register never uses as a title (<code>Signor</code>, <code>Mister</code>) is a wrong answer, not something to normalize away.</td></tr>
+<tr><td><code>arrival_date</code>, <code>departure_date</code></td><td>Right or wrong after base normalization <strong>+ day leading-zero strip</strong> (<code>February 09 1769</code> == <code>February 9 1769</code>; GT is non-padded). Differently-formatted dates (day-first, month abbreviations, raw Italian like <code>9bre</code>) are model deviations from the requested <code>Month D YYYY</code> and are wrong.</td></tr>
+<tr><td><code>place_of_stay</code>, <code>place_of_origin</code></td><td>Right or wrong after place normalization (see below)</td></tr>
 </tbody></table>
 <p>
-<strong>Character accuracy</strong> = <code>1 − levenshtein(gt, model) / len(gt)</code>, clamped to
+<strong>What counts as right.</strong> After normalization (see 4 below) and the
 <br>
-[0, 1]. A one-character slip in a 16-character string scores ≈ 0.94, not 0. Both
+<a href="equivalences.html">EQUIVALENCES.md</a> rules have run on both sides, the model value either
 <br>
-GT and model are normalized to a canonical form <em>before</em> the edit-distance
+equals the ground truth, or it is one of the <strong>acceptable alternatives</strong>. Nothing else is credited. For example: If a model lists <code>alla cortesia san angelo</code> and the ground truth is
 <br>
-comparison, so a correctly-written abbreviation matches the expanded GT exactly.
+<code>alla cortesia san agnolo</code>, the model&#x27;s answer is scored 0.0. It is a wrong parish, not 0.94 of a right one.
 </p>
 <hr>
-<h2>4. Base normalization (all text fields)</h2>
+<h2>4. Normalization</h2>
 <p>
 Applied to every text field (title, dates, and — as the first layer — places):
 </p>
@@ -315,116 +237,62 @@ Applied to every text field (title, dates, and — as the first layer — places
 <br>
 4. Strip a trailing <code>?</code> from <strong>GT</strong> tokens (illegible marker) before the
 <br>
-   equivalence lookup, so a marked token still finds its dictionary entry. This is
+   equivalence lookup. 
 <br>
-   a lookup aid, not the name wildcard of §2 — it applies to the non-name text
+5. For <code>place_of_stay</code>, <code>place_of_origin</code> the leading connective <strong><code>in</code></strong> is dropped. For example, &quot;in casa di…&quot; is correct, but the ground truth lists &quot;Casa di…&quot;.
 <br>
-   fields and removes the marker rather than matching through it.
-<br>
-5. Apply the single-token equivalences for that field from
-<br>
-   <a href="EQUIVALENCES.md">EQUIVALENCES.md</a> §2, token by token (expand-both-sides).
-<br>
-6. Apply the multi-token equivalences from §2 as a sequence replacement.
-<br>
-7. Apply the ignore rules for that field from §1, honouring their position and
-<br>
-   side. Not applied to <code>name</code> — see §2 above.
-</p>
-<p>
-Steps 1-4 match venice-39-guided&#x27;s token preprocessing so the two projects&#x27; text
-<br>
-scores stay comparable; steps 5-7 are this project&#x27;s rule file.
+6. For <code>place_of_stay</code>, <code>place_of_origin</code> a glued saint prefix is split (<code>Sant&#x27;Angelo</code> → <code>san angelo</code>).
 </p>
 <hr>
-<h2>5. Place normalization (<code>place_of_stay</code>, <code>place_of_origin</code>)</h2>
+<h2>5. Equivalence and ignore rules</h2>
 <p>
-Place fields get base normalization <strong>plus</strong> Venetian place-name handling, built
+This evaluator is scoped to this corpus, specifically. It is not 
 <br>
-from a corpus scan of GT + model outputs:
-</p>
-<ul>
-<li>Drop a leading connective <strong><code>in</code></strong> (the document reads &quot;in casa di…&quot;; GT records</li>
-</ul>
-<p>
-  &quot;Casa di…&quot;, so the <code>in</code> is a connective, not content).
-</p>
-<ul>
-<li>Treat commas/colons as separators.</li>
-<li>Split a glued saint prefix (<code>Sant&#x27;Angelo</code> → <code>san angelo</code>).</li>
-<li>Apply the place equivalence map (§6).</li>
-</ul>
-<p>
-Genuine misreadings of the handwriting (e.g. <code>Feltrina</code>→<code>Pestiora</code>,
-<br>
-<code>Zobenigo</code>→<code>Colenigo</code>) are <strong>left intact</strong> and scored by character accuracy — the
-<br>
-normalization never rescues them.
-</p>
-<hr>
-<h2>6. Equivalence and ignore rules</h2>
-<p>
-Held in <a href="EQUIVALENCES.md">EQUIVALENCES.md</a>, not here. That file is the input to
-<br>
-the scorer: <code>rules.py</code> parses it at import and <code>evaluate.py</code> applies it, so a row
-<br>
-added there changes how runs are scored.
+built for reuse. The equivalences are listed in <a href="equivalences.html">EQUIVALENCES.md</a>. <a href="equivalences.html">EQUIVALENCES.md</a>, records the dictionaries which <code>rules.py</code> reads at run time and <code>evaluate.py</code> applies.
 </p>
 <ul>
 <li><strong>§1 Ignore</strong> — tokens removed before comparing, with a position (<code>leading</code> /</li>
 </ul>
 <p>
-  <code>trailing</code> / <code>anywhere</code>) and a side (<code>model</code> / <code>both</code>).
+  <code>trailing</code> / <code>anywhere</code> / <code>onward</code>) and a side (<code>model</code> / <code>both</code>).
 </p>
 <ul>
 <li><strong>§2 Equivalent</strong> — forms that mean the same thing. A single-token row acts as</li>
 </ul>
 <p>
-  an abbreviation expansion; a multi-token row is replaced as a sequence.
+  an abbreviation expansion; a multi-token row is replaced as a sequence. A row&#x27;s
+<br>
+  side says whether it normalizes both GT and model output, or model output only.
 </p>
 <ul>
-<li><strong>§3 Accept pair</strong> — one exact (GT, model) pair accepted, for cases no general</li>
+<li><strong>§3 Dictionary of acceptable alternatives</strong> — for one ground-truth value of</li>
 </ul>
 <p>
-  rule should cover.
-</p>
-<ul>
-<li><strong>§0</strong> — the pipeline order and the structural transforms, which stay in code</li>
-</ul>
-<p>
-  because they are order-dependent rather than lists of forms.
-</p>
-<p>
-Only rows marked <code>settled</code> are applied. <code>OPEN</code> rows are parsed and checked but
+  <code>title</code>, a date or a place field, the normalized model values that also count
 <br>
-change no score, so a rule can be drafted and previewed before it is switched on.
-</p>
-<p>
-<strong>Governing principles</strong>, unchanged: expand-both-sides, so GT and model normalize
-<br>
-to the same canonical and a correctly-written abbreviation earns full credit while
-<br>
-an unrecognized misreading still falls to character accuracy; and every form must
-<br>
-have a witness in the transcription or the ground truth, since this evaluator is
-<br>
-scoped to this corpus rather than built for reuse.
-</p>
-<p>
-A <code>model</code>-side ignore is only valid when the token never appears in the GT for
-<br>
-that field — otherwise it splits pairs that are identical. Verified across all 220
-<br>
-GT values in the four text fields: no current rule does this.
+  as right. This is where correctness is defined beyond equality.
 </p>
 <hr>
-<h2>7. What this document does not cover</h2>
-<ul>
-<li>The collection prompts and the 9-field schema: see <a href="collect_responses.py">collect_responses.py</a>.</li>
-<li>Ground truth: the authoritative per-traveler CSVs in <code>gt/</code> (<code>gt_page_NN.csv</code>).</li>
-<li>Results and per-field breakdowns: see <a href="summary.html">summary.html</a> and the</li>
-</ul>
+<h2>6. How this differs from question-answering</h2>
 <p>
+The question-answering experiment (<a href="/preliminary-work/question-answering/eval_guidelines.html">its evaluation guidelines</a>)
+<br>
+and this one share token preprocessing (§4 steps 1-4) and the expand-both-sides
+<br>
+philosophy. The scoring differs, deliberately:
+</p>
+<table>
+<thead><tr><th></th><th>Question-answering</th><th>Data extraction</th></tr></thead>
+<tbody>
+<tr><td>Text scoring</td><td>Character accuracy — a free-text answer is graded for how close it came</td><td><code>name</code>: similarity gate (Ratcliff-Obershelp ≥ 0.70) for row matching, CER for transcription. <code>title</code>, dates, places: <strong>right or wrong</strong> — a schema field either matches the register entry or does not</td></tr>
+<tr><td>Equivalences</td><td>A dictionary in <code>evaluate.py</code>, always applied to both sides</td><td><a href="equivalences.html">EQUIVALENCES.md</a>: The categories are: ignore, equivalent, and acceptable alternatives</td></tr>
+<tr><td><code>?</code> in the ground truth</td><td>A trailing <code>?</code> (uncertain reading) is stripped before comparison</td><td>In names, one <code>?</code> per unreadable glyph, matched as a wildcard (§2). In other fields, a trailing <code>?</code> is stripped, as in question-answering</td></tr>
+<tr><td>Ground truth and model both blank</td><td>Depends on the question: excluded from the base (Q2, Q21) or 1.0 (Q5, Q10, Q12, Q22)</td><td>1.0 in every field</td></tr>
+</tbody></table>
+<hr>
+<p>
+See <a href="summary.html">summary.html</a> and the
+<br>
   per-page results / compare pages.
 </p>
 </body>

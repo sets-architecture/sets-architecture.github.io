@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Equivalences and Ignore Rules — Data Extraction</title>
+<style>
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.55; }
+h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+h2 { font-size: 1.1rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+h3 { font-size: 1.0rem; margin-top: 1.5rem; }
+hr { border: none; border-top: 1px solid #ccc; margin: 1.5rem 0; }
+table { border-collapse: collapse; font-size: 0.85rem; margin: 0.8rem 0 1.5rem; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #f4f4f4; padding: 1px 4px; border-radius: 3px; font-size: 0.85em; }
+a { color: #1858a7; }
+.back { font-size: 0.82rem; margin-bottom: 1.5rem; }
+td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
+.dates { font-size: 0.8rem; color: #666; margin: 0.25rem 0 1.25rem; line-height: 1.45; }</style>
+</head>
+<body>
+<p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
+<p class="dates">Page generated: 2026-11-07<br>Source updated: 2026-11-07<br>Scoring inputs: ground truth <code>36c390d2</code>, evaluate.py <code>5c52b890</code>, rules <code>f073df0f</code></p>
+<h1>Equivalences and ignore rules</h1>
+<p>
+<strong>This file is the input to the scorer, not a description of it.</strong> <code>rules.py</code> reads it and <code>evaluate.py</code> applies it, so a row here changes how runs are scored.
+</p>
+<p>
+Every row is applied: there is no draft state.
+</p>
+<p>
+The <strong>side</strong> column applies to §1 and §2 alike: <code>both</code> normalizes ground truth and model output together; <code>model</code> applies only to model output, for things the ground truth never contains.
+</p>
+<p>
+Every form must have a witness in the transcription or the ground truth. <code>python check_equivalences.py</code> reports load-bearing vs redundant rows, unobserved forms, any ignore-token that collides with a GT name, and §3 rows or alternatives that are dead or redundant.
+</p>
+<hr>
+<h2>1. Ignore — remove this token, then compare</h2>
+<p>
+The value is compared with the token removed. For <code>name</code>, the unreduced form is always kept as a candidate and the better reading wins, so an ignore rule there can only reveal a name that was buried, never lower a score.
+</p>
+<p>
+Always name the <strong>field</strong>: <code>Cormos</code> is a place in <code>place_of_origin</code> and part of a name in <code>name</code>. Several fields can share one row.
+</p>
+<p>
+<strong>position</strong> decides where the token has to sit, and how much goes with it:
+</p>
+<table>
+<thead><tr><th>position</th><th>removes</th></tr></thead>
+<tbody>
+<tr><td><code>leading</code></td><td>the token, at the start of the value only</td></tr>
+<tr><td><code>trailing</code></td><td>the token, at the end of the value only</td></tr>
+<tr><td><code>anywhere</code></td><td>the token, wherever it occurs</td></tr>
+<tr><td><code>onward</code></td><td>the token <strong>and everything after it</strong> — for a trailing clause such as an appended place of origin</td></tr>
+</tbody></table>
+<p>
+<code>di</code> at the start of a name is a connective; <code>di</code> in the middle is part of <code>Ernesto di Bargh</code>. That is why position is stated rather than inferred. No rule empties a value: if the token is all that remains, it stays.
+</p>
+<table>
+<thead><tr><th>field</th><th>token</th><th>position</th><th>side</th><th>note</th></tr></thead>
+<tbody>
+<tr><td>name, title</td><td>Il, Lo, La, L&#x27;, I, Gli, Le, Li</td><td>leading</td><td>model</td><td>articles. <code>title</code> added 2026-08-25: the §2 rows enumerate <code>Il Barone</code>, <code>Il Co:</code> and the rest one at a time and cannot cover every variation — <code>Il Cornetta</code>, <code>La Vedova</code> and <code>Li conti</code> were all uncovered. No GT title begins with an article, so <code>model</code> side cannot desync the two</td></tr>
+<tr><td>name</td><td>di, da, de, del, della, dei, dal</td><td>onward</td><td>model</td><td>an appended place of origin: the connective and everything after it</td></tr>
+<tr><td>name</td><td>Conte, Conti, Co:</td><td>leading</td><td>model</td><td>title written into the name field</td></tr>
+<tr><td>name</td><td>Monsignor, Mons.</td><td>leading</td><td>model</td><td>title written into the name field</td></tr>
+<tr><td>name</td><td>Barone</td><td>leading</td><td>model</td><td>title written into the name field</td></tr>
+<tr><td>name</td><td>Pre</td><td>leading</td><td>model</td><td>title written into the name field. OPEN until 2026-08-22</td></tr>
+<tr><td>name</td><td>Don, Donna</td><td>leading</td><td>model</td><td>title written into the name field</td></tr>
+<tr><td>name</td><td>Cavalier, Cavaliere, Cav:</td><td>leading</td><td>model</td><td>title written into the name field</td></tr>
+<tr><td>name</td><td>Marchese, March:</td><td>leading</td><td>model</td><td>title written into the name field</td></tr>
+<tr><td>name</td><td>Maggiore, Cornetta, Vedova, Abbate, Abb., Canonico</td><td>leading</td><td>model</td><td>title written into the name field</td></tr>
+<tr><td>place_of_origin</td><td>di, da, d&#x27;</td><td>leading</td><td>model</td><td>122 model rows carry one; 117 reach 1.00, none worsen. The token cell was empty until 2026-08-21, so the row loaded as nothing and the rule never applied</td></tr>
+<tr><td>place_of_stay</td><td>alloggiarono</td><td>anywhere</td><td>model</td><td>alla 232, dal 55, allogiano family ~80</td></tr>
+<tr><td>place_of_stay</td><td>alloggio</td><td>anywhere</td><td>model</td><td>alla 232, dal 55, allogiano family ~80</td></tr>
+<tr><td>place_of_stay</td><td>allogiano</td><td>anywhere</td><td>model</td><td>alla 232, dal 55, allogiano family ~80</td></tr>
+<tr><td>place_of_stay</td><td>alloggiò</td><td>anywhere</td><td>model</td><td>alla 232, dal 55, allogiano family ~80</td></tr>
+<tr><td>place_of_stay</td><td>allogio</td><td>anywhere</td><td>model</td><td>alla 232, dal 55, allogiano family ~80</td></tr>
+<tr><td>place_of_stay</td><td>allogiò</td><td>anywhere</td><td>model</td><td>alla 232, dal 55, allogiano family ~80</td></tr>
+<tr><td>place_of_stay</td><td>all&#x27;, nell&#x27;</td><td>leading</td><td>model</td><td>before ospizio</td></tr>
+</tbody></table>
+<h2>2. Equivalent — these forms are the same value</h2>
+<p>
+All forms on a row mean the same thing; the first is the canonical. A row whose forms are a single token behaves as an abbreviation expansion; a row spanning several tokens is replaced as a sequence wherever it occurs. Same syntax either way — you do not need to know which mechanism applies.
+</p>
+<table>
+<thead><tr><th>field</th><th>forms (separate with =)</th><th>side</th><th>note</th></tr></thead>
+<tbody>
+<tr><td>title, arrival_date, departure_date, place_of_stay, place_of_origin</td><td>giovanni = gio</td><td>both</td><td>general abbreviation, was §0.3</td></tr>
+<tr><td>title, arrival_date, departure_date, place_of_stay, place_of_origin</td><td>quondam = q = q(uonda)m = (quondam) = q.m = qm</td><td>both</td><td>general abbreviation, was §0.3. <code>q(uondam)</code> removed 2026-08-21 — invented variant, the corpus writes <code>q(uonda)m</code></td></tr>
+<tr><td>name</td><td>qm = q = q(uonda)m = q.m = quondam</td><td>both</td><td>was §0.5 — short canonical keeps the normalized name the same length, so the equivalence cannot shift a borderline match across the threshold. <code>q(uondam)</code> removed 2026-08-21 with the general row</td></tr>
+<tr><td>title</td><td>Monsignor = Mons: = Mons.r = Monsig. = Mons. = Mons = Monsr</td><td>both</td><td>100 occurrences currently scoring 0.00</td></tr>
+<tr><td>title</td><td>Pre = Pre. = Pre&#x27;</td><td>both</td><td></td></tr>
+<tr><td>title</td><td>Conte = Co: = Co. = Il Co: = Il Co.</td><td>both</td><td>with the article rule, covers Il Co:</td></tr>
+<tr><td>title</td><td>Marchese = March: = March. = Marc. = Il Marc. = Il March: = il marchese</td><td>both</td><td></td></tr>
+<tr><td>title</td><td>Cavaliere = Il Cav: = Cav. = Cavalier = cavaliere = Cav: = Cav.r</td><td>both</td><td></td></tr>
+<tr><td>title</td><td>Abbate = Abb. = L&#x27;Abb.e = Ab. = L&#x27;Abb: = L&#x27;Abbè = L&#x27;Abbé</td><td>both</td><td>accented variants included: normalization preserves accents, so each needs listing</td></tr>
+<tr><td>title</td><td>Maggiore = Mag.r = mag</td><td>both</td><td></td></tr>
+<tr><td>title</td><td>Canonico/Pre = Il Canonico Pre = Canonico Pre. = canonico pre</td><td>both</td><td></td></tr>
+<tr><td>place_of_stay</td><td>q.m = q.m.</td><td>both</td><td></td></tr>
+<tr><td>place_of_stay</td><td>cà = c.a = ca = ca&#x27; = ca’</td><td>both</td><td>place abbreviation, was §0.4</td></tr>
+<tr><td>place_of_stay</td><td>locanda = loc = loc(and)a = loc: = loc.</td><td>both</td><td>place abbreviation, was §0.4</td></tr>
+<tr><td>place_of_stay, place_of_origin</td><td>maria = m = ma</td><td>both</td><td>place abbreviation, was §0.4</td></tr>
+<tr><td>place_of_stay</td><td>ospizio = osp = osp. = osp(izi)o =</td><td>both</td><td>place abbreviation, was §0.4</td></tr>
+<tr><td>place_of_stay, place_of_origin</td><td>san = sant = santa = st. = st = sta. = s = s.t = s(an)t&#x27; = s(an) = s.</td><td>both</td><td></td></tr>
+<tr><td>place_of_stay, place_of_origin</td><td>santi = s.s = s.ti = ss = sti</td><td>both</td><td>place abbreviation, was §0.4</td></tr>
+<tr><td>place_of_origin</td><td>inglese = inghilterra</td><td>model</td><td></td></tr>
+<tr><td>place_of_origin</td><td>cividal del friuli = cividale del friuli</td><td>model</td><td></td></tr>
+<tr><td>place_of_origin</td><td>dalmatiao = dalmata = dalmazia</td><td>model</td><td></td></tr>
+<tr><td>place_of_origin</td><td>francese = francia</td><td>model</td><td></td></tr>
+<tr><td>place_of_origin</td><td>hanover = hannover</td><td>model</td><td></td></tr>
+<tr><td>place_of_origin</td><td>schio = schiò</td><td>model</td><td></td></tr>
+<tr><td>place_of_origin</td><td>svizzero = svizzera</td><td>model</td><td></td></tr>
+<tr><td>place_of_origin</td><td>ucrania = ucraina</td><td>model</td><td></td></tr>
+</tbody></table>
+<h2>3. Dictionary of acceptable alternatives</h2>
+<p>
+<strong>This section defines what counts as correct.</strong> <code>title</code>, <code>arrival_date</code>, <code>departure_date</code>, <code>place_of_stay</code> and <code>place_of_origin</code> are scored right or wrong: after §1 and §2 have run, a model value either equals the ground truth or appears on that ground truth&#x27;s row here. Nothing else is credited. <code>name</code> is out of scope — it pairs model rows to ground-truth rows rather than being checked for correctness, and keeps similarity scoring throughout.
+</p>
+<p>
+Write <strong>normalized</strong> forms, not raw data. Both sides are compared after the normalizers and the §1/§2 rules have run — lowercase, abbreviations folded to their canonical (<code>s.</code> → <code>san</code>, <code>loc:</code> → <code>locanda</code>, <code>q.m</code> → <code>quondam</code>), commas and colons gone. The loader runs every entry through the same pipeline, so a raw form still matches, but it may not land where it reads as if it does: <code>s. [san] vido</code> below is stored as <code>san [san vido</code>. Writing the normalized form keeps the table saying what the scorer does. <code>python check_equivalences.py</code> prints every entry as normalized, and flags a dead row (ground truth not a normalized GT value), a dead alternative (no model output reaches it) and a redundant one (§1/§2 already make it equal). To check what a form normalizes to before entering it: <code>python -c &quot;import evaluate as e; print(e.norm_place(&#x27;YOUR VALUE&#x27;, False, field=&#x27;place_of_stay&#x27;))&quot;</code> — normalization is idempotent, so a value that comes back unchanged is safe to enter.
+</p>
+<p>
+<strong>One row per ground-truth value</strong>, with the alternatives separated by <code>=</code>, the same syntax §2 uses. The ground-truth column takes a single normalized value.
+</p>
+<p>
+Prefer §2 when the variation is token-level: a rule there generalizes to every value containing the token, while an entry here authorizes one form for one ground truth. <code>de&#x27;poveri</code> for <code>de&#x27; poveri</code> is token-level and belongs in §2; <code>casa di pietro danna locandiere a san giovanni grisostomo</code> is a one-off phrasing and belongs here.
+</p>
+<table>
+<thead><tr><th>field</th><th>ground truth (normalized)</th><th>acceptable alternatives (separate with =)</th><th>note</th></tr></thead>
+<tbody>
+<tr><td>place_of_stay</td><td>alla cortesia san angelo</td><td>alla cortesia san san angelo = cortesia san angelo</td><td></td></tr>
+<tr><td>place_of_stay</td><td>alla cà feltrina san maria zobenigo</td><td>alla cà feltrina s(an)ta maria zobenigo = alla cà feltrina san san maria zobenigo</td><td></td></tr>
+<tr><td>place_of_stay</td><td>allo scudo di francia san lucca</td><td>alla scudo di francia san luca = allo scudo di francia (s luca) = allo scudo di francia san luca = allo studio di francia in san luca = scudo di francia san luca = scudo di francia san lucca</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa d&#x27;isach morpurgo</td><td>casa d&#x27;isaach morpurgo = casa d&#x27;issach morpurgo = casa di isach morpurgo = casa di issach morpurgo</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa del quondam beniamin ottolengo</td><td>casa del quondam boniamin ottolengo</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa del quondam simon todesco</td><td>casa del quondam simon tedesco</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa di bon darij santi apostoli</td><td>casa di bon dary in santi apostoli</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa di pietro danna locanda san giovanni grisostomo</td><td>casa di pietro danna (locanda) in san giovanni grisostomo = casa di pietro danna (locanda) san giovanni grisostomo = casa di pietro danna in san giovanni grisostomo = casa di pietro danna locanda a san giovanni grisostomo = casa di pietro danna locanda in san giovanni grisostomo = casa di pietro danna locandiere a san giovanni grisostomo = casa di pietro danna san giovanni grisostomo = san giovanni grisostomo</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa di salomon levi dal banco</td><td>casa di salamon levi dal banco</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa di valentin todeschini locanda san moisè</td><td>casa di valentin todeschin (locanda) in san moisè = casa di valentin todeschin (locanda) san moisè = casa di valentin todeschin locanda in san moisè = casa di valentin todeschin locanda san moisè = casa di valentin todeschini locanda in san moise = casa di valentin todeschini locanda in san moisè = casa di valentin todeschini locandiere a san moise = casa di valentin todeschini locandiere in san moise</td><td></td></tr>
+<tr><td>place_of_stay</td><td>casa di valentin todeschini san moisè</td><td>casa di valentin todeschin san moisè = casa di valentin todeschini locanda in san moisè = casa di valentin todeschini locandiere a san moise = casa di valentin todeschini san moise</td><td></td></tr>
+<tr><td>place_of_stay</td><td>cà feltrina san maria zobenigo</td><td>alla cà feltrina san maria zobenigo = alla cà feltrina sta maria zobenigo</td><td></td></tr>
+<tr><td>place_of_stay</td><td>da samuel capriles</td><td>casa di samuel capriles = samuel capriles</td><td></td></tr>
+<tr><td>place_of_stay</td><td>dal quondam beniamin ottolengo</td><td>casa del quondam beniamin ottolengo = dal quondam beniamin ottolengho = quondam beniamin ottolengo</td><td></td></tr>
+<tr><td>place_of_stay</td><td>locanda del carro san moisè</td><td>alla locanda del carro san moisè</td><td></td></tr>
+<tr><td>place_of_stay</td><td>ospizio de&#x27; poveri</td><td>osp.o de poveri = ospizio de poveri = ospizio de&#x27;poveri</td><td></td></tr>
+<tr><td>place_of_stay</td><td>quondam emanuel pesaro</td><td>allog(iaro)no dal quondam emanuel pesaro = casa del quondam emanuel pesaro = dal quondam emanuel pesaro</td><td></td></tr>
+<tr><td>place_of_origin</td><td>san vido</td><td>s. [san] vido</td><td></td></tr>
+</tbody></table>
+<hr>
+<h2>Not equivalences — decisions that change the scoring logic</h2>
+<table>
+<thead><tr><th>decision</th><th>effect</th></tr></thead>
+<tbody>
+<tr><td>Blank GT + a model value = wrong (0.0) in every field, not unscorable</td><td>live since 2026-08-21. <code>title</code> was scored this way first; for dates and places it replaced <em>unscorable</em> on 306 comparisons</td></tr>
+<tr><td><code>title</code>, dates and places are right or wrong — no partial credit</td><td>live since 2026-08-26. §3 above lists what else counts as right; <code>name</code> keeps similarity</td></tr>
+<tr><td>Name matching gate: which similarity measure, and the threshold</td><td>Ratcliff-Obershelp ≥ 0.70 gates the match; CER measures transcription — see <a href="eval_method.html">eval_method.html</a></td></tr>
+<tr><td>Multi-traveler rows (f.lli) — relabel, or expand and credit</td><td>not expanded: the row matches one traveler and the rest count as missed; labelled <code>under-segmented</code>. 14 rows</td></tr>
+<tr><td>Courtesy-form stripping from titles — <strong>removed</strong></td><td>no honorific list; a title is compared exactly as written, so <code>Mister</code> against a blank GT scores 0.00</td></tr>
+</tbody></table>
+</body>
+</html>

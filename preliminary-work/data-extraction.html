@@ -71,7 +71,13 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/eval_guidelines.html">Evaluation Guidelines</a></div>
-      <div class="desc">Scoring rules: name matching, character accuracy for text fields, exact-match for booleans and integer counts, and the full abbreviation equivalence table (e.g. <code>q.m. / qm / q(uonda)m → quondam</code>).</div>
+      <div class="desc">Scoring rules: name matching and name CER; every other field right or wrong after normalization and the equivalence rules; and how this scoring differs from question-answering.</div>
+    </div>
+  </li>
+  <li>
+    <div class="report-main">
+      <div class="report-title"><a href="/preliminary-work/data-extraction/equivalences.html">Equivalences &amp; Ignore Rules</a></div>
+      <div class="desc">The equivalence, ignore and acceptable-alternative rules the team decided, exactly as the scorer reads them (e.g. <code>q.m / qm / q(uonda)m → quondam</code>).</div>
     </div>
   </li>
   <li>
@@ -94,19 +100,13 @@ description: Structured data extraction across 3 representative pages and 3 prom
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/eval_method.html">The Evaluation Method</a></div>
-      <div class="desc">What the method measures and how it scores model outputs in four different ways (count, align, measure transcription, and characterize what is left over), in explanation of how the method addresses the two separate questions: how many travelers were found, and how faithfully their names were read.</div>
+      <div class="desc">How named travelers are scored — how many were found, and how faithfully their names were read — with the same runs scored four ways, followed by the evidence: worked cases, name length, and titles or places written into the name.</div>
     </div>
   </li>
   <li>
     <div class="report-main">
       <div class="report-title"><a href="/preliminary-work/data-extraction/name_measures.html">Name Similarity Measures Compared</a></div>
       <div class="desc">Comparison of the different methods explored (Ratcliff-Obershelp, CER, normalized edit distance, token F1 and Jaro-Winkler) to provide evidence for the choice of using Ratcliff to decide identity and CER to measure transcription.</div>
-    </div>
-  </li>
-  <li>
-    <div class="report-main">
-      <div class="report-title"><a href="/preliminary-work/data-extraction/scoring_name_match.html">Name Matching &amp; Field Conflation</a></div>
-      <div class="desc">What the name score is, and where a model puts the right value in the wrong field (a title or place of origin written into the name, which is correct in its own column and breaks the match from the other).</div>
     </div>
   </li>
   <li>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>The Evaluation Method — rationale and comparison</title>
+<title>The Evaluation Method — Named Travelers</title>
 <style>
 body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.55; }
 h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
@@ -20,51 +20,39 @@ td .var { display: block; color: #888; font-size: 0.75rem; margin-top: 1px; }
 </head>
 <body>
 <p class="back"><a href="index.html">&larr; Analysis Reports</a></p>
-<p class="dates">Page generated: 2026-08-27<br>Data (model runs) generated: 2026-07-23<br>Scoring inputs: ground truth <code>36c390d2</code>, evaluate.py <code>5c52b890</code>, rules <code>355f2e77</code></p>
-<h1>The evaluation method</h1>
+<p class="dates">Page generated: 2026-11-07<br>Data (model runs) generated: 2026-07-23<br>Scoring inputs: ground truth <code>36c390d2</code>, evaluate.py <code>5c52b890</code>, rules <code>f073df0f</code></p>
+<h1>The evaluation method — named travelers</h1>
 <p>
-What it measures, why it is built this way, and the same model runs scored four ways so the differences can be inspected rather than taken on trust. Every figure on this page is computed by <code>build_eval_method.py</code> from the run checkpoints and the ground-truth CSVs.
+Part II asks for one record per named traveler. This page covers the first field only, the name: how model rows are paired with ground-truth travelers, and how well the names were read. The other eight fields are scored right or wrong (<a href="eval_guidelines.html">eval_guidelines.html</a>, <a href="equivalences.html">equivalences.html</a>). The method comes first (§1–6), then the evidence behind it (§7–10). Every figure is computed by <code>build_eval_method.py</code>.
 </p>
 <hr>
-<h2>1. What we are asking of the sources</h2>
+<h2>1. Two questions</h2>
 <p>
-The Venice 39 material is a weekly register of foreign visitors: each page lists arrivals in the left column and departures in the right, one line per named traveler, with title, dates, lodging and place of origin. Two different historical questions are being put to it, and this experiment is the second half of a two-part study that separates them.
-</p>
-<p>
-1. <strong>How many people are recorded here?</strong> A count of unique named travelers per page. This is the question the question-answering half of the study asks directly, and it is answerable without reading a single name correctly.
+1. <strong>How many named travelers are on the page?</strong> Answerable without reading a single name correctly; Part I asks it directly.
 <br>
-2. <strong>Who were they?</strong> The names as written, transcribed faithfully enough to identify individuals, link them across records and search for them.
+2. <strong>Who were they?</strong> Each traveler once, with the name as written. A traveler who arrives and departs in the same week appears in both columns of the register but is one person, and one row.
 </p>
 <p>
-These are different capabilities and a model can have one without the other. An evaluation that returns a single number cannot tell you which you have. That is the whole design constraint.
+A model can answer one well and the other badly, so each gets its own measure: the count for the first question, and matching (F1) and transcription (name CER) for the second.
 </p>
-<h2>2. What the method does</h2>
-<p>
-<strong>Step 1 — count.</strong> Count the distinct named travelers the model reports on a page and compare with the ground-truth count for that page. Duplicated rows collapse to one traveler, because the question is how many people are recorded, not how many rows were emitted. No name matching is involved; a model that invents every name still counts correctly if it reports the right number of people.
-</p>
-<p>
-<strong>Step 2 — align.</strong> Pair each model row with the ground-truth traveler it is closest to, order-blind, using character similarity on the name. Before comparing, added titles, articles and places of origin are removed from the model&#x27;s name field, and the best available reading wins — so <code>Il Barone Bassa</code> is compared as <code>Bassa</code> and <code>Israel Baysan di Verona</code> as <code>Israel Baysan</code>. The unreduced name is always among the candidates, so a reduction can only reveal a name that was buried, never lower a score.
-</p>
-<p>
-<strong>Step 3 — measure transcription.</strong> Over the aligned pairs, report character error rate on the name itself: <code>CER = levenshtein(gt, model) / len(gt)</code>, micro-averaged, plus the share of names reproduced exactly. The alignment used for this measure has <strong>no similarity floor</strong>, so a badly read name stays in the pool instead of being dropped for being badly read.
-</p>
-<p>
-<strong>Step 4 — characterise what is left over.</strong> Rows with no ground-truth counterpart are classified rather than lumped together: a traveler listed twice, two travelers merged into one row, a fragment of a name, a real traveler misread past recognition, or an invention with no counterpart on the page.
-</p>
-<p>
-Detection precision and recall are still reported, at a 0.70 similarity threshold, but they are one output among several rather than the headline.
-</p>
+<h2>2. Method</h2>
+<ul>
+<li><strong>Count.</strong> Distinct names a model reports per page, shown as the range over 10 runs, against the ground-truth count.</li>
+<li><strong>Match.</strong> Each model row is paired with at most one ground-truth traveler, if their similarity is at least 0.70: the larger of the Ratcliff-Obershelp ratio and token overlap (§7). Titles, articles and places of origin are removed from the model&#x27;s name first, and the best reading wins. Precision, recall and F1 count these pairs. A traveler listed twice matches once; the second row counts against precision.</li>
+<li><strong>Transcription.</strong> Character error rate on the name (<code>edits / ground-truth length</code>, micro-averaged), plus the share of names read exactly. Here it is computed over a one-to-one assignment with no similarity floor, so badly read names stay in. The name CER on <a href="summary.html">summary.html</a> covers matched pairs only — for GPT in the naive condition, 0.23 there against 0.44 here.</li>
+<li><strong>Leftover rows.</strong> Rows beyond that assignment are classified: double-listed, two travelers in one row, fragment, bad read, or fabricated. (<a href="summary.html">summary.html</a> §1.2 classifies every row that failed the match, so its counts are larger.)</li>
+</ul>
 <h2>3. The same runs, scored four ways</h2>
 <table>
-<thead><tr><th>Method</th><th>gate</th><th>alignment</th><th>name reductions</th></tr></thead>
+<thead><tr><th>Method</th><th>match test</th><th>alignment</th><th>name reductions</th></tr></thead>
 <tbody>
-<tr><td><strong>adopted</strong></td><td>Ratcliff-Obershelp ratio ≥ 0.70</td><td>greedy, order-blind</td><td>titles, articles, origins</td></tr>
-<tr><td>original</td><td>Ratcliff-Obershelp ratio ≥ 0.70</td><td>greedy, order-blind</td><td>none — pinned at <code>14e2ef6</code></td></tr>
+<tr><td><strong>adopted</strong></td><td>Ratcliff-Obershelp or token overlap ≥ 0.70</td><td>greedy, order-blind</td><td>titles, articles, origins</td></tr>
+<tr><td>original</td><td>Ratcliff-Obershelp or token overlap ≥ 0.70</td><td>greedy, order-blind</td><td>none — the method at <code>14e2ef6</code></td></tr>
 <tr><td>cer gate</td><td>1 − CER ≥ 0.70</td><td>greedy, order-blind</td><td>titles, articles, origins</td></tr>
 <tr><td>order-preserving</td><td>1 − CER ≥ 0.70</td><td>Needleman-Wunsch</td><td>none</td></tr>
 </tbody></table>
 <p>
-F1 under each, pooled across the three pages and 10 runs:
+F1 under each, pooled across the three pages and 10 runs. The adopted method is the one the scorer uses.
 </p>
 <table>
 <thead><tr><th>Model</th><th>Cond</th><th><strong>adopted</strong></th><th>original</th><th>cer gate</th><th>order-preserving</th></tr></thead>
@@ -86,13 +74,7 @@ F1 under each, pooled across the three pages and 10 runs:
 <tr><td>Claude Thinking</td><td>B</td><td>0.997</td><td>0.995</td><td>0.991</td><td>0.989</td></tr>
 <tr><td><strong>All</strong></td><td></td><td><strong>0.807</strong></td><td>0.776</td><td>0.730</td><td>0.692</td></tr>
 </tbody></table>
-<p>
-Reading across a row shows how much of a model&#x27;s score is an artefact of the instrument. What no column shows is whether the model could read the names — all four are counts of rows that cleared a bar.
-</p>
-<h2>4. What the adopted method reports</h2>
-<p>
-Counting and transcription, per page, so the counts are whole numbers against a whole-number ground truth:
-</p>
+<h2>4. Results by page</h2>
 <h3>Page 28 — 18 unique named travelers</h3>
 <table>
 <thead><tr><th>Model</th><th>naive: found</th><th>CER</th><th>exact</th><th>guided: found</th><th>CER</th><th>exact</th><th>+transcription: found</th><th>CER</th><th>exact</th></tr></thead>
@@ -124,10 +106,10 @@ Counting and transcription, per page, so the counts are whole numbers against a 
 <tr><td>Claude Thinking</td><td>10</td><td>0.23</td><td>16%</td><td>10</td><td>0.23</td><td>17%</td><td>10</td><td>0.00</td><td>98%</td></tr>
 </tbody></table>
 <p>
-Plus the composition of the surplus — rows left over once every ground-truth traveler has its closest candidate:
+Leftover rows:
 </p>
 <table>
-<thead><tr><th>Model</th><th>Cond</th><th>surplus rows</th><th>composition</th></tr></thead>
+<thead><tr><th>Model</th><th>Cond</th><th>leftover rows</th><th>composition</th></tr></thead>
 <tbody>
 <tr><td>Claude</td><td>A</td><td>10</td><td>double-listed 10</td></tr>
 <tr><td>GPT</td><td>N</td><td>12</td><td>fabricated 9, bad read 2, double-listed 1</td></tr>
@@ -141,35 +123,151 @@ Plus the composition of the surplus — rows left over once every ground-truth t
 <tr><td>Claude Thinking</td><td>N</td><td>1</td><td>bad read 1</td></tr>
 <tr><td>Claude Thinking</td><td>A</td><td>1</td><td>double-listed 1</td></tr>
 </tbody></table>
-<h2>5. Why this rather than the alternatives</h2>
-<p>
-<strong>A single number answers neither question.</strong> F1 counts rows that cleared a similarity bar. GPT in the naive condition scores 0.471, which reads as a failure to find the travelers. It is not: on page 39 it reports 9–10 unique named travelers against a ground truth of 10, the same count Gemini 3.1 reports, and then misreads them at 0.57 character error against Gemini 3.1&#x27;s 0.12. Equally good at the first question, very unequal at the second. So detection and transcription are reported as two numbers, F1 and name CER.
-</p>
-<p>
-<strong>The gate and the transcription measure do different jobs, so they are different measures.</strong> The gate decides <em>which traveler a row is about</em>; it is thresholded and then discarded, so a pair at 0.71 and one at 1.00 are identical to F1. Transcription asks <em>how faithfully the name was read</em>, and wants a graded, interpretable, composable number. Ratcliff-Obershelp serves the first and CER the second. Trying to make one measure do both is what produced the original design, where the name&#x27;s reading accuracy appeared in no published figure at all.
-</p>
-<p>
-<strong>CER is the right instrument for transcription and the wrong one for identity.</strong> Its reference-length denominator is a virtue when measuring error per reference character and a defect when deciding identity: appended content is penalised as heavily as wrong content, so a model that writes the traveler&#x27;s origin or title into the name field is recorded as having found nobody. The <code>cer gate</code> column shows the cost. On this corpus the choice is also less consequential than it looks — Ratcliff-Obershelp, CER and edit distance normalized by the longer string agree to two decimals on equal-length substitutions, which is what most misreadings here are; they disagree on 77 occurrences out of 9,586. Ratcliff was kept because it is already in place and nothing in the evidence justified moving the gate.
-</p>
-<p>
-<strong>The name reductions are what the <code>adopted</code> column adds over <code>original</code>.</strong> Titles, articles and appended places of origin are removed from the model&#x27;s name before comparing, and the best reading wins — so a reduction can only reveal a name that was buried, never lower a score. That matters because the ground truth itself contains <code>Ernesto di Bargh</code> and <code>De Flamarin</code>, where the connective is part of the name, and <code>Salamon Cormos</code>, whose recorded origin is Cormos. An unconditional strip would damage all three.
-</p>
-<p>
-<strong>Order-preserving alignment costs more than it returns.</strong> Requiring the model&#x27;s row order to follow the ground truth&#x27;s forfeits matches when a model reads across the two columns instead of finishing the left one first, or groups a family together. Both are legitimate readings of a page the prompt never asked to be traversed in a particular order, and the cost falls almost entirely on one model, which would read as an extraction difference rather than a traversal choice.
-</p>
-<p>
-<strong>The transcription measure is not conditioned on the gate.</strong> Reporting CER only over rows that cleared the threshold would measure the names a model read well, by construction. The gate is set permissively so that marginal readings stay in the pool; the two numbers must therefore be read together, since tightening the gate would raise F1&#x27;s selectivity and flatter CER at the same time. GPT&#x27;s naive character error is 0.44 measured this way.
-</p>
-<h2>6. What this method does not do</h2>
+<h2>5. Why this method</h2>
 <ul>
-<li>The alignment used for the transcription measure is bookkeeping, not a claim of identity. Pairing a model&#x27;s row with a ground-truth traveler at 0.30 similarity does not assert they are the same person; it places the row where its character error can be counted. Detection is answered by the counts and the thresholded precision, never by the size of the assignment.</li>
-<li>CER is a corpus statistic. Over hundreds of names per cell it is stable; on a single short name it is very noisy, which is why no per-name threshold should be read as a confident judgment about that name.</li>
-<li>It measures names. The other eight fields are scored separately and their normalization rules are still under review.</li>
-<li>Nothing here evaluates whether a traveler was correctly placed in the arrival or the departure column.</li>
+<li><strong>Finding and reading are different skills.</strong> GPT in the naive condition scores F1 0.471, yet on page 39 it finds 9–10 of 10 travelers; it misreads them (CER 0.57, against Gemini 3.1&#x27;s 0.12).</li>
+<li><strong>Ratcliff-Obershelp to match, CER to measure reading.</strong> CER penalizes added text as heavily as wrong text, so as a matching test it rejects a correct name with a title or origin attached (the <em>cer gate</em> column).</li>
+<li><strong>Removing titles and origins never lowers a score, but it is not free.</strong> The name as written is always tried too. The removal also lifts some wrong readings over the threshold (the Tornielli and Mazuchelli cases in §8), and stripping unconditionally would damage <code>Ernesto di Bargh</code>, <code>De Flamarin</code> and <code>Salamon Cormos</code>, where the connective or the place is part of the name.</li>
+<li><strong>Row order is not required.</strong> The prompt does not fix a reading order. Enforcing one costs Gemini 2.5 (naive) 0.065 F1, and no other model and condition more than 0.023.</li>
+</ul>
+<h2>6. Limits</h2>
+<ul>
+<li>The no-floor assignment is bookkeeping for CER, not a claim that two names are the same person.</li>
+<li>CER is stable over a whole cell and noisy on a single short name (§9).</li>
+<li>Whether a traveler sits in the arrival or the departure column is not evaluated. Listing the same traveler in both is (§2).</li>
 </ul>
 <hr>
+<h2>7. The two measures</h2>
 <p>
-Generated by <code>build_eval_method.py</code>. Scoring rules: <a href="eval_guidelines.html">eval_guidelines.html</a>. Worked cases of the name measure: <a href="scoring_name_match.html">scoring_name_match.html</a>.
+Both are computed on the reduced readings of the model&#x27;s name (§2), and the best reading wins.
+</p>
+<ul>
+<li><strong>Match test</strong> — the larger of the Ratcliff-Obershelp ratio, <code>2·M / T</code> (<code>T</code> is the combined length of both names, <code>M</code> the characters in matching blocks), and token overlap, <code>|A∩B| / max(|A|,|B|)</code>. A pair at 0.70 or above can match; the value is then discarded.</li>
+<li><strong>CER</strong> — <code>levenshtein(gt, model) / len(gt)</code>: edits per ground-truth character.</li>
+</ul>
+<p>
+They agree on plain misreadings and part on length: the match test&#x27;s combined length absorbs added text, CER&#x27;s ground-truth length does not.
+</p>
+<h2>8. Worked cases</h2>
+<p>
+Model readings of one ground-truth traveler, across runs. <em>gate, untouched</em> is the match test on the name as written; <strong>gate</strong> is after titles, articles and origins are removed, as the scorer applies it, and <em>removed</em> says what was taken off. <em>name CER</em> is the scorer&#x27;s. <em>title</em> and <em>origin</em> are the scorer&#x27;s right-or-wrong results for the same row.
+</p>
+<h3>A title is removed, and the row is still lost to the reading</h3>
+<p>
+Page 39 — <strong>Baissen</strong>. GPT reports the title correctly as <em>Barone</em> and also prefixes it to the name. With the title removed, the comparison is <code>Bassa</code> against <code>Baissen</code>: three wrong characters in a seven-character name, and the row is rejected on the reading alone.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, untouched</th><th><strong>gate</strong></th><th>name CER</th><th>removed</th><th>title</th><th>origin</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Baissen</strong></td><td><strong>Barone</strong></td><td><strong>Sassonia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT A</td><td>7</td><td>Il Barone Bassa</td><td>Barone</td><td>Sassonia</td><td>0.364</td><td><strong>0.667</strong></td><td>0.429</td><td>title/article: il barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Barone</td><td>Sassonia</td><td>0.320</td><td><strong>0.667</strong></td><td>0.429</td><td>title/article: il barone; origin: di</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il barone Bassa di</td><td>Il barone</td><td>Sassonia</td><td>0.320</td><td><strong>0.667</strong></td><td>0.429</td><td>title/article: il barone; origin: di</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>3</td><td>Il Barone Bassa di</td><td>Il Barone</td><td>Sassonia</td><td>0.320</td><td><strong>0.667</strong></td><td>0.429</td><td>title/article: il barone; origin: di</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Baissen</td><td>Il Barone</td><td>Sassonia</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Baissen</td><td>Barone</td><td>Sassonia</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>A place of origin appended to the name</h3>
+<p>
+Page 28 — <strong>Israel Bassan</strong>. GPT fills <code>place_of_origin</code> correctly and also appends it to the name. As written, the row falls below the threshold; with the origin removed, it matches. The reading did not change, only whether the scorer could see it.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, untouched</th><th><strong>gate</strong></th><th>name CER</th><th>removed</th><th>title</th><th>origin</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Israel Bassan</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Verona</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT N</td><td>6</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td><strong>0.923</strong></td><td>0.077</td><td>origin: di verona</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT A</td><td>2</td><td>Israel Baysan di Verona</td><td><em>(blank)</em></td><td>Verona</td><td>0.667</td><td><strong>0.923</strong></td><td>0.077</td><td>origin: di verona</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Israel</td><td><em>(blank)</em></td><td>Verona</td><td>0.632</td><td><strong>0.632</strong></td><td>0.538</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Israel Bassan</td><td><em>(blank)</em></td><td>Verona</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>The ground truth is a bare surname</h3>
+<p>
+Page 36 — <strong>Tornielli</strong>. Ground truth records only the surname, so as written almost every row here is mostly title. With the title removed, all but the worst misreading clear the threshold — including <code>Barone Donizelli</code>, where the surname is simply wrong. The removal raises every score, not only the deserving ones.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, untouched</th><th><strong>gate</strong></th><th>name CER</th><th>removed</th><th>title</th><th>origin</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Tornielli</strong></td><td><strong>Barone</strong></td><td><strong>Milano</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Claude Thinking N</td><td>1</td><td>Barone Bonnietti</td><td>Barone</td><td>di Milano</td><td>0.400</td><td><strong>0.556</strong></td><td>0.444</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude A</td><td>7</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td><strong>0.778</strong></td><td>0.333</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>6</td><td>Barone Donizelli</td><td>Barone</td><td>Milano</td><td>0.560</td><td><strong>0.778</strong></td><td>0.333</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT A</td><td>5</td><td>Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.609</td><td><strong>0.875</strong></td><td>0.222</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude N</td><td>4</td><td>Barone Donzelli</td><td>Barone</td><td>Milano</td><td>0.500</td><td><strong>0.706</strong></td><td>0.333</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>Ambasciatore di Milano</td><td>0.538</td><td><strong>0.875</strong></td><td>0.222</td><td>title/article: il barone</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>GPT N</td><td>2</td><td>Il Barone Tonelli</td><td>Barone</td><td>di Milano</td><td>0.538</td><td><strong>0.875</strong></td><td>0.222</td><td>title/article: il barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude A</td><td>2</td><td>Barone Donnielli</td><td>Barone</td><td>Milano</td><td>0.560</td><td><strong>0.778</strong></td><td>0.222</td><td>title/article: barone</td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Tornielli</td><td>Il Barone</td><td>Milano</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Tornielli</td><td>Barone</td><td>Milano</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Removing a title can admit a wrong reading</h3>
+<p>
+Page 36 — <strong>Francesco Mazuchelli</strong>. Removing <em>Conte</em> lifts two wrong readings, <code>Conte Francesco Alberti</code> and <code>Conte Francesco di ... Marchetti</code>, over the threshold for this traveler. (He shares one line of the register with his two brothers; rows that combine them are under <em>Several travelers in one row</em> below.)
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, untouched</th><th><strong>gate</strong></th><th>name CER</th><th>removed</th><th>title</th><th>origin</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Francesco Mazuchelli</strong></td><td><strong>Conte</strong></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Conte Francesco Alberti</td><td>Conte</td><td>Savoia</td><td>0.605</td><td><strong>0.703</strong></td><td>0.350</td><td>title/article: conte</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>GPT N</td><td>1</td><td>Conte Francesco di ... Marchetti</td><td>Conte</td><td>S. ... / Grecia</td><td>0.667</td><td><strong>0.762</strong></td><td>0.350</td><td>title/article: conte</td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Gemini 2.5 A</td><td>3</td><td>Francesco Mariscotti</td><td>Conte</td><td>Bologna</td><td>0.650</td><td><strong>0.650</strong></td><td>0.350</td><td><em>(blank)</em></td><td>1.00</td><td>0.00</td></tr>
+<tr><td>Claude Thinking N</td><td>1</td><td>Archiciato Malucelli</td><td><em>(blank)</em></td><td>Leccia</td><td>0.650</td><td><strong>0.650</strong></td><td>0.450</td><td><em>(blank)</em></td><td>0.00</td><td>0.00</td></tr>
+<tr><td>Claude B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Claude Thinking B</td><td>10</td><td>Francesco Mazuchelli</td><td>Conte</td><td>Brescia</td><td>1.000</td><td><strong>1.000</strong></td><td>0.000</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Control: a long name absorbs the same number of errors</h3>
+<p>
+Page 39 — <strong>Giovanni Battista Maffoni</strong>. Nothing is added to the name, so <em>removed</em> is empty and the two gate columns agree. Three wrong characters cost little here; compare <code>Baissen</code> above.
+</p>
+<table>
+<thead><tr><th>Source</th><th>Runs</th><th><code>name</code></th><th><code>title</code></th><th><code>place_of_origin</code></th><th>gate, untouched</th><th><strong>gate</strong></th><th>name CER</th><th>removed</th><th>title</th><th>origin</th></tr></thead>
+<tbody>
+<tr><td><strong>Ground truth</strong></td><td>—</td><td><strong>Giovanni Battista Maffoni</strong></td><td><strong><em>(blank)</strong></em></td><td><strong>Brescia</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Claude N</td><td>10</td><td>Giovanni Batta Maffoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.936</td><td><strong>0.936</strong></td><td>0.120</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+<tr><td>Gemini 3.1 N</td><td>10</td><td>Giovanni Batta Massoni</td><td><em>(blank)</em></td><td>Brescia</td><td>0.851</td><td><strong>0.851</strong></td><td>0.200</td><td><em>(blank)</em></td><td>1.00</td><td>1.00</td></tr>
+</tbody></table>
+<h3>Several travelers in one row</h3>
+<p>
+The register writes some family groups on one line (<code>f.lli</code> = <em>fratelli</em>, brothers); the ground truth gives each named traveler a row, as the prompt asks. A model that copies the line as written produces one row for two or three travelers. That row can match at most one of them; the rest count as missed.
+</p>
+<table>
+<thead><tr><th>Page</th><th>Model</th><th>Cond</th><th>Runs</th><th>the single <code>name</code> produced</th><th><code>title</code></th><th><code>place_of_origin</code></th><th>GT travelers in that one row</th></tr></thead>
+<tbody>
+<tr><td>36</td><td>Gemini 3.1</td><td>N</td><td>10</td><td>Francesco Filippo e Federico f.lli Mazzuchelli</td><td>Li Co:</td><td>Brescia</td><td>3 — Francesco Mazuchelli; Filippo Mazuchelli; Federico Mazuchelli</td></tr>
+<tr><td>36</td><td>Gemini 2.5</td><td>N</td><td>3</td><td>Giuseppe Palmarini, Girolamo Bouillino e Antonio Zivati</td><td><em>(blank)</em></td><td>di Genova</td><td>2 — Giuseppe Palmarino; Girolamo Borellino</td></tr>
+</tbody></table>
+<h2>9. Name length</h2>
+<p>
+The same number of wrong characters is survivable in a long name and fatal in a short one. The verdict is the match test&#x27;s.
+</p>
+<table>
+<thead><tr><th>GT name</th><th>model reading</th><th>characters wrong</th><th>GT length</th><th>CER</th><th>match test</th><th>verdict</th></tr></thead>
+<tbody>
+<tr><td>Baissen</td><td>Bassa</td><td>3</td><td>7</td><td>0.429</td><td>0.667</td><td><strong>rejected</strong></td></tr>
+<tr><td>Giovanni Battista Maffoni</td><td>Giovanni Battesta Maffoni</td><td>1</td><td>25</td><td>0.040</td><td>0.960</td><td>matched</td></tr>
+</tbody></table>
+<h2>10. Titles and places written into the name</h2>
+<p>
+Counted over every row a model produced. <em>Title in name</em> and <em>origin in name</em>: the model also wrote the traveler&#x27;s title or place of origin into the name. <em>Also correct in its own field</em>: it filled that field correctly too, so the value was repeated rather than misplaced. Because titles and origins are removed before matching, this costs nothing by itself; <em>row lost</em> counts rows that still failed to match, on the reading of the name. These counts measure instruction-following, not transcription.
+</p>
+<table>
+<thead><tr><th>Model</th><th>Cond</th><th>Rows</th><th>Title in name</th><th>Origin in name</th><th>also correct in its own field</th><th>row still matched</th><th>row lost</th></tr></thead>
+<tbody>
+<tr><td>Claude</td><td>N</td><td>629</td><td>62 (9.9%)</td><td>0 (0.0%)</td><td>49 of 62</td><td>46</td><td><strong>16</strong></td></tr>
+<tr><td>Claude</td><td>A</td><td>632</td><td>23 (3.6%)</td><td>0 (0.0%)</td><td>11 of 23</td><td>22</td><td><strong>1</strong></td></tr>
+<tr><td>GPT</td><td>N</td><td>607</td><td>61 (10.0%)</td><td>60 (9.9%)</td><td>104 of 121</td><td>100</td><td><strong>21</strong></td></tr>
+<tr><td>GPT</td><td>A</td><td>675</td><td>34 (5.0%)</td><td>15 (2.2%)</td><td>44 of 49</td><td>38</td><td><strong>11</strong></td></tr>
+<tr><td>GPT</td><td>B</td><td>650</td><td>10 (1.5%)</td><td>0 (0.0%)</td><td>5 of 10</td><td>10</td><td><strong>0</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>N</td><td>630</td><td>4 (0.6%)</td><td>0 (0.0%)</td><td>0 of 4</td><td>4</td><td><strong>0</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>A</td><td>650</td><td>6 (0.9%)</td><td>0 (0.0%)</td><td>0 of 6</td><td>6</td><td><strong>0</strong></td></tr>
+<tr><td>Gemini 3.1</td><td>B</td><td>652</td><td>9 (1.4%)</td><td>0 (0.0%)</td><td>9 of 9</td><td>9</td><td><strong>0</strong></td></tr>
+<tr><td>Claude Thinking</td><td>N</td><td>614</td><td>21 (3.4%)</td><td>0 (0.0%)</td><td>13 of 21</td><td>18</td><td><strong>3</strong></td></tr>
+<tr><td>Claude Thinking</td><td>A</td><td>628</td><td>12 (1.9%)</td><td>0 (0.0%)</td><td>2 of 12</td><td>9</td><td><strong>3</strong></td></tr>
+<tr><td>Claude Thinking</td><td>B</td><td>650</td><td>1 (0.2%)</td><td>0 (0.0%)</td><td>0 of 1</td><td>1</td><td><strong>0</strong></td></tr>
+</tbody></table>
+<hr>
+<p>
+Generated by <code>build_eval_method.py</code>. Scoring rules: <a href="eval_guidelines.html">eval_guidelines.html</a>.
 </p>
 </body>
 </html>
