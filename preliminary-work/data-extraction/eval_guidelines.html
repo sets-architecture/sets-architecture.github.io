@@ -59,7 +59,7 @@ Each row is greedily paired with at most one GT row by <strong>name similarity</
 <br>
   <strong>wildcard</strong>: it matches any single character at no cost.  
 <br>
-  The quondam abbreviation variants listed on the <code>name</code> row of <a href="equivalences.html">EQUIVALENCES.md</a> are first collapsed to a single
+  The quondam abbreviation variants listed on the <code>name</code> row of the <a href="equivalences.html">equivalence rules</a> are first collapsed to a single
 <br>
   short canonical (<code>qm</code>), so e.g. <code>Leon q.m. Iacob Todesco</code> and
 <br>
@@ -209,7 +209,7 @@ The blank-GT rules are the same for every field:
 <p>
 <strong>What counts as right.</strong> After normalization (see 4 below) and the
 <br>
-<a href="equivalences.html">EQUIVALENCES.md</a> rules have run on both sides, the model value either
+<a href="equivalences.html">equivalence rules</a> have run on both sides, the model value either
 <br>
 equals the ground truth, or it is one of the <strong>acceptable alternatives</strong>. Nothing else is credited. For example: If a model lists <code>alla cortesia san angelo</code> and the ground truth is
 <br>
@@ -248,7 +248,7 @@ Applied to every text field (title, dates, and — as the first layer — places
 <p>
 This evaluator is scoped to this corpus, specifically. It is not 
 <br>
-built for reuse. The equivalences are listed in <a href="equivalences.html">EQUIVALENCES.md</a>. <a href="equivalences.html">EQUIVALENCES.md</a>, records the dictionaries which <code>rules.py</code> reads at run time and <code>evaluate.py</code> applies.
+built for reuse. The equivalences are listed on the <a href="equivalences.html">Equivalences and Ignore Rules</a> page, which records the dictionaries that <code>rules.py</code> reads at run time and <code>evaluate.py</code> applies.
 </p>
 <ul>
 <li><strong>§1 Ignore</strong> — tokens removed before comparing, with a position (<code>leading</code> /</li>
@@ -285,7 +285,7 @@ philosophy. The scoring differs, deliberately:
 <thead><tr><th></th><th>Question-answering</th><th>Data extraction</th></tr></thead>
 <tbody>
 <tr><td>Text scoring</td><td>Character accuracy — a free-text answer is graded for how close it came</td><td><code>name</code>: similarity gate (Ratcliff-Obershelp ≥ 0.70) for row matching, CER for transcription. <code>title</code>, dates, places: <strong>right or wrong</strong> — a schema field either matches the register entry or does not</td></tr>
-<tr><td>Equivalences</td><td>A dictionary in <code>evaluate.py</code>, always applied to both sides</td><td><a href="equivalences.html">EQUIVALENCES.md</a>: The categories are: ignore, equivalent, and acceptable alternatives</td></tr>
+<tr><td>Equivalences</td><td>A dictionary in <code>evaluate.py</code>, always applied to both sides</td><td><a href="equivalences.html">Equivalences and Ignore Rules</a>: The categories are: ignore, equivalent, and acceptable alternatives</td></tr>
 <tr><td><code>?</code> in the ground truth</td><td>A trailing <code>?</code> (uncertain reading) is stripped before comparison</td><td>In names, one <code>?</code> per unreadable glyph, matched as a wildcard (§2). In other fields, a trailing <code>?</code> is stripped, as in question-answering</td></tr>
 <tr><td>Ground truth and model both blank</td><td>Depends on the question: excluded from the base (Q2, Q21) or 1.0 (Q5, Q10, Q12, Q22)</td><td>1.0 in every field</td></tr>
 </tbody></table>
