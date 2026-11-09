@@ -1,4 +1,4 @@
-# Page 39 — August 20, 1770 (AVS IS 758-781 1770 08)
+# Page 39 — August 20, 1770
 
 AVS IS 758-781 August/20/1770
 

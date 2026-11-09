@@ -19,7 +19,7 @@ For example, on model results generated 2026-01-06 at 14:49:32 compared to model
  - Claude Opus: 255 differences across all questions 
  - Gemini: 395 differences across all questions
  
- For the first image AVS IS 758-781 1766 02.jpg
+ For the first image (page 28)
  
  Claude differences: 
   - Additional circular marks: 0 vs 21 

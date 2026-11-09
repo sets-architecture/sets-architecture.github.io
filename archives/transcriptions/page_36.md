@@ -1,4 +1,4 @@
-# Page 36 — May 28, 1770 (AVS IS 758-781 1770 05 28 p1)
+# Page 36 — May 28, 1770
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*A dì 28 Mag(gi)o 1770*
 

@@ -1,0 +1,82 @@
+---
+layout: default
+title: Page not found
+permalink: /404.html
+---
+{% comment %}
+Site-wide not-found page. The 39 venice-39 page images were renamed from their
+archival filenames ("AVS IS 758-781 ….jpg") to page IDs (page_NN.jpg) in November
+2026. An old image address is sent straight to the renamed file; an unknown name
+under /preliminary-work/images/ shows the old → new list. The table is generated
+from venice-39-guided/filename_ID_map.csv; do not edit it by hand.
+{% endcomment %}
+<script>
+(function () {
+  var RENAMED = {"AVS IS 758-781 1767 07 01.jpg": "page_01.jpg", "AVS IS 758-781 1767 02 01 p1.jpg": "page_02.jpg", "AVS IS 758-781 1767 02 01 p2.jpg": "page_03.jpg", "AVS IS 758-781 1767 02 01 p3.jpg": "page_04.jpg", "AVS IS 758-781 1767 02 01 p4.jpg": "page_05.jpg", "AVS IS 758-781 1768 03 26.jpg": "page_06.jpg", "AVS IS 758-781 1768 05 02.jpg": "page_07.jpg", "AVS IS 758-781 1768 05 08.jpg": "page_08.jpg", "AVS IS 758-781 1768 05 08 p2.jpg": "page_09.jpg", "AVS IS 758-781 1768 05 08 p3.jpg": "page_10.jpg", "AVS IS 758-781 1768 05 08 p4.jpg": "page_11.jpg", "AVS IS 758-781 1768 05 08 p5.jpg": "page_12.jpg", "AVS IS 758-781 1768 05 09 p2.jpg": "page_13.jpg", "AVS IS 758-781 1768 05 09 p1.jpg": "page_14.jpg", "AVS IS 758-781 1768 05 09 p3.jpg": "page_15.jpg", "AVS IS 758-781 1768 05 16.jpg": "page_16.jpg", "AVS IS 758-781 1768 08 01.jpg": "page_17.jpg", "AVS IS 758-781 1768 09.jpg": "page_18.jpg", "AVS IS 758-781 1768 11 07.jpg": "page_19.jpg", "AVS IS 758-781 1768 11 28.jpg": "page_20.jpg", "AVS IS 758-781 1768 05.jpg": "page_21.jpg", "AVS IS 758-781 1768 01 02.jpg": "page_22.jpg", "AVS IS 758-781 1768 01 09.jpg": "page_23.jpg", "AVS IS 758-781 1768 01 16 p1.jpg": "page_24.jpg", "AVS IS 758-781 1768 01 16 p2.jpg": "page_25.jpg", "AVS IS 758-781 1768 01 16 p3.jpg": "page_26.jpg", "AVS IS 758-781 1768 02 20.jpg": "page_27.jpg", "AVS IS 758-781 1766 02.jpg": "page_28.jpg", "AVS IS 758-781 1769 05 p1.jpg": "page_29.jpg", "AVS IS 758-781 1769 05 p2.jpg": "page_30.jpg", "AVS IS 758-781 1770 03.jpg": "page_31.jpg", "AVS IS 758-781 1770 05 13.jpg": "page_32.jpg", "AVS IS 758-781 1770 05.jpg": "page_33.jpg", "AVS IS 758-781 1770 05 17 p1.jpg": "page_34.jpg", "AVS IS 758-781 1770 05 17 p2.jpg": "page_35.jpg", "AVS IS 758-781 1770 05 28 p1.jpg": "page_36.jpg", "AVS IS 758-781 1770 05 28 p2.jpg": "page_37.jpg", "AVS IS 758-781 1770 05 28 p3.jpg": "page_38.jpg", "AVS IS 758-781 1770 08.jpg": "page_39.jpg"};
+  var IMAGES = "/preliminary-work/images/";
+  var path = decodeURIComponent(window.location.pathname);
+  if (path.indexOf(IMAGES) !== 0) return;
+  var name = path.slice(IMAGES.length);
+  if (RENAMED.hasOwnProperty(name)) {
+    window.location.replace("{{ '/preliminary-work/images/' | relative_url }}" + RENAMED[name]);
+    return;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("renamed-images").hidden = false;
+  });
+})();
+</script>
+
+<div style="max-width: 900px; margin: 2rem auto; line-height: 1.5;">
+  <h1>Page not found</h1>
+  <p>There is nothing at this address. Try the <a href="{{ '/' | relative_url }}">home page</a>.</p>
+
+  <div id="renamed-images" hidden>
+    <h2 style="font-size: 1.1rem; margin-top: 2rem;">Renamed page images</h2>
+    <p style="font-size: 0.9rem; color: #555;">In November 2026 the venice-39 page images in
+      <code>/preliminary-work/images/</code> were renamed from their archival filenames to their
+      page IDs. Find the old name below to get the new one.</p>
+    <table style="border-collapse: collapse; font-size: 0.85rem;">
+      <tr><th style="text-align: left; padding-right: 2rem;">Old filename</th><th style="text-align: left;">New filename</th></tr>
+      <tr><td>AVS IS 758-781 1767 07 01.jpg</td><td>page_01.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1767 02 01 p1.jpg</td><td>page_02.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1767 02 01 p2.jpg</td><td>page_03.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1767 02 01 p3.jpg</td><td>page_04.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1767 02 01 p4.jpg</td><td>page_05.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 03 26.jpg</td><td>page_06.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 02.jpg</td><td>page_07.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 08.jpg</td><td>page_08.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 08 p2.jpg</td><td>page_09.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 08 p3.jpg</td><td>page_10.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 08 p4.jpg</td><td>page_11.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 08 p5.jpg</td><td>page_12.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 09 p2.jpg</td><td>page_13.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 09 p1.jpg</td><td>page_14.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 09 p3.jpg</td><td>page_15.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05 16.jpg</td><td>page_16.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 08 01.jpg</td><td>page_17.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 09.jpg</td><td>page_18.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 11 07.jpg</td><td>page_19.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 11 28.jpg</td><td>page_20.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 05.jpg</td><td>page_21.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 01 02.jpg</td><td>page_22.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 01 09.jpg</td><td>page_23.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 01 16 p1.jpg</td><td>page_24.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 01 16 p2.jpg</td><td>page_25.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 01 16 p3.jpg</td><td>page_26.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1768 02 20.jpg</td><td>page_27.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1766 02.jpg</td><td>page_28.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1769 05 p1.jpg</td><td>page_29.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1769 05 p2.jpg</td><td>page_30.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 03.jpg</td><td>page_31.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 05 13.jpg</td><td>page_32.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 05.jpg</td><td>page_33.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 05 17 p1.jpg</td><td>page_34.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 05 17 p2.jpg</td><td>page_35.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 05 28 p1.jpg</td><td>page_36.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 05 28 p2.jpg</td><td>page_37.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 05 28 p3.jpg</td><td>page_38.jpg</td></tr>
+      <tr><td>AVS IS 758-781 1770 08.jpg</td><td>page_39.jpg</td></tr>
+    </table>
+  </div>
+</div>

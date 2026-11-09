@@ -1,4 +1,4 @@
-# Page 28 — February 20, 1769 (AVS IS 758-781 1766 02)
+# Page 28 — February 20, 1769
 
 20 Feb(brari)o 1768  M(ore) V(eneto) [February 1769]
 
