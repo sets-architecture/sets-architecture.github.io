@@ -4,7 +4,7 @@
 
 **[Left column]**
 
-Forastieri Ebrei annotati riferiti dal dep(utat)o  
+Forastieri Ebrei annotati riferiti dal Dep(utat)o  
 nella scad(ut)a Sett(iman)a come siegue  \~\~
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*9 Feb(brari)o*
@@ -17,7 +17,7 @@ Salomon Levi dal Banco
 Leon q(uonda)m Iacob Tedesco con moglie, e cinque Fi  
 gliuoli di Francford nell’Osp(izi)o de’ Poveri
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*//-d(et)to*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*//10-d(et)to*
 
 Elia Amnon di Livorno: in Casa del q(uonda)m Be  
 niamin Ottolengo
@@ -25,7 +25,7 @@ niamin Ottolengo
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*//-d(et)to*
 
 Salvador Anau di Ferrara con un Domes(tic)o  
-in casa del q(uonda)m Emanuel Pesaro
+in Casa del q(uonda)m Emanuel Pesaro
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*//-d(et)to*
 
@@ -45,24 +45,24 @@ Casa d’Isach Morpurgo
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*//16 d(et)to*
 
-Iseppo Grego con moglie una figliola ed  
-Un Domestico di Verona: in Casa di Benetto  
+Iseppo Grego con Moglie una Figliola ed  
+un Domestico di Verona: in Casa di Benetto  
 Polacco
 
 **[Right column]**
 
-Forastieri Ebrei partiti e riferiti dal Dep(utat)o nella  
-Scad(ut)a Sett(iman)a come siegue \~ \~ \~
+Forastieri Ebrei partiti riferiti dal Dep(utat)o nella  
+scad(ut)a Sett(iman)a come siegue \~ \~ \~
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*12 Feb(brai)o*
 
 Aron Arcangiolo di Pesaro partito disse li 11  
-Scad(u)to allogiò dal q(uonda)m Beniamin Ottolengo
+scad(u)to allogiò dal q(uonda)m Beniamin Ottolengo
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*// --d(et)to*
 
-Argiè q(uonda)m Leon Todesco con moglie di Francford  
-p(ar)titi d(isse) li 11 scad(u)to allog(iaro)no all’Osp(izi)o de’Poveri
+Argià q(uonda)m Leon Todesco con moglie di Francford  
+p(ar)titi d(iss)e li 11 scad(u)to allog(iaro)no all’Osp(izi)o de’Poveri
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*//13 d(et)to*
 
