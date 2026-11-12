@@ -4,6 +4,28 @@ Known problems, deferred deliberately. Newest section first. Audited 2026-08-14.
 
 ---
 
+## `gemini31_named_travelers.html` needs re-verification — FOLLOW-UP (PI), noted 2026-11-12
+
+`preliminary-work/data-extraction/gemini31_named_travelers.html` is hand-authored
+(no generator; a plain copy), so its figures can only be confirmed by a person.
+`check_freshness.py` (in `venice-39-data-extraction`) reports it **RE-VERIFY**: it
+was last verified at scoring fingerprint `29e1a2aa997df372`, and the scoring
+inputs now hash to `90a886b0fd9bd217`.
+
+**What moved the fingerprint:** ground-truth departure-date corrections only —
+page 28 (eight travelers, 2026-11-10) and page 39 (Giovanni Maria Scetti,
+2026-11-10; Carlo Paulovich, 2026-11-11). Every page was re-scored and
+republished after each change; across all 150 runs only `departure_date`
+scores moved. No names changed, so row matching, the travelers found, and F1 are
+identical.
+
+**To close it:** check the page's figures against the current scores. When they
+hold, record the new fingerprint in the page's `COPIES` entry in
+`check_freshness.py` — print it with
+`python -c "import check_freshness as c; print(c.scoring_fingerprint())"`.
+
+---
+
 ## 0. Phase N/A/B data-extraction pages not checked for the same "Overall" weighting inconsistency — UNVERIFIED, DEFERRED
 
 **Origin (PI, 2026-08-14):** on
