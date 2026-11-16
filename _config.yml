@@ -29,3 +29,17 @@ exclude:
   - node_modules/
   - .sass-cache/
   - .jekyll-cache/
+
+# "Introduction" articles. Each file in _introduction/ becomes a page at
+# /introduction/<file-name>/ and is listed on /introduction/.
+collections:
+  introduction:
+    output: true
+    permalink: /introduction/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: introduction
+    values:
+      layout: introduction-article

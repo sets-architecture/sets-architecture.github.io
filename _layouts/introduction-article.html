@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<p class="parent-link"><a href="{{ '/introduction/' | relative_url }}">← Introduction</a></p>
+
+<article class="intro-article">
+  {%- comment -%} A div, not <header>: main.css styles every <header> as the dark site bar. {%- endcomment %}
+  <div class="intro-header">
+    <h1>{{ page.title }}</h1>
+    <p class="intro-meta small">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+      {%- if page.authors %} · {{ page.authors | array_to_sentence_string }}{% endif %}
+    </p>
+  </div>
+
+  {{ content }}
+</article>

@@ -4,10 +4,23 @@
 <nav class="primary-nav" aria-label="Primary">
   {%- for item in site.data.navigation -%}
     {%- assign href = item.url | relative_url -%}
-    {%- assign is_active = (current == href) -%}
+    {%- comment -%}
+      Liquid cannot evaluate an expression inside `assign`, so the comparison
+      is done with `if`. A link is "current" on its own page and "active" on
+      that page and every page below it (e.g. a single article).
+    {%- endcomment -%}
+    {%- assign is_current = false -%}
+    {%- assign is_active = false -%}
+    {%- assign current_prefix = current | slice: 0, href.size -%}
+    {%- if current == href -%}
+      {%- assign is_current = true -%}
+      {%- assign is_active = true -%}
+    {%- elsif current_prefix == href -%}
+      {%- assign is_active = true -%}
+    {%- endif -%}
     <a href="{{ href }}"
        class="nav-link{% if is_active %} active{% endif %}"
-       {% if is_active %}aria-current="page"{% endif %}>
+       {% if is_current %}aria-current="page"{% endif %}>
        {{ item.title }}
     </a>
   {%- endfor -%}
