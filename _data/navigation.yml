@@ -1,3 +1,5 @@
 # _data/navigation.yml
 - title: Preliminary work
   url: /preliminary-work/
+- title: Introduction
+  url: /introduction/

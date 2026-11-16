@@ -1,0 +1,35 @@
+---
+layout: default
+title: Introduction
+description: Notes, prototypes and intermediate results from the SETS project.
+---
+
+<section class="hero">
+  <h1>Introduction</h1>
+  <p class="lead">Notes, prototypes and intermediate results from the SETS project, published as the work develops.</p>
+</section>
+
+<section class="intro-list" aria-label="Articles">
+  {%- assign items = site.introduction | sort: "date" | reverse -%}
+  {%- for item in items %}
+  <article class="intro-item">
+    {%- if item.image %}
+    <a class="intro-thumb" href="{{ item.url | relative_url }}" tabindex="-1" aria-hidden="true">
+      <img src="{{ item.image | relative_url }}" alt="" loading="lazy">
+    </a>
+    {%- endif %}
+    <div class="intro-item-text">
+      <h2><a href="{{ item.url | relative_url }}">{{ item.title }}</a></h2>
+      <p class="intro-meta small">
+        <time datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: "%B %-d, %Y" }}</time>
+        {%- if item.authors %} · {{ item.authors | array_to_sentence_string }}{% endif %}
+      </p>
+      {%- if item.description %}
+      <p>{{ item.description }}</p>
+      {%- endif %}
+    </div>
+  </article>
+  {%- else %}
+  <p>No articles yet.</p>
+  {%- endfor %}
+</section>
